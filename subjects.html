@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gurukul — Subjects</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--red:#e50914;--bg:#141414;--card:#1f1f1f;--border:#2a2a2a}
+html,body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif;min-height:100vh}
+.nav{display:flex;align-items:center;gap:28px;padding:0 60px;height:68px;background:rgba(0,0,0,0.95);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border)}
+.nlogo{font-family:'Bebas Neue',cursive;font-size:30px;color:var(--red);letter-spacing:2px;text-decoration:none}
+.nlinks{display:flex;gap:18px;list-style:none}
+.nlinks a{color:#e5e5e5;text-decoration:none;font-size:13px;transition:color .15s}
+.nlinks a:hover{color:#fff}
+.nlinks .act a{color:#fff;font-weight:700}
+.nav-av{margin-left:auto;width:32px;height:32px;border-radius:4px;background:linear-gradient(135deg,var(--red),#ff6b6b);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800}
+
+.hero-sub{padding:60px 60px 40px;background:linear-gradient(180deg,rgba(229,9,20,0.08) 0%,transparent 100%)}
+.hero-sub h1{font-family:'Bebas Neue',cursive;font-size:clamp(40px,5vw,64px);letter-spacing:2px;margin-bottom:10px}
+.hero-sub p{color:#999;font-size:15px;max-width:500px}
+
+.subject-tabs{display:flex;gap:10px;padding:0 60px 32px;flex-wrap:wrap}
+.stab{padding:10px 22px;border-radius:24px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid var(--border);color:#999}
+.stab:hover{color:#fff;border-color:#555}
+.stab.on{background:var(--red);color:#fff;border-color:var(--red)}
+
+.content{padding:0 60px 80px}
+.subject-section{margin-bottom:56px}
+.sec-header{display:flex;align-items:center;gap:16px;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.sec-icon{font-size:32px}
+.sec-title{font-family:'Bebas Neue',cursive;font-size:32px;letter-spacing:1px}
+.sec-count{font-size:13px;color:#666;margin-left:auto}
+.sec-progress{display:flex;align-items:center;gap:10px;font-size:12px;color:#46d369}
+.sec-pbar{width:80px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.sec-pfill{height:100%;background:#46d369;border-radius:2px}
+
+.chapters-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+
+.chcard{background:var(--card);border-radius:8px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;border:1px solid transparent}
+.chcard:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.6);border-color:rgba(255,255,255,0.1)}
+.chcard-thumb{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.chcard-bg{position:absolute;inset:0}
+.chcard-icon{position:relative;z-index:1;font-size:40px}
+.chcard-scrim{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,0.7) 0%,transparent 60%);z-index:2}
+.chcard-ch{position:absolute;bottom:8px;left:10px;z-index:3;font-size:10px;font-weight:700;color:rgba(255,255,255,0.8);letter-spacing:1.5px;text-transform:uppercase}
+.chcard-done{position:absolute;top:8px;right:8px;z-index:3;width:22px;height:22px;background:#46d369;border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
+.chcard.completed .chcard-done{opacity:1}
+.chcard-prog{height:3px;background:#333}
+.chcard-progfill{height:100%;background:var(--red);transition:width .3s}
+.chcard-info{padding:12px 14px}
+.chcard-title{font-size:13px;font-weight:700;margin-bottom:6px;line-height:1.35}
+.chcard-meta{display:flex;align-items:center;gap:8px;font-size:11px;color:#777}
+.chcard-diff{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px}
+.diff-easy{color:#46d369;background:rgba(70,211,105,0.1)}
+.diff-medium{color:#ffaa00;background:rgba(255,170,0,0.1)}
+.diff-hard{color:#ff6b6b;background:rgba(229,9,20,0.1)}
+.chcard-play{display:flex;align-items:center;gap:5px;margin-top:8px;color:var(--red);font-size:12px;font-weight:600;opacity:0;transition:opacity .2s}
+.chcard:hover .chcard-play{opacity:1}
+
+@media(max-width:768px){
+  .nav{padding:0 18px}.nlinks{display:none}
+  .hero-sub,.content,.subject-tabs{padding-left:18px;padding-right:18px}
+  .chapters-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="nlogo" href="index.html">GURUKUL</a>
+  <ul class="nlinks">
+    <li><a href="index.html">Home</a></li>
+    <li class="act"><a href="subjects.html">Subjects</a></li>
+    <li><a href="mylist.html">My List</a></li>
+    <li><a href="tests.html">Tests</a></li>
+    <li><a href="leaderboard.html">Leaderboard</a></li>
+  </ul>
+  <div class="nav-av">S</div>
+</nav>
+
+<div class="hero-sub">
+  <h1>All Subjects</h1>
+  <p>Class 12 — CBSE / ISC · 6 subjects · 80+ chapters</p>
+</div>
+
+<div class="subject-tabs" id="subjectTabs">
+  <div class="stab on" onclick="filterSub(this,'all')">All Subjects</div>
+  <div class="stab" onclick="filterSub(this,'physics')">⚛️ Physics</div>
+  <div class="stab" onclick="filterSub(this,'chemistry')">🧪 Chemistry</div>
+  <div class="stab" onclick="filterSub(this,'maths')">📐 Mathematics</div>
+  <div class="stab" onclick="filterSub(this,'biology')">🧬 Biology</div>
+  <div class="stab" onclick="filterSub(this,'english')">📖 English</div>
+  <div class="stab" onclick="filterSub(this,'cs')">💻 Comp. Sci</div>
+</div>
+
+<div class="content" id="content"></div>
+
+<script>
+const SUBJECTS = {
+  physics:{label:'Physics',icon:'⚛️',chapters:[
+    {t:"Electric Charges & Fields",i:"⚡",g:"linear-gradient(135deg,#080836,#0c0c66)",ch:"Ch.1",dif:"Medium",dur:"4h 20m",p:65},
+    {t:"Electrostatic Potential & Capacitance",i:"🔋",g:"linear-gradient(135deg,#160a4e,#2a1070)",ch:"Ch.2",dif:"Medium",dur:"3h 45m",p:30},
+    {t:"Current Electricity",i:"💡",g:"linear-gradient(135deg,#0a280a,#1a5c1a)",ch:"Ch.3",dif:"Hard",dur:"5h 10m",p:10},
+    {t:"Moving Charges & Magnetism",i:"🧲",g:"linear-gradient(135deg,#3d0000,#8b0000)",ch:"Ch.4",dif:"Hard",dur:"4h 50m",p:0},
+    {t:"Magnetism & Matter",i:"🌍",g:"linear-gradient(135deg,#0a183a,#182c6b)",ch:"Ch.5",dif:"Easy",dur:"2h 40m",p:0},
+    {t:"Electromagnetic Induction",i:"🌀",g:"linear-gradient(135deg,#1a1a00,#5c5c00)",ch:"Ch.6",dif:"Medium",dur:"3h 30m",p:0},
+    {t:"Alternating Current",i:"〰️",g:"linear-gradient(135deg,#2e0c0c,#6b1a1a)",ch:"Ch.7",dif:"Hard",dur:"4h 00m",p:0},
+    {t:"Electromagnetic Waves",i:"📡",g:"linear-gradient(135deg,#001a2d,#003d6b)",ch:"Ch.8",dif:"Easy",dur:"2h 20m",p:0},
+    {t:"Ray Optics",i:"🔭",g:"linear-gradient(135deg,#00001a,#000066)",ch:"Ch.9",dif:"Medium",dur:"5h 20m",p:85},
+    {t:"Wave Optics",i:"🌊",g:"linear-gradient(135deg,#001a1a,#005c5c)",ch:"Ch.10",dif:"Hard",dur:"3h 40m",p:0},
+    {t:"Dual Nature of Radiation",i:"☢️",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Ch.11",dif:"Medium",dur:"2h 50m",p:0},
+    {t:"Atoms",i:"⚛️",g:"linear-gradient(135deg,#001a0d,#004018)",ch:"Ch.12",dif:"Easy",dur:"2h 30m",p:0},
+    {t:"Nuclei",i:"💥",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.13",dif:"Medium",dur:"3h 10m",p:0},
+    {t:"Semiconductor Electronics",i:"🖥️",g:"linear-gradient(135deg,#0d0d1a,#1a1a4d)",ch:"Ch.14",dif:"Hard",dur:"4h 30m",p:40},
+  ]},
+  chemistry:{label:'Chemistry',icon:'🧪',chapters:[
+    {t:"The Solid State",i:"💎",g:"linear-gradient(135deg,#0d0d3d,#1a1a6b)",ch:"Ch.1",dif:"Medium",dur:"3h 20m",p:0},
+    {t:"Solutions",i:"🧪",g:"linear-gradient(135deg,#003d3d,#007070)",ch:"Ch.2",dif:"Medium",dur:"3h 40m",p:50},
+    {t:"Electrochemistry",i:"⚗️",g:"linear-gradient(135deg,#2d0d4e,#5c1a9e)",ch:"Ch.3",dif:"Hard",dur:"4h 20m",p:20},
+    {t:"Chemical Kinetics",i:"💨",g:"linear-gradient(135deg,#3d1a00,#7a3300)",ch:"Ch.4",dif:"Medium",dur:"3h 10m",p:0},
+    {t:"Surface Chemistry",i:"🔵",g:"linear-gradient(135deg,#001a3d,#003470)",ch:"Ch.5",dif:"Easy",dur:"2h 30m",p:0},
+    {t:"Isolation of Elements",i:"⛏️",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.6",dif:"Easy",dur:"2h 10m",p:0},
+    {t:"The p-Block Elements",i:"🧬",g:"linear-gradient(135deg,#0d3d00,#1a6b00)",ch:"Ch.7",dif:"Hard",dur:"4h 40m",p:0},
+    {t:"The d & f Block Elements",i:"🔩",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.8",dif:"Medium",dur:"3h 00m",p:0},
+    {t:"Coordination Compounds",i:"🌐",g:"linear-gradient(135deg,#001a3d,#003470)",ch:"Ch.9",dif:"Hard",dur:"4h 00m",p:0},
+    {t:"Haloalkanes & Haloarenes",i:"🌡️",g:"linear-gradient(135deg,#1a3d00,#2d6600)",ch:"Ch.10",dif:"Hard",dur:"3h 50m",p:10},
+    {t:"Alcohols, Phenols & Ethers",i:"🍶",g:"linear-gradient(135deg,#3d0d00,#6b1a00)",ch:"Ch.11",dif:"Medium",dur:"3h 20m",p:0},
+    {t:"Aldehydes, Ketones & Acids",i:"🧴",g:"linear-gradient(135deg,#0d1a3d,#1a2d6b)",ch:"Ch.12",dif:"Hard",dur:"4h 10m",p:0},
+    {t:"Amines",i:"🔬",g:"linear-gradient(135deg,#2d0d00,#5c1a00)",ch:"Ch.13",dif:"Medium",dur:"2h 50m",p:0},
+    {t:"Biomolecules",i:"🧫",g:"linear-gradient(135deg,#001a00,#003300)",ch:"Ch.14",dif:"Medium",dur:"3h 30m",p:0},
+  ]},
+  maths:{label:'Mathematics',icon:'📐',chapters:[
+    {t:"Relations & Functions",i:"🔗",g:"linear-gradient(135deg,#0d001a,#280040)",ch:"Ch.1",dif:"Easy",dur:"3h 20m",p:100},
+    {t:"Inverse Trigonometric Functions",i:"📐",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.2",dif:"Medium",dur:"2h 40m",p:75},
+    {t:"Matrices",i:"🔢",g:"linear-gradient(135deg,#1a1a00,#454500)",ch:"Ch.3",dif:"Medium",dur:"3h 50m",p:40},
+    {t:"Determinants",i:"📊",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.4",dif:"Medium",dur:"3h 30m",p:20},
+    {t:"Continuity & Differentiability",i:"📈",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Ch.5",dif:"Hard",dur:"5h 30m",p:0},
+    {t:"Application of Derivatives",i:"📉",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Ch.6",dif:"Hard",dur:"4h 20m",p:0},
+    {t:"Integrals",i:"∫",g:"linear-gradient(135deg,#001a1a,#005050)",ch:"Ch.7",dif:"Hard",dur:"6h 20m",p:0},
+    {t:"Application of Integrals",i:"🏔️",g:"linear-gradient(135deg,#0d1a0d,#1a4d1a)",ch:"Ch.8",dif:"Medium",dur:"2h 40m",p:0},
+    {t:"Differential Equations",i:"🌀",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Ch.9",dif:"Hard",dur:"4h 00m",p:0},
+    {t:"Vector Algebra",i:"➡️",g:"linear-gradient(135deg,#001a3d,#003d8c)",ch:"Ch.10",dif:"Medium",dur:"3h 20m",p:0},
+    {t:"3D Geometry",i:"📦",g:"linear-gradient(135deg,#00001a,#000050)",ch:"Ch.11",dif:"Medium",dur:"3h 45m",p:0},
+    {t:"Linear Programming",i:"📋",g:"linear-gradient(135deg,#1a1000,#4d3000)",ch:"Ch.12",dif:"Easy",dur:"2h 30m",p:0},
+    {t:"Probability",i:"🎲",g:"linear-gradient(135deg,#1a0010,#4d0030)",ch:"Ch.13",dif:"Hard",dur:"4h 10m",p:0},
+  ]},
+  biology:{label:'Biology',icon:'🧬',chapters:[
+    {t:"Reproduction in Organisms",i:"🌸",g:"linear-gradient(135deg,#1a003d,#3d0080)",ch:"Ch.1",dif:"Easy",dur:"2h 30m",p:90},
+    {t:"Sexual Reproduction in Plants",i:"🌺",g:"linear-gradient(135deg,#3d000d,#8c001a)",ch:"Ch.2",dif:"Medium",dur:"3h 40m",p:60},
+    {t:"Human Reproduction",i:"👶",g:"linear-gradient(135deg,#001a3d,#003d8c)",ch:"Ch.3",dif:"Medium",dur:"3h 20m",p:30},
+    {t:"Reproductive Health",i:"💊",g:"linear-gradient(135deg,#003d00,#007000)",ch:"Ch.4",dif:"Easy",dur:"2h 10m",p:0},
+    {t:"Principles of Inheritance",i:"🧬",g:"linear-gradient(135deg,#001a1a,#005c5c)",ch:"Ch.5",dif:"Hard",dur:"4h 40m",p:55},
+    {t:"Molecular Basis of Inheritance",i:"🔬",g:"linear-gradient(135deg,#1a1a3d,#2d2d8c)",ch:"Ch.6",dif:"Hard",dur:"5h 00m",p:20},
+    {t:"Evolution",i:"🦋",g:"linear-gradient(135deg,#2d0d00,#6b1a00)",ch:"Ch.7",dif:"Medium",dur:"3h 10m",p:0},
+    {t:"Human Health and Disease",i:"🏥",g:"linear-gradient(135deg,#003d1a,#007030)",ch:"Ch.8",dif:"Medium",dur:"3h 20m",p:0},
+    {t:"Food Production Strategies",i:"🌾",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.9",dif:"Easy",dur:"2h 20m",p:0},
+    {t:"Microbes in Human Welfare",i:"🦠",g:"linear-gradient(135deg,#001a3d,#003d8c)",ch:"Ch.10",dif:"Easy",dur:"2h 40m",p:0},
+    {t:"Biotechnology: Principles",i:"⚗️",g:"linear-gradient(135deg,#1a003d,#400080)",ch:"Ch.11",dif:"Hard",dur:"3h 30m",p:0},
+    {t:"Biotechnology: Applications",i:"💉",g:"linear-gradient(135deg,#003d1a,#007040)",ch:"Ch.12",dif:"Hard",dur:"3h 10m",p:0},
+    {t:"Organisms & Populations",i:"🌿",g:"linear-gradient(135deg,#0d1a0d,#204020)",ch:"Ch.13",dif:"Medium",dur:"2h 50m",p:0},
+    {t:"Ecosystem",i:"🌍",g:"linear-gradient(135deg,#003d00,#006b00)",ch:"Ch.14",dif:"Easy",dur:"2h 50m",p:0},
+    {t:"Biodiversity & Conservation",i:"🦁",g:"linear-gradient(135deg,#1a1000,#4d3000)",ch:"Ch.15",dif:"Easy",dur:"2h 20m",p:0},
+    {t:"Environmental Issues",i:"♻️",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Ch.16",dif:"Easy",dur:"2h 10m",p:0},
+  ]},
+  english:{label:'English',icon:'📖',chapters:[
+    {t:"The Last Lesson",i:"📚",g:"linear-gradient(135deg,#0d1a2d,#1a3d6b)",ch:"Prose 1",dif:"Easy",dur:"1h 20m",p:100},
+    {t:"Lost Spring",i:"🌱",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Prose 2",dif:"Easy",dur:"1h 10m",p:80},
+    {t:"Deep Water",i:"🌊",g:"linear-gradient(135deg,#001a3d,#00336b)",ch:"Prose 3",dif:"Easy",dur:"1h 00m",p:50},
+    {t:"The Rattrap",i:"🪤",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Prose 4",dif:"Easy",dur:"1h 20m",p:20},
+    {t:"Indigo",i:"💙",g:"linear-gradient(135deg,#00001a,#000066)",ch:"Prose 5",dif:"Easy",dur:"1h 00m",p:0},
+    {t:"Poets and Pancakes",i:"🎭",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Prose 6",dif:"Easy",dur:"1h 10m",p:0},
+    {t:"The Interview",i:"🎤",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Prose 7",dif:"Easy",dur:"1h 00m",p:0},
+    {t:"Going Places",i:"✈️",g:"linear-gradient(135deg,#1a0d0d,#4d1a1a)",ch:"Prose 8",dif:"Easy",dur:"1h 00m",p:0},
+    {t:"My Mother at Sixty-Six",i:"👩",g:"linear-gradient(135deg,#0d1a0d,#204020)",ch:"Poem 1",dif:"Easy",dur:"0h 45m",p:0},
+    {t:"Elementary School in a Slum",i:"🏫",g:"linear-gradient(135deg,#1a1000,#4d3000)",ch:"Poem 2",dif:"Easy",dur:"0h 40m",p:0},
+    {t:"Keeping Quiet",i:"🤫",g:"linear-gradient(135deg,#001a2d,#004d8c)",ch:"Poem 3",dif:"Easy",dur:"0h 40m",p:0},
+    {t:"A Thing of Beauty",i:"🌅",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Poem 4",dif:"Easy",dur:"0h 35m",p:0},
+  ]},
+  cs:{label:'Computer Science',icon:'💻',chapters:[
+    {t:"Python Revision Tour",i:"🐍",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Ch.1",dif:"Easy",dur:"3h 00m",p:90},
+    {t:"Data Handling using NumPy",i:"🔢",g:"linear-gradient(135deg,#001a3d,#004d8c)",ch:"Ch.2",dif:"Medium",dur:"2h 30m",p:50},
+    {t:"Data Handling using Pandas",i:"🐼",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.3",dif:"Medium",dur:"3h 20m",p:30},
+    {t:"Plotting with Matplotlib",i:"📊",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.4",dif:"Easy",dur:"2h 00m",p:10},
+    {t:"Computer Networks",i:"🌐",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.5",dif:"Medium",dur:"3h 40m",p:0},
+    {t:"Database Concepts",i:"🗃️",g:"linear-gradient(135deg,#0d001a,#280060)",ch:"Ch.6",dif:"Medium",dur:"2h 50m",p:0},
+    {t:"SQL Queries",i:"💾",g:"linear-gradient(135deg,#00001a,#000060)",ch:"Ch.7",dif:"Hard",dur:"4h 00m",p:0},
+    {t:"Django Web Framework",i:"🕸️",g:"linear-gradient(135deg,#001a0d,#004d20)",ch:"Ch.8",dif:"Hard",dur:"4h 30m",p:0},
+    {t:"Cybersecurity & Ethics",i:"🔐",g:"linear-gradient(135deg,#1a0000,#500000)",ch:"Ch.9",dif:"Medium",dur:"2h 20m",p:0},
+    {t:"Societal Impacts of IT",i:"🌍",g:"linear-gradient(135deg,#001a00,#003d00)",ch:"Ch.10",dif:"Easy",dur:"1h 50m",p:0},
+  ]},
+};
+
+function filterSub(el, key) {
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  render(key);
+}
+
+function render(filter) {
+  const cont = document.getElementById('content');
+  cont.innerHTML = '';
+  for (const [key, subj] of Object.entries(SUBJECTS)) {
+    if (filter !== 'all' && filter !== key) continue;
+    const done = subj.chapters.filter(c=>c.p===100).length;
+    const total = subj.chapters.length;
+    const avgProg = Math.round(subj.chapters.reduce((a,c)=>a+c.p,0)/total);
+    const sec = document.createElement('div');
+    sec.className = 'subject-section';
+    sec.id = 'sec-'+key;
+    sec.innerHTML = `
+      <div class="sec-header">
+        <div class="sec-icon">${subj.icon}</div>
+        <div class="sec-title">${subj.label}</div>
+        <div class="sec-progress">
+          <span>${avgProg}% done</span>
+          <div class="sec-pbar"><div class="sec-pfill" style="width:${avgProg}%"></div></div>
+        </div>
+        <div class="sec-count">${total} chapters · ${done} completed</div>
+      </div>
+      <div class="chapters-grid" id="grid-${key}"></div>`;
+    cont.appendChild(sec);
+    const grid = document.getElementById('grid-'+key);
+    subj.chapters.forEach((c, i) => {
+      const card = document.createElement('div');
+      card.className = `chcard${c.p===100?' completed':''}`;
+      card.innerHTML = `
+        <div class="chcard-thumb">
+          <div class="chcard-bg" style="background:${c.g}"></div>
+          <div class="chcard-icon">${c.i}</div>
+          <div class="chcard-scrim"></div>
+          <div class="chcard-ch">${c.ch}</div>
+          <div class="chcard-done"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+        </div>
+        ${c.p>0?`<div class="chcard-prog"><div class="chcard-progfill" style="width:${c.p}%"></div></div>`:''}
+        <div class="chcard-info">
+          <div class="chcard-title">${c.t}</div>
+          <div class="chcard-meta">
+            <span class="chcard-diff diff-${c.dif.toLowerCase()}">${c.dif}</span>
+            <span>${c.dur}</span>
+          </div>
+          <div class="chcard-play">▶ Watch Now</div>
+        </div>`;
+      card.addEventListener('click', () => {
+        window.location.href = `watch.html?subj=${key}&idx=${i}`;
+      });
+      grid.appendChild(card);
+    });
+  }
+}
+
+render('all');
+</script>
+</body>
+</html>

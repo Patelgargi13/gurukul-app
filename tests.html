@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gurukul — Tests</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--red:#e50914;--bg:#141414;--card:#1f1f1f;--border:#2a2a2a}
+html,body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif;min-height:100vh}
+.nav{display:flex;align-items:center;gap:28px;padding:0 60px;height:68px;background:rgba(0,0,0,0.95);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border)}
+.nlogo{font-family:'Bebas Neue',cursive;font-size:30px;color:var(--red);letter-spacing:2px;text-decoration:none}
+.nlinks{display:flex;gap:18px;list-style:none}
+.nlinks a{color:#e5e5e5;text-decoration:none;font-size:13px;transition:color .15s}.nlinks a:hover{color:#fff}
+.nlinks .act a{color:#fff;font-weight:700}
+.nav-av{margin-left:auto;width:32px;height:32px;border-radius:4px;background:linear-gradient(135deg,var(--red),#ff6b6b);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800}
+
+/* ── HOME SCREEN ── */
+#homeScreen{padding:60px}
+.page-hero{margin-bottom:48px}
+.page-hero h1{font-family:'Bebas Neue',cursive;font-size:clamp(40px,5vw,64px);letter-spacing:2px;margin-bottom:10px}
+.page-hero p{color:#999;font-size:15px;max-width:500px;line-height:1.6}
+
+.test-categories{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:48px}
+.tcat{background:var(--card);border-radius:10px;padding:24px;cursor:pointer;border:1px solid var(--border);transition:all .2s;position:relative;overflow:hidden}
+.tcat::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .2s}
+.tcat:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.6);border-color:rgba(255,255,255,.15)}
+.tcat-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px}
+.badge-easy{background:rgba(70,211,105,.15);color:#46d369}
+.badge-medium{background:rgba(255,170,0,.15);color:#ffaa00}
+.badge-hard{background:rgba(229,9,20,.15);color:#ff6b6b}
+.badge-mixed{background:rgba(84,185,197,.15);color:#54b9c5}
+.tcat-icon{font-size:36px;margin-bottom:12px;display:block}
+.tcat-title{font-size:18px;font-weight:800;margin-bottom:6px}
+.tcat-desc{font-size:13px;color:#777;line-height:1.6;margin-bottom:16px}
+.tcat-meta{display:flex;gap:16px;font-size:12px;color:#555}
+.tcat-meta span{display:flex;align-items:center;gap:5px}
+.tcat-start{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+.tcat-btn{padding:8px 18px;background:var(--red);border:none;border-radius:4px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s}
+.tcat-btn:hover{background:#f40612}
+.tcat-score{font-size:12px;color:#666}
+.tcat-score.done{color:#46d369}
+
+/* recent results */
+.section-title{font-size:20px;font-weight:800;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.results-list{display:flex;flex-direction:column;gap:10px}
+.ritem{background:var(--card);border-radius:8px;padding:16px 20px;display:flex;align-items:center;gap:16px;border:1px solid var(--border)}
+.ritem-icon{font-size:28px;flex-shrink:0}
+.ritem-info{flex:1}
+.ritem-title{font-size:14px;font-weight:700;margin-bottom:3px}
+.ritem-meta{font-size:12px;color:#666}
+.ritem-score{text-align:right}
+.ritem-pct{font-family:'Bebas Neue',cursive;font-size:28px;line-height:1}
+.ritem-pct.high{color:#46d369}.ritem-pct.mid{color:#ffaa00}.ritem-pct.low{color:#ff6b6b}
+.ritem-grade{font-size:11px;color:#666;margin-top:2px}
+
+/* ── TEST SCREEN ── */
+#testScreen{display:none;min-height:100vh}
+.test-topbar{display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:60px;background:#0d0d0d;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50}
+.test-info{display:flex;align-items:center;gap:20px}
+.test-name{font-size:14px;font-weight:700}
+.test-progress-wrap{display:flex;align-items:center;gap:10px;font-size:12px;color:#888}
+.test-pbar{width:120px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.test-pfill{height:100%;background:var(--red);border-radius:2px;transition:width .3s}
+.timer{display:flex;align-items:center;gap:8px;font-family:'Bebas Neue',cursive;font-size:22px;letter-spacing:1px}
+.timer.warn{color:#ffaa00}.timer.danger{color:#ff6b6b;animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
+.test-end-btn{padding:8px 18px;background:rgba(229,9,20,.15);border:1px solid rgba(229,9,20,.3);border-radius:4px;color:#ff6b6b;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.test-end-btn:hover{background:var(--red);color:#fff;border-color:var(--red)}
+
+.test-body{display:grid;grid-template-columns:1fr 280px;gap:0;min-height:calc(100vh - 60px)}
+
+/* question area */
+.q-area{padding:40px 48px;overflow-y:auto}
+.q-header{display:flex;align-items:center;gap:12px;margin-bottom:24px}
+.q-num-badge{background:var(--red);color:#fff;font-family:'Bebas Neue',cursive;font-size:18px;padding:4px 12px;border-radius:4px;letter-spacing:1px}
+.q-type-tag{font-size:11px;font-weight:700;color:#888;letter-spacing:1.5px;text-transform:uppercase}
+.q-subject-tag{font-size:11px;padding:3px 8px;border-radius:10px;font-weight:600}
+.q-text{font-size:20px;font-weight:700;line-height:1.55;margin-bottom:28px;color:#fff}
+.q-opts{display:grid;gap:12px;margin-bottom:24px}
+.qo{padding:16px 20px;border-radius:8px;border:1.5px solid var(--border);background:rgba(255,255,255,.03);cursor:pointer;font-size:15px;color:#ccc;transition:all .2s;display:flex;align-items:center;gap:14px;font-family:inherit;text-align:left;width:100%}
+.qo:hover:not(:disabled){border-color:#555;background:rgba(255,255,255,.07);color:#fff}
+.qo.picked{border-color:var(--red);background:rgba(229,9,20,.1);color:#fff}
+.qo.correct-ans{border-color:#46d369;background:rgba(70,211,105,.1);color:#46d369}
+.qo.wrong-ans{border-color:#ff4444;background:rgba(255,68,68,.1);color:#ff8888}
+.qo:disabled{cursor:default}
+.ol{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;transition:all .2s}
+.qo.picked .ol{background:var(--red)}
+.qo.correct-ans .ol{background:#46d369;color:#000}
+.qo.wrong-ans .ol{background:#ff4444}
+
+.q-nav{display:flex;align-items:center;justify-content:space-between;padding-top:20px;border-top:1px solid var(--border)}
+.qnav-btn{padding:12px 28px;border-radius:4px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;border:none}
+.qnav-prev{background:rgba(255,255,255,.08);color:#fff}.qnav-prev:hover{background:rgba(255,255,255,.14)}
+.qnav-next{background:var(--red);color:#fff}.qnav-next:hover{background:#f40612}
+.qnav-next:disabled{opacity:.4;cursor:not-allowed}
+.q-skip{font-size:13px;color:#555;cursor:pointer;transition:color .15s}.q-skip:hover{color:#888}
+
+/* palette sidebar */
+.q-palette{padding:20px;border-left:1px solid var(--border);overflow-y:auto}
+.palette-title{font-size:13px;font-weight:700;color:#888;margin-bottom:14px;letter-spacing:.5px}
+.palette-legend{display:flex;flex-direction:column;gap:6px;margin-bottom:18px;font-size:11px;color:#666}
+.legend-item{display:flex;align-items:center;gap:8px}
+.legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.dot-answered{background:#46d369}
+.dot-skipped{background:#ffaa00}
+.dot-current{background:var(--red)}
+.dot-unanswered{background:var(--border)}
+.palette-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:20px}
+.pq{width:100%;aspect-ratio:1;border-radius:4px;border:none;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;font-family:inherit}
+.pq.unanswered{background:var(--border);color:#888}.pq.unanswered:hover{background:#444;color:#fff}
+.pq.answered{background:#46d369;color:#000}
+.pq.skipped{background:rgba(255,170,0,.3);color:#ffaa00;border:1px solid rgba(255,170,0,.4)}
+.pq.current{background:var(--red);color:#fff}
+.palette-stats{background:rgba(255,255,255,.04);border-radius:8px;padding:14px;border:1px solid var(--border)}
+.pstat{display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px}
+.pstat:last-child{margin-bottom:0}
+.pstat span:last-child{font-weight:700}
+.pstat .green{color:#46d369}.pstat .yellow{color:#ffaa00}.pstat .red{color:#ff6b6b}
+
+/* ── RESULT SCREEN ── */
+#resultScreen{display:none;padding:60px;max-width:900px;margin:0 auto}
+.res-hero{text-align:center;margin-bottom:48px}
+.res-emoji{font-size:72px;margin-bottom:16px}
+.res-title{font-family:'Bebas Neue',cursive;font-size:56px;letter-spacing:2px;margin-bottom:8px}
+.res-sub{font-size:16px;color:#999;margin-bottom:28px}
+.res-score-card{display:inline-flex;flex-direction:column;align-items:center;padding:28px 48px;background:rgba(255,255,255,.04);border-radius:14px;border:1px solid var(--border);margin-bottom:8px}
+.res-pct{font-family:'Bebas Neue',cursive;font-size:72px;line-height:1;color:var(--red)}
+.res-marks{font-size:14px;color:#888;margin-top:4px}
+.res-breakdown{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:36px}
+.rb{background:var(--card);border-radius:10px;padding:18px;text-align:center;border:1px solid var(--border)}
+.rb-num{font-family:'Bebas Neue',cursive;font-size:36px;margin-bottom:4px}
+.rb-label{font-size:11px;color:#666;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.rb.correct .rb-num{color:#46d369}
+.rb.wrong .rb-num{color:#ff6b6b}
+.rb.skip .rb-num{color:#ffaa00}
+.rb.accuracy .rb-num{color:var(--red)}
+.res-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:48px}
+.rbtn{padding:13px 30px;border-radius:4px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;border:none;transition:all .15s}
+.rbtn.primary{background:#fff;color:#000}.rbtn.primary:hover{background:rgba(255,255,255,.85)}
+.rbtn.secondary{background:rgba(255,255,255,.08);color:#fff;border:1px solid var(--border)}.rbtn.secondary:hover{background:rgba(255,255,255,.14)}
+
+/* review */
+.review-title{font-size:22px;font-weight:800;margin-bottom:20px}
+.rev-item{background:var(--card);border-radius:8px;padding:20px;margin-bottom:14px;border:1px solid var(--border)}
+.rev-q{font-size:15px;font-weight:600;margin-bottom:14px;line-height:1.5}
+.rev-opts{display:grid;gap:8px;margin-bottom:12px}
+.rev-opt{padding:10px 14px;border-radius:6px;font-size:13px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;color:#888}
+.rev-opt.correct{border-color:#46d369;background:rgba(70,211,105,.08);color:#46d369}
+.rev-opt.wrong{border-color:#ff4444;background:rgba(255,68,68,.08);color:#ff8888}
+.rev-opt.your-wrong{border-color:#ff4444;background:rgba(255,68,68,.08);color:#ff8888}
+.rev-explain{font-size:12px;color:#777;line-height:1.6;padding:10px 14px;background:rgba(255,255,255,.03);border-radius:6px;border-left:3px solid var(--red)}
+
+#toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:#fff;color:#000;padding:11px 22px;border-radius:4px;font-size:14px;font-weight:700;z-index:9999;opacity:0;pointer-events:none;transition:all .3s}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:768px){
+  .nav{padding:0 18px}.nlinks{display:none}
+  #homeScreen,.q-area,#resultScreen{padding:20px}
+  .test-topbar{padding:0 16px}
+  .test-body{grid-template-columns:1fr}
+  .q-palette{display:none}
+  .res-breakdown{grid-template-columns:repeat(2,1fr)}
+  .test-categories{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="nlogo" href="index.html">GURUKUL</a>
+  <ul class="nlinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="subjects.html">Subjects</a></li>
+    <li><a href="mylist.html">My List</a></li>
+    <li class="act"><a href="tests.html">Tests</a></li>
+    <li><a href="leaderboard.html">Leaderboard</a></li>
+  </ul>
+  <div class="nav-av">S</div>
+</nav>
+
+<!-- HOME -->
+<div id="homeScreen">
+  <div class="page-hero">
+    <h1>Practice Tests</h1>
+    <p>Chapter tests, subject mock exams and full syllabus tests — with timer, scoring and detailed review.</p>
+  </div>
+
+  <div class="test-categories" id="testCards"></div>
+
+  <div class="section-title">📊 Recent Results</div>
+  <div class="results-list" id="recentResults"></div>
+</div>
+
+<!-- TEST -->
+<div id="testScreen">
+  <div class="test-topbar">
+    <div class="test-info">
+      <div class="test-name" id="testName">Test</div>
+      <div class="test-progress-wrap">
+        <div class="test-pbar"><div class="test-pfill" id="testPbar" style="width:0%"></div></div>
+        <span id="testProgress">1/30</span>
+      </div>
+    </div>
+    <div class="timer" id="timer">⏱ 60:00</div>
+    <button class="test-end-btn" onclick="confirmEnd()">Submit Test</button>
+  </div>
+  <div class="test-body">
+    <div class="q-area" id="qArea"></div>
+    <div class="q-palette">
+      <div class="palette-title">QUESTION PALETTE</div>
+      <div class="palette-legend">
+        <div class="legend-item"><div class="legend-dot dot-answered"></div>Answered</div>
+        <div class="legend-item"><div class="legend-dot dot-skipped"></div>Skipped</div>
+        <div class="legend-item"><div class="legend-dot dot-current"></div>Current</div>
+        <div class="legend-item"><div class="legend-dot dot-unanswered"></div>Not visited</div>
+      </div>
+      <div class="palette-grid" id="palette"></div>
+      <div class="palette-stats" id="paletteStats"></div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div id="resultScreen"></div>
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════ TEST BANK ═══════════════════════
+const TESTS = [
+  {
+    id:'physics_full',icon:'⚛️',title:'Physics Full Test',
+    desc:'Complete Class 12 Physics — all 14 chapters covered.',
+    badge:'hard',badgeLabel:'Hard',questions:30,time:60,
+    bestScore:null,
+    qs:[
+      {q:"The SI unit of electric charge is:",opts:["Ampere","Coulomb","Volt","Ohm"],ans:1,subj:"Physics",explain:"Coulomb (C) is the SI unit of electric charge."},
+      {q:"Electric field inside a conductor in electrostatic equilibrium is:",opts:["Maximum","Zero","Equal to surface field","Depends on material"],ans:1,subj:"Physics",explain:"Electric field inside a conductor is always zero in electrostatic equilibrium."},
+      {q:"Which law relates electric flux to charge enclosed?",opts:["Faraday's Law","Lenz's Law","Gauss's Law","Ampere's Law"],ans:2,subj:"Physics",explain:"Gauss's Law states that electric flux through a closed surface equals charge enclosed divided by ε₀."},
+      {q:"The unit of capacitance is:",opts:["Henry","Farad","Tesla","Weber"],ans:1,subj:"Physics",explain:"Farad (F) is the SI unit of capacitance. 1 Farad = 1 Coulomb per Volt."},
+      {q:"Ohm's law states that V is proportional to I when:",opts:["Temperature changes","Temperature is constant","Pressure changes","Area changes"],ans:1,subj:"Physics",explain:"Ohm's law holds when temperature and other physical conditions remain constant."},
+      {q:"A magnetic field exerts force on a:",opts:["Stationary charge","Moving charge","Both","Neither"],ans:1,subj:"Physics",explain:"Magnetic force F = qv×B acts only on moving charges."},
+      {q:"The phenomenon of electromagnetic induction was discovered by:",opts:["Maxwell","Faraday","Ampere","Hertz"],ans:1,subj:"Physics",explain:"Michael Faraday discovered electromagnetic induction in 1831."},
+      {q:"In a series RLC circuit at resonance, impedance is:",opts:["Maximum","Minimum = R","Zero","Infinite"],ans:1,subj:"Physics",explain:"At resonance, XL = XC, so impedance Z = R (minimum value)."},
+      {q:"Electromagnetic waves are:",opts:["Longitudinal","Transverse","Both types","Neither"],ans:1,subj:"Physics",explain:"EM waves are transverse waves — E and B fields oscillate perpendicular to direction of propagation."},
+      {q:"Total internal reflection occurs when light goes from:",opts:["Rarer to denser medium","Denser to rarer medium","Any medium","Vacuum only"],ans:1,subj:"Physics",explain:"TIR occurs when light travels from denser to rarer medium at angle greater than critical angle."},
+      {q:"In Young's double slit experiment, fringe width is proportional to:",opts:["d (slit separation)","1/d","d²","√d"],ans:1,subj:"Physics",explain:"Fringe width β = λD/d, so it's inversely proportional to slit separation d."},
+      {q:"The photoelectric effect supports the:",opts:["Wave nature of light","Particle nature of light","Both natures","Neither"],ans:1,subj:"Physics",explain:"Photoelectric effect supports particle (photon) nature of light — explained by Einstein in 1905."},
+      {q:"Bohr's model is applicable to:",opts:["All atoms","Hydrogen-like atoms only","Metals only","Noble gases"],ans:1,subj:"Physics",explain:"Bohr's model works for hydrogen and hydrogen-like ions (He⁺, Li²⁺) with one electron."},
+      {q:"The process of spontaneous emission of radiation from a nucleus is called:",opts:["Fission","Fusion","Radioactivity","Ionization"],ans:2,subj:"Physics",explain:"Radioactivity is the spontaneous emission of alpha, beta or gamma radiation from unstable nuclei."},
+      {q:"In a p-n junction diode, the depletion layer has:",opts:["Free electrons only","Holes only","No free charges","Equal electrons and holes"],ans:2,subj:"Physics",explain:"The depletion region has no free charge carriers — electrons and holes have recombined."},
+    ]
+  },
+  {
+    id:'chemistry_full',icon:'🧪',title:'Chemistry Full Test',
+    desc:'Complete Class 12 Chemistry — organic and inorganic.',
+    badge:'hard',badgeLabel:'Hard',questions:30,time:60,bestScore:78,
+    qs:[
+      {q:"The number of atoms per unit cell in a BCC structure is:",opts:["1","2","4","8"],ans:1,subj:"Chem",explain:"BCC: 1 atom at centre + 8×(1/8) corner atoms = 1 + 1 = 2 atoms per unit cell."},
+      {q:"Raoult's law states that vapour pressure of solution is:",opts:["Greater than pure solvent","Equal to pure solvent","Proportional to mole fraction of solvent","Inversely proportional to temperature"],ans:2,subj:"Chem",explain:"P = P°×xsolvent. Vapour pressure equals vapour pressure of pure solvent times mole fraction of solvent."},
+      {q:"Standard hydrogen electrode has electrode potential:",opts:["1V","+1V","0V","-1V"],ans:2,subj:"Chem",explain:"By convention, the standard hydrogen electrode (SHE) is assigned electrode potential of exactly 0V."},
+      {q:"The rate of reaction generally _____ with increase in temperature:",opts:["Decreases","Increases","Remains same","First increases then decreases"],ans:1,subj:"Chem",explain:"Increasing temperature increases kinetic energy, more collisions exceed activation energy, so rate increases."},
+      {q:"Tyndall effect is shown by:",opts:["True solution","Colloidal solution","Suspension","All of these"],ans:1,subj:"Chem",explain:"Tyndall effect — scattering of light — is characteristic of colloidal solutions."},
+      {q:"The most electronegative element is:",opts:["Oxygen","Chlorine","Fluorine","Nitrogen"],ans:2,subj:"Chem",explain:"Fluorine has the highest electronegativity (4.0 on Pauling scale) among all elements."},
+      {q:"Which of the following is a transition metal?",opts:["Calcium","Iron","Aluminium","Sodium"],ans:1,subj:"Chem",explain:"Iron (Fe) is a transition metal (d-block element) with partially filled d-orbitals."},
+      {q:"IUPAC name of CH₃CHO is:",opts:["Methanal","Ethanal","Propanal","Ethanone"],ans:1,subj:"Chem",explain:"CH₃CHO has 2 carbons with an aldehyde group, so its IUPAC name is Ethanal."},
+      {q:"SN2 reaction proceeds with:",opts:["Retention of configuration","Inversion of configuration","Racemisation","No change"],ans:1,subj:"Chem",explain:"SN2 proceeds via backside attack causing Walden inversion — complete inversion of configuration."},
+      {q:"Lucas test is used to distinguish between:",opts:["Aldehydes and ketones","Primary, secondary and tertiary alcohols","Phenols and alcohols","Acids and esters"],ans:1,subj:"Chem",explain:"Lucas test (ZnCl₂ + HCl) distinguishes 1°, 2°, 3° alcohols by rate of reaction."},
+    ]
+  },
+  {
+    id:'maths_full',icon:'📐',title:'Mathematics Full Test',
+    desc:'Complete Class 12 Maths — calculus, algebra, probability.',
+    badge:'hard',badgeLabel:'Hard',questions:25,time:90,bestScore:null,
+    qs:[
+      {q:"The number of equivalence relations on set {1,2,3} is:",opts:["2","3","5","8"],ans:2,subj:"Maths",explain:"The number of equivalence relations on a set of 3 elements equals Bell number B(3) = 5."},
+      {q:"sin⁻¹(sin 2π/3) equals:",opts:["2π/3","π/3","–π/3","π"],ans:1,subj:"Maths",explain:"2π/3 is not in principal range [–π/2, π/2] of sin⁻¹. sin(2π/3) = sin(π/3), so sin⁻¹(sin 2π/3) = π/3."},
+      {q:"If A is a square matrix of order 3 and |A| = 5, then |2A| equals:",opts:["10","25","40","–40"],ans:2,subj:"Maths",explain:"|kA| = kⁿ|A| for n×n matrix. |2A| = 2³ × 5 = 8 × 5 = 40."},
+      {q:"If f(x) = x² is continuous at x = 2, then lim(x→2) f(x) equals:",opts:["2","4","8","Does not exist"],ans:1,subj:"Maths",explain:"For continuous function, lim f(x) = f(2) = 2² = 4."},
+      {q:"The derivative of eˣ is:",opts:["eˣ⁻¹","xeˣ⁻¹","eˣ","1/eˣ"],ans:2,subj:"Maths",explain:"d/dx(eˣ) = eˣ. The exponential function is its own derivative."},
+      {q:"∫(1/x)dx equals:",opts:["x","log|x| + C","1/x² + C","–1/x + C"],ans:1,subj:"Maths",explain:"∫(1/x)dx = ln|x| + C (also written as log|x| + C)."},
+      {q:"The area enclosed by y = x² and y = x is:",opts:["1/3","1/6","1/2","1/4"],ans:1,subj:"Maths",explain:"Curves intersect at x=0,1. Area = ∫₀¹(x–x²)dx = [x²/2 – x³/3]₀¹ = 1/2 – 1/3 = 1/6."},
+      {q:"Order of differential equation d²y/dx² + (dy/dx)³ = x is:",opts:["1","2","3","4"],ans:1,subj:"Maths",explain:"Order is determined by the highest derivative present. Here d²y/dx² is highest, so order = 2."},
+      {q:"If a⃗ · b⃗ = 0, the vectors are:",opts:["Parallel","Perpendicular","Equal","Anti-parallel"],ans:1,subj:"Maths",explain:"Dot product a⃗ · b⃗ = |a||b|cosθ = 0 implies cosθ = 0, so θ = 90° — vectors are perpendicular."},
+      {q:"In Bayes' theorem, P(A|B) equals:",opts:["P(B|A)×P(A)/P(B)","P(A)×P(B)","P(A∩B)/P(A)","P(B|A)/P(A)"],ans:0,subj:"Maths",explain:"Bayes' theorem: P(A|B) = P(B|A)×P(A) / P(B)."},
+    ]
+  },
+  {
+    id:'biology_quick',icon:'🧬',title:'Biology Quick Test',
+    desc:'Genetics, Evolution and Reproduction — 15 questions.',
+    badge:'medium',badgeLabel:'Medium',questions:15,time:30,bestScore:88,
+    qs:[
+      {q:"Mendel's Law of Segregation states that:",opts:["Genes are linked","Alleles separate during gamete formation","All traits are dominant","Genes are on chromosomes"],ans:1,subj:"Bio",explain:"Law of Segregation: two alleles of a gene separate during meiosis so each gamete carries only one allele."},
+      {q:"DNA replication is:",opts:["Conservative","Semi-conservative","Dispersive","Random"],ans:1,subj:"Bio",explain:"DNA replication is semi-conservative — each new double helix has one old and one new strand."},
+      {q:"The genetic code is:",opts:["Overlapping","Non-degenerate","Universal","Non-continuous"],ans:2,subj:"Bio",explain:"The genetic code is universal — same codons code for same amino acids in all living organisms (with few exceptions)."},
+      {q:"Hardy-Weinberg principle applies when:",opts:["Population is small","No mutation occurs","Selection is present","Migration occurs"],ans:1,subj:"Bio",explain:"Hardy-Weinberg equilibrium requires: no mutation, random mating, no selection, no migration, large population."},
+      {q:"Double fertilisation occurs in:",opts:["Gymnosperms","Angiosperms","Ferns","Mosses"],ans:1,subj:"Bio",explain:"Double fertilisation is unique to angiosperms — one sperm fertilises egg (zygote), another fuses with polar nuclei (endosperm)."},
+    ]
+  },
+  {
+    id:'mixed_easy',icon:'🌟',title:'Mixed Easy Quiz',
+    desc:'All subjects — easy questions, great for revision.',
+    badge:'easy',badgeLabel:'Easy',questions:20,time:25,bestScore:95,
+    qs:[
+      {q:"Light travels fastest in:",opts:["Water","Glass","Vacuum","Air"],ans:2,subj:"Physics",explain:"Light travels at maximum speed c = 3×10⁸ m/s in vacuum."},
+      {q:"The powerhouse of the cell is:",opts:["Nucleus","Ribosome","Mitochondria","Chloroplast"],ans:2,subj:"Bio",explain:"Mitochondria produce ATP through cellular respiration, earning the nickname 'powerhouse of the cell'."},
+      {q:"Which gas is produced when acid reacts with metal?",opts:["Oxygen","Carbon dioxide","Hydrogen","Nitrogen"],ans:2,subj:"Chem",explain:"Metals react with dilute acids to produce hydrogen gas: Metal + Acid → Salt + H₂↑"},
+      {q:"The derivative of a constant is:",opts:["1","0","The constant itself","Undefined"],ans:1,subj:"Maths",explain:"d/dx(c) = 0 for any constant c. Constants don't change, so their rate of change is zero."},
+      {q:"Ohm is the unit of:",opts:["Current","Voltage","Resistance","Power"],ans:2,subj:"Physics",explain:"Ohm (Ω) is the SI unit of electrical resistance."},
+    ]
+  },
+];
+
+const RECENT = [
+  {title:'Chemistry Full Test',icon:'🧪',score:78,total:30,correct:23,date:'Yesterday',time:'58 min'},
+  {title:'Biology Quick Test',icon:'🧬',score:88,total:15,correct:13,date:'2 days ago',time:'22 min'},
+  {title:'Mixed Easy Quiz',icon:'🌟',score:95,total:20,correct:19,date:'3 days ago',time:'18 min'},
+];
+
+// ═══════════════════════ STATE ═══════════════════════
+let currentTest = null;
+let answers = {};
+let skipped = new Set();
+let currentQ = 0;
+let timerInterval = null;
+let timeLeft = 0;
+
+// ═══════════════════════ HOME ═══════════════════════
+function renderHome() {
+  const cards = document.getElementById('testCards');
+  cards.innerHTML = TESTS.map(t => `
+    <div class="tcat" onclick="startTest('${t.id}')">
+      <span class="tcat-badge badge-${t.badge}">${t.badgeLabel}</span>
+      <span class="tcat-icon">${t.icon}</span>
+      <div class="tcat-title">${t.title}</div>
+      <div class="tcat-desc">${t.desc}</div>
+      <div class="tcat-meta">
+        <span>📝 ${t.questions} questions</span>
+        <span>⏱ ${t.time} mins</span>
+        <span>📊 ${t.bestScore?'+'+t.bestScore+'% best':'Not attempted'}</span>
+      </div>
+      <div class="tcat-start">
+        <button class="tcat-btn">${t.bestScore?'Retake Test':'Start Test'} →</button>
+        <span class="tcat-score ${t.bestScore?'done':''}">${t.bestScore?'Best: '+t.bestScore+'%':'New'}</span>
+      </div>
+    </div>`).join('');
+
+  const res = document.getElementById('recentResults');
+  res.innerHTML = RECENT.map(r => {
+    const cls = r.score>=80?'high':r.score>=60?'mid':'low';
+    const grade = r.score>=90?'A+':r.score>=80?'A':r.score>=70?'B':r.score>=60?'C':'D';
+    return `<div class="ritem">
+      <div class="ritem-icon">${r.icon}</div>
+      <div class="ritem-info">
+        <div class="ritem-title">${r.title}</div>
+        <div class="ritem-meta">${r.correct}/${r.total} correct · ${r.date} · ${r.time}</div>
+      </div>
+      <div class="ritem-score">
+        <div class="ritem-pct ${cls}">${r.score}%</div>
+        <div class="ritem-grade">Grade ${grade}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════ START TEST ═══════════════════════
+function startTest(id) {
+  currentTest = TESTS.find(t=>t.id===id);
+  if (!currentTest) return;
+  answers = {};
+  skipped = new Set();
+  currentQ = 0;
+  timeLeft = currentTest.time * 60;
+
+  document.getElementById('homeScreen').style.display = 'none';
+  document.getElementById('testScreen').style.display = 'block';
+  document.getElementById('resultScreen').style.display = 'none';
+  document.getElementById('testName').textContent = currentTest.title;
+
+  renderQuestion();
+  startTimer();
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) { clearInterval(timerInterval); submitTest(); }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(timeLeft/60).toString().padStart(2,'0');
+  const s = (timeLeft%60).toString().padStart(2,'0');
+  const el = document.getElementById('timer');
+  el.textContent = `⏱ ${m}:${s}`;
+  el.className = 'timer' + (timeLeft<=60?' danger':timeLeft<=300?' warn':'');
+}
+
+// ═══════════════════════ RENDER QUESTION ═══════════════════════
+function renderQuestion() {
+  const qs = currentTest.qs;
+  const total = qs.length;
+  const q = qs[currentQ];
+
+  document.getElementById('testPbar').style.width = ((currentQ/total)*100)+'%';
+  document.getElementById('testProgress').textContent = `${currentQ+1}/${total}`;
+  updatePalette();
+
+  const area = document.getElementById('qArea');
+  const picked = answers[currentQ];
+  const subjColor = {Physics:'#0a3d8f',Maths:'#4a0080',Chem:'#1a6b3a',Bio:'#8c2d00'}[q.subj]||'#333';
+
+  area.innerHTML = `
+    <div class="q-header">
+      <div class="q-num-badge">Q${currentQ+1}</div>
+      <div class="q-type-tag">Multiple Choice</div>
+      <div class="q-subject-tag" style="background:${subjColor}20;color:${subjColor};border:1px solid ${subjColor}40">${q.subj}</div>
+    </div>
+    <div class="q-text">${q.q}</div>
+    <div class="q-opts" id="qOpts">
+      ${q.opts.map((o,i)=>`
+        <button class="qo${picked===i?' picked':''}" onclick="pickAnswer(${i})" ${picked!==undefined?'disabled':''} id="qo${i}">
+          <div class="ol">${'ABCD'[i]}</div>${o}
+        </button>`).join('')}
+    </div>
+    <div class="q-nav">
+      <button class="qnav-btn qnav-prev" onclick="goQ(${currentQ-1})" ${currentQ===0?'disabled':''}>← Previous</button>
+      <span class="q-skip" onclick="skipQ()">Skip for now</span>
+      <button class="qnav-btn qnav-next" onclick="goQ(${currentQ+1})" ${currentQ>=total-1?'disabled':''}>
+        ${currentQ===total-1?'Review →':'Next →'}
+      </button>
+    </div>`;
+}
+
+function pickAnswer(idx) {
+  answers[currentQ] = idx;
+  skipped.delete(currentQ);
+  document.querySelectorAll('.qo').forEach((b,i) => {
+    b.disabled = true;
+    if (i===idx) b.classList.add('picked');
+  });
+  updatePalette();
+  // auto advance after 800ms
+  if (currentQ < currentTest.qs.length-1) {
+    setTimeout(() => goQ(currentQ+1), 700);
+  }
+}
+
+function skipQ() {
+  skipped.add(currentQ);
+  updatePalette();
+  if (currentQ < currentTest.qs.length-1) goQ(currentQ+1);
+}
+
+function goQ(idx) {
+  if (idx < 0 || idx >= currentTest.qs.length) return;
+  currentQ = idx;
+  renderQuestion();
+}
+
+function updatePalette() {
+  const qs = currentTest.qs;
+  const grid = document.getElementById('palette');
+  if (!grid) return;
+  grid.innerHTML = qs.map((_,i)=>{
+    let cls = answers[i]!==undefined?'answered':skipped.has(i)?'skipped':i===currentQ?'current':'unanswered';
+    return `<button class="pq ${cls}" onclick="goQ(${i})">${i+1}</button>`;
+  }).join('');
+
+  const answered = Object.keys(answers).length;
+  const sk = skipped.size;
+  const notVisited = qs.length - answered - sk;
+  document.getElementById('paletteStats').innerHTML = `
+    <div class="pstat"><span>Answered</span><span class="green">${answered}</span></div>
+    <div class="pstat"><span>Skipped</span><span class="yellow">${sk}</span></div>
+    <div class="pstat"><span>Not visited</span><span>${notVisited}</span></div>
+    <div class="pstat"><span>Total</span><span>${qs.length}</span></div>`;
+}
+
+function confirmEnd() {
+  const answered = Object.keys(answers).length;
+  const total = currentTest.qs.length;
+  const unanswered = total - answered;
+  if (unanswered > 0) {
+    if (!confirm(`You have ${unanswered} unanswered question${unanswered>1?'s':''}. Submit anyway?`)) return;
+  }
+  submitTest();
+}
+
+// ═══════════════════════ SUBMIT & RESULTS ═══════════════════════
+function submitTest() {
+  clearInterval(timerInterval);
+  const qs = currentTest.qs;
+  let correct = 0, wrong = 0, skippedCount = 0;
+  qs.forEach((q,i) => {
+    if (answers[i]===undefined) skippedCount++;
+    else if (answers[i]===q.ans) correct++;
+    else wrong++;
+  });
+  const pct = Math.round((correct/qs.length)*100);
+  const grade = pct>=90?'A+':pct>=80?'A':pct>=70?'B':pct>=60?'C':'D';
+  const marks = correct*4 - wrong*1;
+  let emoji,title,sub;
+  if(pct>=90){emoji='🏆';title='OUTSTANDING!';sub='Excellent performance! You are fully prepared.'}
+  else if(pct>=75){emoji='🎉';title='GREAT SCORE!';sub='Really good! A little more revision and you are ready.'}
+  else if(pct>=60){emoji='📚';title='GOOD EFFORT!';sub='You are getting there. Review the wrong answers carefully.'}
+  else{emoji='💪';title='KEEP PRACTISING';sub='Don\'t give up! Revise the chapters and try again.'}
+
+  document.getElementById('testScreen').style.display = 'none';
+  const res = document.getElementById('resultScreen');
+  res.style.display = 'block';
+
+  // Review HTML
+  const reviewHTML = qs.map((q,i) => {
+    const userAns = answers[i];
+    const isCorrect = userAns === q.ans;
+    const optsHTML = q.opts.map((o,oi) => {
+      let cls = '';
+      if (oi===q.ans) cls='correct';
+      else if (oi===userAns && !isCorrect) cls='wrong';
+      return `<div class="rev-opt ${cls}">
+        <span style="font-weight:700;width:20px">${'ABCD'[oi]}</span>${o}
+        ${oi===q.ans?'✓':''}${oi===userAns&&!isCorrect?'✗':''}
+      </div>`;
+    }).join('');
+    return `<div class="rev-item">
+      <div class="rev-q">Q${i+1}. ${q.q}
+        <span style="float:right;font-size:11px;padding:2px 8px;border-radius:10px;background:${isCorrect?'rgba(70,211,105,.15)':userAns===undefined?'rgba(255,170,0,.15)':'rgba(229,9,20,.15)'};color:${isCorrect?'#46d369':userAns===undefined?'#ffaa00':'#ff6b6b'};font-weight:700">
+          ${isCorrect?'+4':userAns===undefined?'Skipped':'-1'}
+        </span>
+      </div>
+      <div class="rev-opts">${optsHTML}</div>
+      <div class="rev-explain">💡 ${q.explain}</div>
+    </div>`;
+  }).join('');
+
+  res.innerHTML = `
+    <div class="res-hero">
+      <div class="res-emoji">${emoji}</div>
+      <div class="res-title">${title}</div>
+      <div class="res-sub">${sub}</div>
+      <div class="res-score-card">
+        <div class="res-pct">${pct}%</div>
+        <div class="res-marks">Marks: ${marks} / ${qs.length*4} &nbsp;·&nbsp; Grade ${grade}</div>
+      </div>
+    </div>
+    <div class="res-breakdown">
+      <div class="rb correct"><div class="rb-num">${correct}</div><div class="rb-label">Correct</div></div>
+      <div class="rb wrong"><div class="rb-num">${wrong}</div><div class="rb-label">Wrong</div></div>
+      <div class="rb skip"><div class="rb-num">${skippedCount}</div><div class="rb-label">Skipped</div></div>
+      <div class="rb accuracy"><div class="rb-num">${pct}%</div><div class="rb-label">Score</div></div>
+    </div>
+    <div class="res-btns">
+      <button class="rbtn primary" onclick="location.reload()">Back to Tests</button>
+      <button class="rbtn secondary" onclick="startTest('${currentTest.id}')">Retake Test 🔄</button>
+      <button class="rbtn secondary" onclick="document.getElementById('reviewSec').scrollIntoView({behavior:'smooth'})">Review Answers 📋</button>
+    </div>
+    <div id="reviewSec">
+      <div class="review-title">Answer Review</div>
+      ${reviewHTML}
+    </div>`;
+}
+
+renderHome();
+</script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gurukul — My List</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--red:#e50914;--bg:#141414;--card:#1f1f1f;--border:#2a2a2a}
+html,body{background:var(--bg);color:#fff;font-family:'Inter',sans-serif;min-height:100vh}
+.nav{display:flex;align-items:center;gap:28px;padding:0 60px;height:68px;background:rgba(0,0,0,0.95);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border)}
+.nlogo{font-family:'Bebas Neue',cursive;font-size:30px;color:var(--red);letter-spacing:2px;text-decoration:none}
+.nlinks{display:flex;gap:18px;list-style:none}
+.nlinks a{color:#e5e5e5;text-decoration:none;font-size:13px;transition:color .15s}.nlinks a:hover{color:#fff}
+.nlinks .act a{color:#fff;font-weight:700}
+.nav-av{margin-left:auto;width:32px;height:32px;border-radius:4px;background:linear-gradient(135deg,var(--red),#ff6b6b);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800}
+
+.hero-sub{padding:60px 60px 40px}
+.hero-sub h1{font-family:'Bebas Neue',cursive;font-size:clamp(40px,5vw,64px);letter-spacing:2px;margin-bottom:10px}
+.hero-sub p{color:#999;font-size:15px}
+
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin:0 60px 32px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:12px 20px;font-size:13px;font-weight:600;color:#808080;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .2s}
+.tab:hover{color:#fff}.tab.on{color:#fff;border-bottom-color:#fff}
+
+.content{padding:0 60px 80px}
+
+/* EMPTY STATE */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;text-align:center}
+.empty-icon{font-size:64px;margin-bottom:20px;opacity:.4}
+.empty-title{font-size:22px;font-weight:700;margin-bottom:10px;color:#666}
+.empty-sub{font-size:14px;color:#444;margin-bottom:24px;line-height:1.6}
+.empty-btn{padding:12px 28px;background:var(--red);border:none;border-radius:4px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block}
+
+/* GRID */
+.list-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.lcard{background:var(--card);border-radius:8px;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;border:1px solid transparent;position:relative}
+.lcard:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.6);border-color:rgba(255,255,255,.1)}
+.lcard-thumb{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.lcard-bg{position:absolute;inset:0}
+.lcard-icon{position:relative;z-index:1;font-size:40px}
+.lcard-scrim{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.7) 0%,transparent 60%);z-index:2}
+.lcard-ch{position:absolute;bottom:8px;left:10px;z-index:3;font-size:10px;font-weight:700;color:rgba(255,255,255,.8);letter-spacing:1.5px;text-transform:uppercase}
+.lcard-remove{position:absolute;top:8px;right:8px;z-index:5;width:28px;height:28px;background:rgba(0,0,0,.7);border-radius:50%;display:flex;align-items:center;justify-content:center;border:none;color:#fff;cursor:pointer;opacity:0;transition:opacity .2s;font-size:14px}
+.lcard:hover .lcard-remove{opacity:1}
+.lcard-remove:hover{background:var(--red)}
+.lcard-prog{height:3px;background:#333}
+.lcard-progfill{height:100%;background:var(--red)}
+.lcard-info{padding:12px 14px}
+.lcard-title{font-size:13px;font-weight:700;margin-bottom:6px;line-height:1.35}
+.lcard-meta{display:flex;align-items:center;gap:8px;font-size:11px;color:#777}
+.lcard-diff{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px}
+.diff-easy{color:#46d369;background:rgba(70,211,105,.1)}
+.diff-medium{color:#ffaa00;background:rgba(255,170,.0,.1)}
+.diff-hard{color:#ff6b6b;background:rgba(229,9,20,.1)}
+.lcard-date{font-size:10px;color:#555;margin-top:4px}
+
+/* CONTINUE WATCHING special row */
+.section-title{font-size:18px;font-weight:700;margin-bottom:16px;color:#e5e5e5;display:flex;align-items:center;gap:10px}
+.section-title span{font-size:13px;color:#666;font-weight:400}
+.section{margin-bottom:40px}
+
+/* progress card variant */
+.prog-bar-sm{height:3px;background:#333;border-radius:2px;margin-top:6px;overflow:hidden}
+.prog-fill-sm{height:100%;background:var(--red);border-radius:2px}
+.prog-pct{font-size:10px;color:var(--red);font-weight:700;margin-top:3px}
+
+#toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:#fff;color:#000;padding:11px 22px;border-radius:4px;font-size:14px;font-weight:700;z-index:9999;opacity:0;pointer-events:none;transition:all .3s;box-shadow:0 4px 24px rgba(0,0,0,.5)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:768px){
+  .nav{padding:0 18px}.nlinks{display:none}
+  .hero-sub,.content,.tabs{padding-left:18px;padding-right:18px;margin-left:0;margin-right:0}
+  .list-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="nlogo" href="index.html">GURUKUL</a>
+  <ul class="nlinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="subjects.html">Subjects</a></li>
+    <li class="act"><a href="mylist.html">My List</a></li>
+    <li><a href="tests.html">Tests</a></li>
+    <li><a href="leaderboard.html">Leaderboard</a></li>
+  </ul>
+  <div class="nav-av">S</div>
+</nav>
+
+<div class="hero-sub">
+  <h1>My List</h1>
+  <p id="listCount">Your saved chapters — watch anytime</p>
+</div>
+
+<div class="tabs">
+  <div class="tab on" onclick="setTab(this,'all')">All Saved</div>
+  <div class="tab" onclick="setTab(this,'continue')">Continue Watching</div>
+  <div class="tab" onclick="setTab(this,'completed')">Completed ✓</div>
+  <div class="tab" onclick="setTab(this,'physics')">Physics</div>
+  <div class="tab" onclick="setTab(this,'chemistry')">Chemistry</div>
+  <div class="tab" onclick="setTab(this,'maths')">Maths</div>
+  <div class="tab" onclick="setTab(this,'biology')">Biology</div>
+</div>
+
+<div class="content" id="content"></div>
+<div id="toast"></div>
+
+<script>
+// Sample list data — in real app this comes from Firebase
+const MY_LIST = [
+  {t:"Electric Charges & Fields",i:"⚡",g:"linear-gradient(135deg,#080836,#0c0c66)",ch:"Ch.1",subj:"physics",dif:"Medium",dur:"4h 20m",p:65,saved:"2 days ago"},
+  {t:"Solutions",i:"🧪",g:"linear-gradient(135deg,#003d3d,#007070)",ch:"Ch.2",subj:"chemistry",dif:"Medium",dur:"3h 40m",p:50,saved:"3 days ago"},
+  {t:"Electrochemistry",i:"⚗️",g:"linear-gradient(135deg,#2d0d4e,#5c1a9e)",ch:"Ch.3",subj:"chemistry",dif:"Hard",dur:"4h 20m",p:20,saved:"3 days ago"},
+  {t:"Relations & Functions",i:"🔗",g:"linear-gradient(135deg,#0d001a,#280040)",ch:"Ch.1",subj:"maths",dif:"Easy",dur:"3h 20m",p:100,saved:"1 week ago"},
+  {t:"Inverse Trigonometric Functions",i:"📐",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.2",subj:"maths",dif:"Medium",dur:"2h 40m",p:75,saved:"1 week ago"},
+  {t:"Ray Optics",i:"🔭",g:"linear-gradient(135deg,#00001a,#000066)",ch:"Ch.9",subj:"physics",dif:"Medium",dur:"5h 20m",p:85,saved:"5 days ago"},
+  {t:"Reproduction in Organisms",i:"🌸",g:"linear-gradient(135deg,#1a003d,#3d0080)",ch:"Ch.1",subj:"biology",dif:"Easy",dur:"2h 30m",p:90,saved:"4 days ago"},
+  {t:"Molecular Basis of Inheritance",i:"🔬",g:"linear-gradient(135deg,#1a1a3d,#2d2d8c)",ch:"Ch.6",subj:"biology",dif:"Hard",dur:"5h 00m",p:20,saved:"2 days ago"},
+  {t:"The Last Lesson",i:"📚",g:"linear-gradient(135deg,#0d1a2d,#1a3d6b)",ch:"Prose 1",subj:"english",dif:"Easy",dur:"1h 20m",p:100,saved:"1 week ago"},
+  {t:"Python Revision Tour",i:"🐍",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Ch.1",subj:"cs",dif:"Easy",dur:"3h 00m",p:90,saved:"4 days ago"},
+];
+
+let currentTab = 'all';
+let listData = [...MY_LIST];
+
+function setTab(el, tab) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  currentTab = tab;
+  render();
+}
+
+function getFiltered() {
+  if (currentTab === 'all') return listData;
+  if (currentTab === 'continue') return listData.filter(c=>c.p>0&&c.p<100);
+  if (currentTab === 'completed') return listData.filter(c=>c.p===100);
+  return listData.filter(c=>c.subj===currentTab);
+}
+
+function render() {
+  const cont = document.getElementById('content');
+  const items = getFiltered();
+  document.getElementById('listCount').textContent = `${listData.length} saved chapters — watch anytime`;
+
+  if (!items.length) {
+    cont.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">📋</div>
+        <div class="empty-title">Nothing here yet</div>
+        <div class="empty-sub">Chapters you save will appear here.<br>Browse subjects and click + My List to save chapters.</div>
+        <a class="empty-btn" href="subjects.html">Browse Subjects</a>
+      </div>`;
+    return;
+  }
+
+  // Group: continue watching + others
+  const cont_watch = items.filter(c=>c.p>0&&c.p<100);
+  const completed = items.filter(c=>c.p===100);
+  const notStarted = items.filter(c=>c.p===0);
+
+  cont.innerHTML = '';
+
+  if (currentTab === 'all') {
+    if (cont_watch.length) {
+      cont.appendChild(makeSection('▶ Continue Watching', cont_watch));
+    }
+    if (notStarted.length) {
+      cont.appendChild(makeSection('📌 Saved — Not Started', notStarted));
+    }
+    if (completed.length) {
+      cont.appendChild(makeSection('✅ Completed', completed));
+    }
+  } else {
+    cont.appendChild(makeSection('', items));
+  }
+}
+
+function makeSection(title, items) {
+  const sec = document.createElement('div');
+  sec.className = 'section';
+  if (title) {
+    sec.innerHTML = `<div class="section-title">${title} <span>${items.length} chapters</span></div>`;
+  }
+  const grid = document.createElement('div');
+  grid.className = 'list-grid';
+  items.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'lcard';
+    card.innerHTML = `
+      <div class="lcard-thumb">
+        <div class="lcard-bg" style="background:${c.g}"></div>
+        <div class="lcard-icon">${c.i}</div>
+        <div class="lcard-scrim"></div>
+        <div class="lcard-ch">${c.ch}</div>
+        <button class="lcard-remove" onclick="removeItem(event,'${c.t}')">✕</button>
+      </div>
+      ${c.p>0?`<div class="lcard-prog"><div class="lcard-progfill" style="width:${c.p}%"></div></div>`:''}
+      <div class="lcard-info">
+        <div class="lcard-title">${c.t}</div>
+        <div class="lcard-meta">
+          <span class="lcard-diff diff-${c.dif.toLowerCase()}">${c.dif}</span>
+          <span>${c.dur}</span>
+          ${c.p===100?'<span style="color:#46d369;font-weight:700">✓ Done</span>':''}
+        </div>
+        ${c.p>0&&c.p<100?`<div class="prog-bar-sm"><div class="prog-fill-sm" style="width:${c.p}%"></div></div><div class="prog-pct">${c.p}% complete</div>`:''}
+        <div class="lcard-date">Saved ${c.saved}</div>
+      </div>`;
+    card.addEventListener('click', e => {
+      if (e.target.closest('.lcard-remove')) return;
+      window.location.href = `watch.html?subj=${c.subj}&idx=0`;
+    });
+    grid.appendChild(card);
+  });
+  sec.appendChild(grid);
+  return sec;
+}
+
+function removeItem(e, title) {
+  e.stopPropagation();
+  listData = listData.filter(c=>c.t!==title);
+  render();
+  showToast('Removed from My List');
+}
+
+let tt;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(tt);
+  tt = setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+render();
+</script>
+</body>
+</html>
