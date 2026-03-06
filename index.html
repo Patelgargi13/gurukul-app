@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gurukul</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--red:#e50914;--card:#1f1f1f;--border:#2a2a2a}
+html,body{background:#000;color:#fff;font-family:'Inter',sans-serif;overflow-x:hidden}
+
+/* ══ INTRO ══ */
+#intro{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:99999;transition:opacity 1s ease}
+#intro.out{opacity:0;pointer-events:none}
+.gs{position:relative;width:180px;height:220px;display:flex;align-items:center;justify-content:center}
+.gb{font-family:'Bebas Neue',cursive;font-size:210px;line-height:1;color:var(--red);position:absolute;z-index:2;
+  animation:gb 0.8s cubic-bezier(0.16,1,0.3,1) 0.3s both;
+  filter:drop-shadow(0 0 50px rgba(229,9,20,1)) drop-shadow(0 0 120px rgba(229,9,20,0.6))}
+@keyframes gb{from{opacity:0;transform:scale(2.4);filter:blur(30px) drop-shadow(0 0 120px #e50914)}to{opacity:1;transform:scale(1)}}
+.gsk{position:absolute;inset:-30px 0;overflow:hidden;z-index:3;pointer-events:none}
+.sk{position:absolute;top:-20%;bottom:-20%;opacity:0;mix-blend-mode:screen}
+.sk:nth-child(1){left:14%;width:2px;background:linear-gradient(180deg,transparent 0%,rgba(255,90,90,.95) 40%,#ff3232 50%,rgba(255,90,90,.95) 60%,transparent);animation:skf .55s ease .95s both}
+.sk:nth-child(2){left:24%;width:5px;background:linear-gradient(180deg,transparent,rgba(255,70,70,.8) 40%,#ff2828 50%,rgba(255,70,70,.8) 60%,transparent);animation:skf .62s ease 1.04s both}
+.sk:nth-child(3){left:34%;width:2px;background:linear-gradient(180deg,transparent,rgba(255,110,110,.9) 38%,#ff3c3c 50%,rgba(255,110,110,.9) 62%,transparent);animation:skf .5s ease 1.0s both}
+.sk:nth-child(4){left:46%;width:6px;background:linear-gradient(180deg,transparent,rgba(255,80,80,.85) 35%,#ff2020 50%,rgba(255,80,80,.85) 65%,transparent);animation:skf .68s ease .9s both}
+.sk:nth-child(5){left:58%;width:2px;background:linear-gradient(180deg,transparent,rgba(255,100,100,.9) 40%,#ff3030 50%,rgba(255,100,100,.9) 60%,transparent);animation:skf .52s ease 1.08s both}
+.sk:nth-child(6){left:68%;width:3px;background:linear-gradient(180deg,transparent,rgba(255,75,75,.8) 40%,#ff2525 50%,rgba(255,75,75,.8) 60%,transparent);animation:skf .58s ease 1.02s both}
+.sk:nth-child(7){left:78%;width:2px;background:linear-gradient(180deg,transparent,rgba(255,105,105,.85) 40%,#ff3535 50%,rgba(255,105,105,.85) 60%,transparent);animation:skf .5s ease 1.13s both}
+.sk:nth-child(8){left:41%;width:1px;background:linear-gradient(180deg,transparent,rgba(255,140,140,.5) 45%,rgba(255,90,90,.65) 50%,rgba(255,140,140,.5) 55%,transparent);animation:skf .4s ease 1.19s both}
+.sk:nth-child(9){left:53%;width:1px;background:linear-gradient(180deg,transparent,rgba(255,130,130,.5) 45%,rgba(255,85,85,.6) 50%,rgba(255,130,130,.5) 55%,transparent);animation:skf .4s ease 1.24s both}
+@keyframes skf{0%{opacity:0;transform:translateY(-100%)}15%{opacity:1}80%{opacity:.9}100%{opacity:0;transform:translateY(100%)}}
+.gbar{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);height:4px;background:var(--red);
+  box-shadow:0 0 20px var(--red),0 0 50px rgba(229,9,20,.5);border-radius:2px;
+  animation:gbaranim .5s ease .88s both;z-index:4}
+@keyframes gbaranim{from{width:0;opacity:0}to{width:140px;opacity:1}}
+.gfloor{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);width:220px;height:26px;
+  background:radial-gradient(ellipse,rgba(229,9,20,.55) 0%,transparent 68%);
+  animation:gfloorm .4s ease .94s both;z-index:1}
+@keyframes gfloorm{from{opacity:0}to{opacity:1}}
+
+/* ══ AUTH ══ */
+#auth{display:none;position:fixed;inset:0;z-index:9998;background:linear-gradient(180deg,rgba(0,0,0,.78) 0%,rgba(0,0,0,.55) 50%,rgba(0,0,0,.78) 100%),#0a0a0a;overflow-y:auto}
+#auth.show{display:flex;flex-direction:column;align-items:center}
+.anav{width:100%;padding:24px 60px;display:flex}
+.alogo{font-family:'Bebas Neue',cursive;font-size:40px;color:var(--red);letter-spacing:3px;text-shadow:0 0 24px rgba(229,9,20,.55)}
+.abox{background:rgba(0,0,0,.88);border-radius:6px;padding:56px 64px;width:100%;max-width:460px;margin:auto}
+.atitle{font-size:32px;font-weight:800;margin-bottom:28px}
+.ascr{display:none}.ascr.on{display:block}
+.fg{margin-bottom:16px;position:relative}
+.fg input{width:100%;padding:20px 16px 8px;background:#333;border:none;border-radius:4px;color:#fff;font-size:16px;outline:none;transition:background .2s;font-family:inherit}
+.fg input:focus{background:#454545}
+.fg label{position:absolute;top:50%;left:16px;transform:translateY(-50%);color:#8c8c8c;font-size:16px;transition:all .15s;pointer-events:none}
+.fg input:focus~label,.fg input:not(:placeholder-shown)~label{top:10px;font-size:11px;font-weight:700;letter-spacing:.5px;transform:none}
+.abtn{width:100%;padding:17px;background:var(--red);border:none;border-radius:4px;color:#fff;font-size:16px;font-weight:700;cursor:pointer;margin-top:8px;transition:background .2s;font-family:inherit}
+.abtn:hover{background:#f40612}
+.aor{display:flex;align-items:center;gap:12px;color:#8c8c8c;font-size:13px;margin:20px 0}
+.aor::before,.aor::after{content:'';flex:1;height:1px;background:#444}
+.alink{color:#fff;font-weight:700;cursor:pointer}.alink:hover{text-decoration:underline}
+.asm{color:#8c8c8c;font-size:14px;margin-top:14px;text-align:center}
+.flink{color:#8c8c8c;font-size:13px;cursor:pointer;text-align:right;display:block;margin-top:6px}.flink:hover{color:#fff}
+.aerr{color:#e87c03;font-size:13px;margin-top:8px;display:none}
+.aok{color:#46d369;font-size:13px;margin-top:8px;display:none}
+
+/* ══ NAVBAR ══ */
+#app{display:none}#app.show{display:block}
+.nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;gap:28px;padding:0 60px;height:68px;
+  background:linear-gradient(180deg,rgba(0,0,0,.95) 0%,transparent 100%);transition:background .3s}
+.nav.sc{background:rgba(20,20,20,.98);box-shadow:0 2px 20px rgba(0,0,0,.6)}
+.nlogo{font-family:'Bebas Neue',cursive;font-size:32px;color:var(--red);letter-spacing:2px;text-shadow:0 0 16px rgba(229,9,20,.5);cursor:pointer}
+.nlinks{display:flex;gap:18px;list-style:none}
+.nlinks a{color:#e5e5e5;text-decoration:none;font-size:13px;transition:color .15s}.nlinks a:hover{color:#b3b3b3}
+.nlinks .act a{color:#fff;font-weight:700}
+.nright{margin-left:auto;display:flex;align-items:center;gap:18px;position:relative}
+
+/* ── SEARCH BOX + DROPDOWN ── */
+.srchwrap{position:relative}
+.srch{display:flex;align-items:center;gap:8px;border:1px solid #ccc;padding:5px 12px;border-radius:2px;background:rgba(0,0,0,.65);transition:border-color .2s}
+.srch.focused{border-color:#fff;background:rgba(0,0,0,.85)}
+.srch input{background:none;border:none;color:#fff;font-size:13px;width:200px;outline:none;font-family:inherit}
+.srch input::placeholder{color:#888}
+/* search results dropdown */
+#srchDrop{
+  position:absolute;top:calc(100% + 6px);left:0;right:0;
+  background:#181818;border:1px solid #333;border-radius:4px;
+  max-height:420px;overflow-y:auto;z-index:600;
+  display:none;box-shadow:0 8px 40px rgba(0,0,0,.9);
+  scrollbar-width:thin;scrollbar-color:#444 transparent;
+}
+#srchDrop.open{display:block}
+.sdr-header{padding:10px 14px 6px;font-size:11px;font-weight:700;color:#888;letter-spacing:1.5px;text-transform:uppercase;border-bottom:1px solid #2a2a2a}
+.sdr-item{display:flex;align-items:center;gap:12px;padding:10px 14px;cursor:pointer;transition:background .15s}
+.sdr-item:hover{background:rgba(255,255,255,.08)}
+.sdr-thumb{width:64px;height:36px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.sdr-info{flex:1;min-width:0}
+.sdr-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sdr-sub{font-size:11px;color:#888;margin-top:2px}
+.sdr-badge{font-size:10px;font-weight:700;padding:2px 6px;border-radius:2px;flex-shrink:0}
+.sdr-empty{padding:20px 14px;font-size:13px;color:#666;text-align:center}
+.sdr-clear{padding:10px 14px;font-size:12px;color:#888;cursor:pointer;text-align:center;border-top:1px solid #2a2a2a}
+.sdr-clear:hover{color:#fff}
+
+.nav-av{width:32px;height:32px;border-radius:4px;background:linear-gradient(135deg,var(--red),#ff6b6b);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;cursor:pointer}
+
+/* ══ HERO ══ */
+.hero{height:96vh;min-height:600px;position:relative;display:flex;align-items:flex-end;padding:0 60px 110px;overflow:hidden}
+.hbg{position:absolute;inset:0;
+  background:linear-gradient(77deg,rgba(0,0,0,.88) 0%,rgba(0,0,0,0) 55%),
+  linear-gradient(180deg,rgba(20,20,20,0) 48%,rgba(20,20,20,.75) 80%,#141414 100%),
+  linear-gradient(135deg,#0a0a0a,#150202,#0a0a0a)}
+.hc{position:relative;z-index:2;max-width:580px}
+.hbadge{display:inline-flex;align-items:center;gap:6px;background:rgba(229,9,20,.9);padding:4px 12px;border-radius:2px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:18px}
+.htitle{font-family:'Bebas Neue',cursive;font-size:clamp(58px,8vw,96px);line-height:.9;letter-spacing:2px;margin-bottom:18px;text-shadow:2px 2px 10px rgba(0,0,0,.8)}
+.htitle .acc{color:var(--red)}
+.hmeta{display:flex;align-items:center;gap:12px;font-size:14px;margin-bottom:14px}
+.hmatch{color:#46d369;font-weight:700}
+.hrat{border:1px solid #ccc;padding:1px 7px;font-size:11px;border-radius:2px}
+.hhd{background:rgba(255,255,255,.15);padding:2px 7px;font-size:11px;border-radius:2px;font-weight:600}
+.hdesc{font-size:16px;line-height:1.68;color:#d2d2d2;max-width:450px;margin-bottom:28px;text-shadow:1px 1px 6px rgba(0,0,0,.9)}
+.hbtns{display:flex;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;border-radius:4px;font-size:16px;font-weight:700;cursor:pointer;border:none;transition:all .15s;font-family:inherit}
+.bw{background:#fff;color:#000}.bw:hover{background:rgba(255,255,255,.78)}
+.bg{background:rgba(109,109,110,.72);color:#fff}.bg:hover{background:rgba(109,109,110,.42)}
+
+/* ══ ROWS ══ */
+.rwrap{background:#141414;position:relative;z-index:2;padding-bottom:80px}
+.stabs{display:flex;border-bottom:2px solid #2a2a2a;margin:0 60px;overflow-x:auto;scrollbar-width:none}
+.stabs::-webkit-scrollbar{display:none}
+.stab{padding:14px 22px;font-size:13px;font-weight:600;color:#808080;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .2s}
+.stab:hover{color:#fff}.stab.on{color:#fff;border-bottom-color:#fff}
+.row{margin-bottom:2.5vw;padding:0 60px}
+.rtitle{font-size:clamp(16px,1.5vw,22px);font-weight:700;color:#e5e5e5;margin-bottom:12px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.rmore{font-size:12px;font-weight:700;color:#54b9c5;letter-spacing:1px;opacity:0;transform:translateX(-8px);transition:all .3s;display:flex;align-items:center}
+.rtitle:hover .rmore{opacity:1;transform:translateX(0)}
+.slwrap{position:relative}
+.slbtn{position:absolute;top:0;bottom:0;width:55px;background:rgba(20,20,20,.75);border:none;color:#fff;font-size:30px;cursor:pointer;z-index:20;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
+.slwrap:hover .slbtn{opacity:1}
+.slbtn.l{left:0;border-radius:0 5px 5px 0}.slbtn.r{right:0;border-radius:5px 0 0 5px}
+.crow{display:flex;gap:6px;overflow-x:auto;padding:14px 4px 60px;scroll-behavior:smooth;scrollbar-width:none}
+.crow::-webkit-scrollbar{display:none}
+
+/* ══ CARD — fixed hover expand ══ */
+.card{
+  flex:0 0 270px;border-radius:6px;cursor:pointer;
+  position:relative;z-index:1;
+  /* KEY: give room below for the expand panel */
+  margin-bottom:0;
+  transition:transform .3s ease, z-index 0s .3s;
+}
+.card:hover{
+  transform:scale(1.22) translateY(-10px);
+  z-index:200;
+  transition:transform .3s ease .18s, z-index 0s .18s;
+}
+.card:first-child:hover{transform:scale(1.22) translateY(-10px) translateX(12%)}
+.card:last-child:hover{transform:scale(1.22) translateY(-10px) translateX(-12%)}
+
+/* The visible part (thumb) */
+.cin{border-radius:6px;overflow:hidden;background:var(--card);box-shadow:0 4px 20px rgba(0,0,0,.5);transition:box-shadow .3s;position:relative}
+.card:hover .cin{box-shadow:0 20px 60px rgba(0,0,0,.95),0 0 0 1px rgba(255,255,255,.12)}
+.ct{width:100%;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.ctbg{position:absolute;inset:0}
+.ctscrim{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.72) 0%,transparent 55%);z-index:2}
+.ctc{position:relative;z-index:3;text-align:center;pointer-events:none}
+.ctc .emi{font-size:52px;display:block}
+.ctc .chl{font-size:11px;color:rgba(255,255,255,.88);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-top:5px;display:block}
+.cstag{position:absolute;bottom:9px;left:11px;z-index:4;font-size:9px;font-weight:700;color:rgba(255,255,255,.75);letter-spacing:1.5px;text-transform:uppercase}
+.cpbar{height:3px;background:#555}
+.cpfill{height:100%;background:var(--red)}
+
+/* ── Expand panel: absolutely positioned BELOW the card thumb ── */
+.cexp{
+  position:absolute;
+  top:100%; /* sits right below .cin */
+  left:0;right:0;
+  background:var(--card);
+  border-radius:0 0 6px 6px;
+  padding:14px 14px 16px;
+  /* hidden by default */
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(-4px);
+  transition:opacity .25s ease .18s, transform .25s ease .18s;
+  z-index:201;
+  box-shadow:0 22px 50px rgba(0,0,0,.9);
+  min-width:100%;
+}
+.card:hover .cexp{
+  opacity:1;
+  pointer-events:all;
+  transform:translateY(0);
+}
+
+/* action buttons row */
+.cacts{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.ca{
+  width:34px;height:34px;border-radius:50%;
+  border:2px solid rgba(255,255,255,.55);
+  background:rgba(0,0,0,.5);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .15s;flex-shrink:0;
+}
+.ca:hover{border-color:#fff;background:rgba(255,255,255,.2);transform:scale(1.12)}
+.ca.play{background:#fff;border-color:#fff;color:#000}.ca.play:hover{background:rgba(255,255,255,.82)}
+.caml{margin-left:auto}
+/* tooltips on buttons */
+.ca{position:relative}
+.ca .tip{
+  position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  background:#fff;color:#000;font-size:10px;font-weight:700;padding:3px 7px;border-radius:3px;
+  white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;
+}
+.ca:hover .tip{opacity:1}
+.cn{font-size:13px;font-weight:700;margin-bottom:6px;line-height:1.35}
+.ctags{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.tg{color:#46d369;font-weight:700;font-size:11px}
+.ti{font-size:10px;color:#aaa;display:flex;align-items:center;gap:3px}
+.tdot{width:3px;height:3px;background:#666;border-radius:50%;display:inline-block}
+
+/* ══ MODAL ══ */
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:9100;display:none;align-items:flex-start;justify-content:center;padding:30px 16px;overflow-y:auto}
+#ov.open{display:flex}
+.mdl{background:#181818;border-radius:10px;width:100%;max-width:900px;position:relative;box-shadow:0 0 80px rgba(0,0,0,.95);margin:auto}
+.mcls{position:absolute;top:16px;right:16px;z-index:20;width:36px;height:36px;border-radius:50%;background:rgba(24,24,24,.95);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.mcls:hover{background:#444}
+.mhero{width:100%;aspect-ratio:16/9;position:relative;border-radius:10px 10px 0 0;overflow:hidden;display:flex;align-items:flex-end}
+.mhbg{position:absolute;inset:0;font-size:100px;display:flex;align-items:center;justify-content:center}
+.mhf{position:absolute;inset:0;background:linear-gradient(0deg,rgba(24,24,24,1) 0%,rgba(24,24,24,0) 58%)}
+.mhi{position:relative;z-index:2;padding:32px}
+.mtitle{font-family:'Bebas Neue',cursive;font-size:54px;letter-spacing:1px;margin-bottom:16px}
+.mbtns{display:flex;gap:10px;flex-wrap:wrap}
+.mbody{padding:24px 32px 36px;display:grid;grid-template-columns:2fr 1fr;gap:28px}
+.mdesc{font-size:14px;line-height:1.78;color:#ccc;margin-bottom:20px}
+.mmeta p{margin-bottom:10px;font-size:13px;line-height:1.5}
+.mmeta p span:first-child{color:#777}
+.chlt{font-size:22px;font-weight:800;margin-bottom:14px}
+.chi{display:flex;align-items:center;gap:14px;padding:14px 10px;border-top:1px solid #2a2a2a;cursor:pointer;border-radius:4px;transition:background .15s}
+.chi:hover{background:rgba(255,255,255,.06)}
+.chin{font-family:'Bebas Neue',cursive;font-size:38px;color:#555;width:34px;flex-shrink:0;text-align:center}
+.chtmb{width:130px;height:74px;border-radius:4px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;position:relative}
+.chov{position:absolute;inset:0;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;transition:background .2s}
+.chi:hover .chov{background:rgba(0,0,0,.45)}
+.chpl{width:38px;height:38px;background:rgba(255,255,255,.95);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.7);transition:all .2s}
+.chi:hover .chpl{opacity:1;transform:scale(1)}
+.chif{flex:1}.chif h4{font-size:14px;font-weight:700;margin-bottom:4px}.chif p{font-size:12px;color:#aaa;line-height:1.5}
+.chd{font-size:12px;color:#aaa;flex-shrink:0}
+
+/* ══ TOAST ══ */
+#toast{position:fixed;bottom:40px;left:50%;transform:translateX(-50%) translateY(20px);background:#fff;color:#000;padding:12px 26px;border-radius:4px;font-size:14px;font-weight:700;z-index:99999;opacity:0;pointer-events:none;transition:all .3s;box-shadow:0 4px 28px rgba(0,0,0,.5)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+footer{background:#141414;border-top:1px solid #222;padding:48px 60px 34px}
+.flo{font-family:'Bebas Neue',cursive;font-size:22px;color:var(--red);opacity:.6;letter-spacing:2px;margin-bottom:18px}
+.fli{display:flex;flex-wrap:wrap;gap:10px 28px;list-style:none;margin-bottom:18px}
+.fli li a{font-size:13px;color:#777;text-decoration:none;transition:color .2s}.fli li a:hover{color:#ccc}
+.fco{font-size:12px;color:#444}
+
+@media(max-width:768px){
+  .nav{padding:0 18px}.nlinks{display:none}
+  .hero{padding:0 18px 90px}
+  .row,.stabs{padding:0 18px;margin-left:0;margin-right:0}
+  .card{flex:0 0 185px}.card:hover{transform:scale(1.14) translateY(-6px)}
+  .mbody{grid-template-columns:1fr}
+  .abox{padding:34px 26px;margin:20px 16px}
+  footer{padding:36px 20px}
+  .srch input{width:130px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ INTRO ══ -->
+<div id="intro">
+  <div class="gs">
+    <div class="gb">G</div>
+    <div class="gsk">
+      <div class="sk"></div><div class="sk"></div><div class="sk"></div>
+      <div class="sk"></div><div class="sk"></div><div class="sk"></div>
+      <div class="sk"></div><div class="sk"></div><div class="sk"></div>
+    </div>
+    <div class="gbar"></div>
+    <div class="gfloor"></div>
+  </div>
+</div>
+
+<!-- ══ AUTH ══ -->
+<div id="auth">
+  <div class="anav"><div class="alogo">GURUKUL</div></div>
+  <div class="abox">
+
+    <div class="ascr on" id="scr-login">
+      <h1 class="atitle">Sign In</h1>
+      <div class="fg"><input type="email" id="lem" placeholder=" "><label>Email or mobile number</label></div>
+      <div class="fg"><input type="password" id="lpw" placeholder=" "><label>Password</label></div>
+      <div class="aerr" id="lerr"></div>
+      <button class="abtn" onclick="doLogin()">Sign In</button>
+      <span class="flink" onclick="go('forgot')">Forgot password?</span>
+      <div class="aor"><span>OR</span></div>
+      <div class="asm">New to Gurukul? <span class="alink" onclick="go('signup')">Sign up now.</span></div>
+    </div>
+
+    <div class="ascr" id="scr-signup">
+      <h1 class="atitle">Create Account</h1>
+      <div class="fg"><input type="text" id="snm" placeholder=" "><label>Full name</label></div>
+      <div class="fg"><input type="email" id="sem" placeholder=" "><label>Email address</label></div>
+      <div class="fg"><input type="password" id="spw" placeholder=" "><label>Password (min 8 chars)</label></div>
+      <div class="fg"><input type="text" id="scl" placeholder=" "><label>Class / Grade (e.g. 12th)</label></div>
+      <div class="aerr" id="serr"></div>
+      <button class="abtn" onclick="doSignup()">Create Account</button>
+      <div class="asm" style="margin-top:14px">Already have an account? <span class="alink" onclick="go('login')">Sign in.</span></div>
+    </div>
+
+    <div class="ascr" id="scr-forgot">
+      <h1 class="atitle">Forgot Password</h1>
+      <p style="color:#aaa;font-size:14px;margin-bottom:22px;line-height:1.65">Enter the email linked to your Gurukul account and we'll send a reset link.</p>
+      <div class="fg"><input type="email" id="fem" placeholder=" "><label>Email address</label></div>
+      <div class="aok" id="fok">✓ Reset link sent! Check your inbox.</div>
+      <div class="aerr" id="ferr"></div>
+      <button class="abtn" onclick="doForgot()">Send Reset Link</button>
+      <div class="asm" style="margin-top:14px">Remember it? <span class="alink" onclick="go('login')">Sign in.</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+<div id="app">
+
+  <nav class="nav" id="nav">
+    <div class="nlogo">GURUKUL</div>
+    <ul class="nlinks">
+      <li class="act"><a href="#">Home</a></li>
+      <li><a href="#">Subjects</a></li>
+      <li><a href="#">My List</a></li>
+      <li><a href="#">Tests</a></li>
+      <li><a href="#">Leaderboard</a></li>
+    </ul>
+    <div class="nright">
+      <!-- SEARCH WITH DROPDOWN -->
+      <div class="srchwrap">
+        <div class="srch" id="srchBox">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="srchInput" placeholder="Search chapters, subjects…" autocomplete="off">
+        </div>
+        <div id="srchDrop"></div>
+      </div>
+      <div class="nav-av" id="uinit">S</div>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="hbg"></div>
+    <div class="hc">
+      <div class="hbadge">⚡ Start Here</div>
+      <h1 class="htitle">ELECTRO<br><span class="acc">STATICS</span></h1>
+      <div class="hmeta"><span class="hmatch">98% Match</span><span>2024</span><span class="hrat">U/A</span><span class="hhd">HD</span></div>
+      <p class="hdesc">The foundation of Class 12 Physics. Master Coulomb's Law, Electric Fields, Gauss's Theorem and Capacitance — with 100+ solved examples and stunning visuals.</p>
+      <div class="hbtns">
+        <button class="btn bw" onclick="openMBI('physics',0)"><svg width="22" height="22" viewBox="0 0 24 24" fill="black"><polygon points="5,3 19,12 5,21"/></svg>Play</button>
+        <button class="btn bg" onclick="openMBI('physics',0)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>More Info</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="rwrap">
+    <div class="stabs" id="stabs">
+      <div class="stab on" onclick="setTab(this,'all')">All</div>
+      <div class="stab" onclick="setTab(this,'physics')">⚛️ Physics</div>
+      <div class="stab" onclick="setTab(this,'chemistry')">🧪 Chemistry</div>
+      <div class="stab" onclick="setTab(this,'maths')">📐 Mathematics</div>
+      <div class="stab" onclick="setTab(this,'biology')">🧬 Biology</div>
+      <div class="stab" onclick="setTab(this,'english')">📖 English</div>
+      <div class="stab" onclick="setTab(this,'cs')">💻 Comp. Sci</div>
+    </div>
+    <div style="height:32px"></div>
+
+    <div class="row" id="row-continue" style="display:none">
+      <div class="rtitle">▶ Continue Watching <span class="rmore">See all ›</span></div>
+      <div class="slwrap"><button class="slbtn l" onclick="sr('rc',−1)">‹</button><div class="crow" id="rc"></div><button class="slbtn r" onclick="sr('rc',1)">›</button></div>
+    </div>
+    <div class="row" id="row-physics"><div class="rtitle">⚛️ Physics <span class="rmore">See all ›</span></div><div class="slwrap"><button class="slbtn l" onclick="sr('rp',-1)">‹</button><div class="crow" id="rp"></div><button class="slbtn r" onclick="sr('rp',1)">›</button></div></div>
+    <div class="row" id="row-chemistry"><div class="rtitle">🧪 Chemistry <span class="rmore">See all ›</span></div><div class="slwrap"><button class="slbtn l" onclick="sr('rch',-1)">‹</button><div class="crow" id="rch"></div><button class="slbtn r" onclick="sr('rch',1)">›</button></div></div>
+    <div class="row" id="row-maths"><div class="rtitle">📐 Mathematics <span class="rmore">See all ›</span></div><div class="slwrap"><button class="slbtn l" onclick="sr('rm',-1)">‹</button><div class="crow" id="rm"></div><button class="slbtn r" onclick="sr('rm',1)">›</button></div></div>
+    <div class="row" id="row-biology"><div class="rtitle">🧬 Biology <span class="rmore">See all ›</span></div><div class="slwrap"><button class="slbtn l" onclick="sr('rb',-1)">‹</button><div class="crow" id="rb"></div><button class="slbtn r" onclick="sr('rb',1)">›</button></div></div>
+    <div class="row" id="row-english"><div class="rtitle">📖 English <span class="rmore">See all ›</span></div><div class="slwrap"><button class="slbtn l" onclick="sr('re',-1)">‹</button><div class="crow" id="re"></div><button class="slbtn r" onclick="sr('re',1)">›</button></div></div>
+    <div class="row" id="row-cs"><div class="rtitle">💻 Computer Science <span class="rmore">See all ›</span></div><div class="slwrap"><button class="slbtn l" onclick="sr('rcs',-1)">‹</button><div class="crow" id="rcs"></div><button class="slbtn r" onclick="sr('rcs',1)">›</button></div></div>
+  </div>
+
+  <footer>
+    <div class="flo">GURUKUL</div>
+    <ul class="fli">
+      <li><a href="#">About</a></li><li><a href="#">Contact</a></li><li><a href="#">Privacy</a></li>
+      <li><a href="#">Terms</a></li><li><a href="#">Help Centre</a></li><li><a href="#">Download App</a></li>
+    </ul>
+    <p class="fco">© 2024 Gurukul. Educational use only.</p>
+  </footer>
+</div>
+
+<!-- MODAL -->
+<div id="ov" onclick="closeOv(event)">
+  <div class="mdl">
+    <button class="mcls" onclick="closeMdl()">✕</button>
+    <div class="mhero">
+      <div class="mhbg" id="mhbg"></div>
+      <div class="mhf"></div>
+      <div class="mhi">
+        <h1 class="mtitle" id="mtitle"></h1>
+        <div class="mbtns">
+          <button class="btn bw"><svg width="18" height="18" viewBox="0 0 24 24" fill="black"><polygon points="5,3 19,12 5,21"/></svg>Play</button>
+          <button class="btn bg" onclick="addList()">+ My List</button>
+          <button class="btn bg" onclick="shareNow()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Share</button>
+        </div>
+      </div>
+    </div>
+    <div class="mbody">
+      <div>
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:14px;flex-wrap:wrap">
+          <span style="color:#46d369;font-weight:700">97% Match</span>
+          <span style="font-size:13px">2024</span>
+          <span style="border:1px solid #ccc;padding:1px 7px;font-size:11px;border-radius:2px">U</span>
+          <span style="background:rgba(255,255,255,.15);padding:2px 7px;font-size:11px;border-radius:2px;font-weight:600">HD</span>
+        </div>
+        <p class="mdesc" id="mdesc"></p>
+        <div id="mchaps"></div>
+      </div>
+      <div class="mmeta">
+        <p><span>Subject: </span><span id="msubj"></span></p>
+        <p><span>Topics: </span><span id="mtop"></span></p>
+        <p><span>Duration: </span><span id="mdur"></span></p>
+        <p><span>Difficulty: </span><span id="mdif"></span></p>
+        <p><span>Board: </span><span>CBSE / ISC</span></p>
+        <p><span>Chapter: </span><span id="mch"></span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════
+// DATA — All 12th Std Chapters
+// ═══════════════════════════════════════
+const D = {
+  physics:[
+    {t:"Electric Charges & Fields",i:"⚡",g:"linear-gradient(135deg,#080836,#0c0c66)",ch:"Ch.1",tp:"Coulomb's Law, Gauss's Theorem",d:"4h 20m",dif:"Medium",desc:"Fundamental nature of electric charge, Coulomb's law in vector form, electric field lines, Gauss's theorem with applications.",p:65},
+    {t:"Electrostatic Potential & Capacitance",i:"🔋",g:"linear-gradient(135deg,#160a4e,#2a1070)",ch:"Ch.2",tp:"Potential, Capacitance, Dielectrics",d:"3h 45m",dif:"Medium",desc:"Electric potential, equipotential surfaces, capacitors in series/parallel, energy stored, dielectrics.",p:30},
+    {t:"Current Electricity",i:"💡",g:"linear-gradient(135deg,#0a280a,#1a5c1a)",ch:"Ch.3",tp:"Ohm's Law, Kirchhoff's Laws",d:"5h 10m",dif:"Hard",desc:"Drift velocity, Ohm's law, Kirchhoff's laws, Wheatstone bridge, potentiometer.",p:10},
+    {t:"Moving Charges & Magnetism",i:"🧲",g:"linear-gradient(135deg,#3d0000,#8b0000)",ch:"Ch.4",tp:"Biot-Savart, Ampere, Cyclotron",d:"4h 50m",dif:"Hard",desc:"Biot-Savart law, Ampere's law, motion in EM fields, galvanometer, cyclotron.",p:0},
+    {t:"Magnetism & Matter",i:"🌍",g:"linear-gradient(135deg,#0a183a,#182c6b)",ch:"Ch.5",tp:"Bar Magnet, Earth's Magnetism",d:"2h 40m",dif:"Easy",desc:"Magnetic dipole, earth's field, magnetic properties of materials, hysteresis.",p:0},
+    {t:"Electromagnetic Induction",i:"🌀",g:"linear-gradient(135deg,#1a1a00,#5c5c00)",ch:"Ch.6",tp:"Faraday, Lenz, Inductance",d:"3h 30m",dif:"Medium",desc:"Faraday's laws, Lenz's law, motional EMF, self and mutual inductance.",p:0},
+    {t:"Alternating Current",i:"〰️",g:"linear-gradient(135deg,#2e0c0c,#6b1a1a)",ch:"Ch.7",tp:"RLC, Resonance, Transformer",d:"4h 00m",dif:"Hard",desc:"Phasors, RLC series circuit, resonance, power factor, LC oscillations, transformers.",p:0},
+    {t:"Electromagnetic Waves",i:"📡",g:"linear-gradient(135deg,#001a2d,#003d6b)",ch:"Ch.8",tp:"Maxwell's Equations, EM Spectrum",d:"2h 20m",dif:"Easy",desc:"Displacement current, Maxwell's equations, EM spectrum from radio to gamma rays.",p:0},
+    {t:"Ray Optics & Optical Instruments",i:"🔭",g:"linear-gradient(135deg,#00001a,#000066)",ch:"Ch.9",tp:"Lenses, Mirrors, Microscope, Telescope",d:"5h 20m",dif:"Medium",desc:"Reflection, refraction, TIR, prism, lenses, eye, microscope, telescope.",p:85},
+    {t:"Wave Optics",i:"🌊",g:"linear-gradient(135deg,#001a1a,#005c5c)",ch:"Ch.10",tp:"Huygens, Interference, Diffraction",d:"3h 40m",dif:"Hard",desc:"Huygens principle, Young's double slit, coherence, diffraction, polarisation.",p:0},
+    {t:"Dual Nature of Radiation & Matter",i:"☢️",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Ch.11",tp:"Photoelectric Effect, de Broglie",d:"2h 50m",dif:"Medium",desc:"Photoelectric effect, Einstein's equation, wave-particle duality, de Broglie wavelength.",p:0},
+    {t:"Atoms",i:"⚛️",g:"linear-gradient(135deg,#001a0d,#004018)",ch:"Ch.12",tp:"Bohr Model, Hydrogen Spectrum",d:"2h 30m",dif:"Easy",desc:"Rutherford's model, Bohr's model, hydrogen spectrum, energy levels.",p:0},
+    {t:"Nuclei",i:"💥",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.13",tp:"Binding Energy, Radioactivity, Fission",d:"3h 10m",dif:"Medium",desc:"Binding energy, radioactivity, alpha/beta/gamma decay, fission and fusion.",p:0},
+    {t:"Semiconductor Electronics",i:"🖥️",g:"linear-gradient(135deg,#0d0d1a,#1a1a4d)",ch:"Ch.14",tp:"Diode, Transistor, Logic Gates",d:"4h 30m",dif:"Hard",desc:"p-n junction, diode, rectifiers, Zener, transistor, logic gates and digital circuits.",p:40},
+  ],
+  chemistry:[
+    {t:"The Solid State",i:"💎",g:"linear-gradient(135deg,#0d0d3d,#1a1a6b)",ch:"Ch.1",tp:"Crystal Structure, Packing, Defects",d:"3h 20m",dif:"Medium",desc:"Crystal lattices, unit cells, packing efficiency, crystal defects, electrical and magnetic properties.",p:0},
+    {t:"Solutions",i:"🧪",g:"linear-gradient(135deg,#003d3d,#007070)",ch:"Ch.2",tp:"Raoult's Law, Colligative Properties",d:"3h 40m",dif:"Medium",desc:"Concentration, Raoult's law, elevation of BP, depression of FP, osmotic pressure, abnormal molar mass.",p:50},
+    {t:"Electrochemistry",i:"⚗️",g:"linear-gradient(135deg,#2d0d4e,#5c1a9e)",ch:"Ch.3",tp:"Galvanic Cell, Nernst, Electrolysis",d:"4h 20m",dif:"Hard",desc:"Galvanic cells, Nernst equation, electrolysis, Faraday's laws, conductance, batteries, fuel cells.",p:20},
+    {t:"Chemical Kinetics",i:"💨",g:"linear-gradient(135deg,#3d1a00,#7a3300)",ch:"Ch.4",tp:"Rate Laws, Activation Energy, Arrhenius",d:"3h 10m",dif:"Medium",desc:"Rate expression, order of reactions, Arrhenius equation, activation energy, catalysis.",p:0},
+    {t:"Surface Chemistry",i:"🔵",g:"linear-gradient(135deg,#001a3d,#003470)",ch:"Ch.5",tp:"Adsorption, Colloids, Catalysis",d:"2h 30m",dif:"Easy",desc:"Adsorption, adsorption isotherms, catalysis, colloids, emulsions.",p:0},
+    {t:"Isolation of Elements",i:"⛏️",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.6",tp:"Metallurgy, Thermodynamics, Refining",d:"2h 10m",dif:"Easy",desc:"Concentration of ores, extraction, thermodynamic principles, refining methods.",p:0},
+    {t:"The p-Block Elements",i:"🧬",g:"linear-gradient(135deg,#0d3d00,#1a6b00)",ch:"Ch.7",tp:"Group 15-18 Elements & Compounds",d:"4h 40m",dif:"Hard",desc:"Groups 15-18: trends, preparation and properties of important compounds.",p:0},
+    {t:"The d & f Block Elements",i:"🔩",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.8",tp:"Transition Metals, Lanthanoids",d:"3h 00m",dif:"Medium",desc:"Transition metals properties, colour, magnetic properties, lanthanoids and actinoids.",p:0},
+    {t:"Coordination Compounds",i:"🌐",g:"linear-gradient(135deg,#001a3d,#003470)",ch:"Ch.9",tp:"IUPAC, Werner, Isomerism, CFT",d:"4h 00m",dif:"Hard",desc:"Ligands, IUPAC nomenclature, isomerism, bonding, crystal field theory, colour.",p:0},
+    {t:"Haloalkanes & Haloarenes",i:"🌡️",g:"linear-gradient(135deg,#1a3d00,#2d6600)",ch:"Ch.10",tp:"SN1, SN2, Elimination Reactions",d:"3h 50m",dif:"Hard",desc:"Nomenclature, SN1/SN2 mechanisms, stereochemistry, Grignard reagent.",p:10},
+    {t:"Alcohols, Phenols & Ethers",i:"🍶",g:"linear-gradient(135deg,#3d0d00,#6b1a00)",ch:"Ch.11",tp:"Preparation, Reactions, Acidity",d:"3h 20m",dif:"Medium",desc:"Classification, preparation, reactions, acidic character of phenol.",p:0},
+    {t:"Aldehydes, Ketones & Carboxylic Acids",i:"🧴",g:"linear-gradient(135deg,#0d1a3d,#1a2d6b)",ch:"Ch.12",tp:"Nucleophilic Addition, Reactions",d:"4h 10m",dif:"Hard",desc:"Nucleophilic addition, reactions, acidity of carboxylic acids, acid derivatives.",p:0},
+    {t:"Amines",i:"🔬",g:"linear-gradient(135deg,#2d0d00,#5c1a00)",ch:"Ch.13",tp:"Classification, Basicity, Reactions",d:"2h 50m",dif:"Medium",desc:"Classification, basicity, preparation, diazotisation and coupling reactions.",p:0},
+    {t:"Biomolecules",i:"🧫",g:"linear-gradient(135deg,#001a00,#003300)",ch:"Ch.14",tp:"Carbohydrates, Proteins, DNA, Vitamins",d:"3h 30m",dif:"Medium",desc:"Carbohydrates, amino acids, proteins, enzymes, nucleic acids, vitamins, hormones.",p:0},
+  ],
+  maths:[
+    {t:"Relations & Functions",i:"🔗",g:"linear-gradient(135deg,#0d001a,#280040)",ch:"Ch.1",tp:"Types of Relations, Composite, Inverse",d:"3h 20m",dif:"Easy",desc:"Types of relations, types of functions, composition, invertible functions, binary operations.",p:100},
+    {t:"Inverse Trigonometric Functions",i:"📐",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.2",tp:"Domain, Range, Graphs, Identities",d:"2h 40m",dif:"Medium",desc:"Definition, domain and range, graphs, elementary properties and identities.",p:75},
+    {t:"Matrices",i:"🔢",g:"linear-gradient(135deg,#1a1a00,#454500)",ch:"Ch.3",tp:"Operations, Transpose, Inverse",d:"3h 50m",dif:"Medium",desc:"Types of matrices, operations, transpose, symmetric, invertible matrices.",p:40},
+    {t:"Determinants",i:"📊",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.4",tp:"Properties, Cofactors, Cramer's Rule",d:"3h 30m",dif:"Medium",desc:"Properties, cofactors, adjoint, inverse, applications in solving equations.",p:20},
+    {t:"Continuity & Differentiability",i:"📈",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Ch.5",tp:"Limits, Chain Rule, MVT",d:"5h 30m",dif:"Hard",desc:"Continuity, differentiability, chain rule, implicit, parametric, log differentiation, MVT.",p:0},
+    {t:"Application of Derivatives",i:"📉",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Ch.6",tp:"Tangents, Maxima, Minima",d:"4h 20m",dif:"Hard",desc:"Rate of change, increasing/decreasing, tangents, normals, maxima and minima.",p:0},
+    {t:"Integrals",i:"∫",g:"linear-gradient(135deg,#001a1a,#005050)",ch:"Ch.7",tp:"Substitution, By Parts, Definite",d:"6h 20m",dif:"Hard",desc:"Methods of integration, definite integrals, fundamental theorem of calculus.",p:0},
+    {t:"Application of Integrals",i:"🏔️",g:"linear-gradient(135deg,#0d1a0d,#1a4d1a)",ch:"Ch.8",tp:"Area Under Curves",d:"2h 40m",dif:"Medium",desc:"Area under simple curves and area between two curves.",p:0},
+    {t:"Differential Equations",i:"🌀",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Ch.9",tp:"Order, Variable Separable, Linear",d:"4h 00m",dif:"Hard",desc:"Order and degree, formation, variable separable, homogeneous, linear DEs.",p:0},
+    {t:"Vector Algebra",i:"➡️",g:"linear-gradient(135deg,#001a3d,#003d8c)",ch:"Ch.10",tp:"Dot Product, Cross Product",d:"3h 20m",dif:"Medium",desc:"Vectors, dot and cross products, scalar triple product, applications.",p:0},
+    {t:"Three Dimensional Geometry",i:"📦",g:"linear-gradient(135deg,#00001a,#000050)",ch:"Ch.11",tp:"Lines, Planes, Direction Cosines",d:"3h 45m",dif:"Medium",desc:"Direction cosines, equations of line and plane, shortest distance.",p:0},
+    {t:"Linear Programming",i:"📋",g:"linear-gradient(135deg,#1a1000,#4d3000)",ch:"Ch.12",tp:"LPP, Corner Point Method",d:"2h 30m",dif:"Easy",desc:"LPPs, graphical method, feasible region, corner point method.",p:0},
+    {t:"Probability",i:"🎲",g:"linear-gradient(135deg,#1a0010,#4d0030)",ch:"Ch.13",tp:"Bayes Theorem, Distributions",d:"4h 10m",dif:"Hard",desc:"Conditional probability, Bayes' theorem, random variables, binomial distribution.",p:0},
+  ],
+  biology:[
+    {t:"Reproduction in Organisms",i:"🌸",g:"linear-gradient(135deg,#1a003d,#3d0080)",ch:"Ch.1",tp:"Asexual, Sexual Reproduction",d:"2h 30m",dif:"Easy",desc:"Modes of reproduction, asexual and sexual reproduction, vegetative propagation.",p:90},
+    {t:"Sexual Reproduction in Flowering Plants",i:"🌺",g:"linear-gradient(135deg,#3d000d,#8c001a)",ch:"Ch.2",tp:"Pollination, Fertilisation, Seed",d:"3h 40m",dif:"Medium",desc:"Flower structure, male/female gametophytes, pollination, double fertilisation, seed.",p:60},
+    {t:"Human Reproduction",i:"👶",g:"linear-gradient(135deg,#001a3d,#003d8c)",ch:"Ch.3",tp:"Gametogenesis, Menstrual Cycle",d:"3h 20m",dif:"Medium",desc:"Reproductive systems, gametogenesis, menstrual cycle, fertilisation, implantation.",p:30},
+    {t:"Reproductive Health",i:"💊",g:"linear-gradient(135deg,#003d00,#007000)",ch:"Ch.4",tp:"Contraception, MTP, STIs",d:"2h 10m",dif:"Easy",desc:"Reproductive health, contraception methods, MTP, STIs.",p:0},
+    {t:"Principles of Inheritance & Variation",i:"🧬",g:"linear-gradient(135deg,#001a1a,#005c5c)",ch:"Ch.5",tp:"Mendel's Laws, Codominance, Sex Determination",d:"4h 40m",dif:"Hard",desc:"Mendel's laws, codominance, incomplete dominance, sex determination, chromosomal disorders.",p:55},
+    {t:"Molecular Basis of Inheritance",i:"🔬",g:"linear-gradient(135deg,#1a1a3d,#2d2d8c)",ch:"Ch.6",tp:"DNA, Replication, Transcription, Translation",d:"5h 00m",dif:"Hard",desc:"DNA structure, replication, transcription, genetic code, translation, gene regulation.",p:20},
+    {t:"Evolution",i:"🦋",g:"linear-gradient(135deg,#2d0d00,#6b1a00)",ch:"Ch.7",tp:"Origin of Life, Natural Selection",d:"3h 10m",dif:"Medium",desc:"Origin of life, Darwinism, Hardy-Weinberg principle, speciation.",p:0},
+    {t:"Human Health and Disease",i:"🏥",g:"linear-gradient(135deg,#003d1a,#007030)",ch:"Ch.8",tp:"Immunity, AIDS, Cancer, Vaccines",d:"3h 20m",dif:"Medium",desc:"Common diseases, immunity, vaccination, AIDS, cancer, drugs and alcohol.",p:0},
+    {t:"Food Production Strategies",i:"🌾",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.9",tp:"Plant Breeding, Animal Husbandry",d:"2h 20m",dif:"Easy",desc:"Animal husbandry, plant breeding, biofortification, tissue culture.",p:0},
+    {t:"Microbes in Human Welfare",i:"🦠",g:"linear-gradient(135deg,#001a3d,#003d8c)",ch:"Ch.10",tp:"Fermentation, Biogas, Biocontrol",d:"2h 40m",dif:"Easy",desc:"Microbes in food, industrial products, sewage treatment, biogas, biofertilisers.",p:0},
+    {t:"Biotechnology: Principles",i:"⚗️",g:"linear-gradient(135deg,#1a003d,#400080)",ch:"Ch.11",tp:"Recombinant DNA, PCR, Electrophoresis",d:"3h 30m",dif:"Hard",desc:"Recombinant DNA technology, restriction enzymes, vectors, PCR, electrophoresis.",p:0},
+    {t:"Biotechnology: Applications",i:"💉",g:"linear-gradient(135deg,#003d1a,#007040)",ch:"Ch.12",tp:"GM Crops, Insulin, Gene Therapy",d:"3h 10m",dif:"Hard",desc:"Applications in agriculture, medicine, GM organisms, gene therapy, bioethics.",p:0},
+    {t:"Organisms & Populations",i:"🌿",g:"linear-gradient(135deg,#0d1a0d,#204020)",ch:"Ch.13",tp:"Habitat, Niche, Population Growth",d:"2h 50m",dif:"Medium",desc:"Organisms and environment, population attributes, growth models, interactions.",p:0},
+    {t:"Ecosystem",i:"🌍",g:"linear-gradient(135deg,#003d00,#006b00)",ch:"Ch.14",tp:"Food Chains, Energy Flow, Nutrient Cycling",d:"2h 50m",dif:"Easy",desc:"Ecosystem structure, productivity, energy flow, ecological pyramids, nutrient cycling.",p:0},
+    {t:"Biodiversity & Conservation",i:"🦁",g:"linear-gradient(135deg,#1a1000,#4d3000)",ch:"Ch.15",tp:"Hotspots, In-situ, Ex-situ",d:"2h 20m",dif:"Easy",desc:"Biodiversity levels, loss, conservation hotspots, protected areas.",p:0},
+    {t:"Environmental Issues",i:"♻️",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Ch.16",tp:"Pollution, Ozone, Deforestation",d:"2h 10m",dif:"Easy",desc:"Air, water, soil pollution, greenhouse effect, ozone depletion, deforestation.",p:0},
+  ],
+  english:[
+    {t:"The Last Lesson",i:"📚",g:"linear-gradient(135deg,#0d1a2d,#1a3d6b)",ch:"Prose 1",tp:"Alphonse Daudet",d:"1h 20m",dif:"Easy",desc:"Last French lesson in Alsace after Prussian conquest. Themes: patriotism, language, loss.",p:100},
+    {t:"Lost Spring",i:"🌱",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Prose 2",tp:"Anees Jung",d:"1h 10m",dif:"Easy",desc:"Stories of Saheb and Mukesh — poverty and child labour.",p:80},
+    {t:"Deep Water",i:"🌊",g:"linear-gradient(135deg,#001a3d,#00336b)",ch:"Prose 3",tp:"William O. Douglas",d:"1h 00m",dif:"Easy",desc:"Author's journey overcoming the fear of water. Themes: fear, determination.",p:50},
+    {t:"The Rattrap",i:"🪤",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Prose 4",tp:"Selma Lagerlöf",d:"1h 20m",dif:"Easy",desc:"Peddler's worldview as a rattrap. Themes: redemption, human goodness.",p:20},
+    {t:"Indigo",i:"💙",g:"linear-gradient(135deg,#00001a,#000066)",ch:"Prose 5",tp:"Louis Fischer",d:"1h 00m",dif:"Easy",desc:"Gandhi's Champaran movement. Themes: civil disobedience, justice.",p:0},
+    {t:"Poets and Pancakes",i:"🎭",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Prose 6",tp:"Asokamitran",d:"1h 10m",dif:"Easy",desc:"Life inside Gemini Studios. Themes: bureaucracy, creativity, film industry.",p:0},
+    {t:"The Interview",i:"🎤",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Prose 7",tp:"Christopher Silvester / Umberto Eco",d:"1h 00m",dif:"Easy",desc:"Importance of interviews in modern journalism. Themes: media, fame, privacy.",p:0},
+    {t:"Going Places",i:"✈️",g:"linear-gradient(135deg,#1a0d0d,#4d1a1a)",ch:"Prose 8",tp:"A.R. Barton",d:"1h 00m",dif:"Easy",desc:"Sophie's world of fantasy and escapism. Themes: adolescent dreams, hero worship.",p:0},
+    {t:"My Mother at Sixty-Six",i:"👩",g:"linear-gradient(135deg,#0d1a0d,#204020)",ch:"Poem 1",tp:"Kamala Das",d:"0h 45m",dif:"Easy",desc:"Fear of losing ageing mother. Themes: old age, separation, mother-child love.",p:0},
+    {t:"Elementary School Classroom in a Slum",i:"🏫",g:"linear-gradient(135deg,#1a1000,#4d3000)",ch:"Poem 2",tp:"Stephen Spender",d:"0h 40m",dif:"Easy",desc:"Slum children and inequality. Themes: poverty, education, liberation.",p:0},
+    {t:"Keeping Quiet",i:"🤫",g:"linear-gradient(135deg,#001a2d,#004d8c)",ch:"Poem 3",tp:"Pablo Neruda",d:"0h 40m",dif:"Easy",desc:"Call for universal silence. Themes: peace, introspection, ecological harmony.",p:0},
+    {t:"A Thing of Beauty",i:"🌅",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Poem 4",tp:"John Keats",d:"0h 35m",dif:"Easy",desc:"Beauty as a source of eternal joy. Themes: aesthetics, nature, immortality.",p:0},
+    {t:"A Roadside Stand",i:"🏪",g:"linear-gradient(135deg,#001a00,#003d00)",ch:"Poem 5",tp:"Robert Frost",d:"0h 35m",dif:"Easy",desc:"Rural poor and urban indifference. Themes: poverty, false promises.",p:0},
+    {t:"Aunt Jennifer's Tigers",i:"🐯",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Poem 6",tp:"Adrienne Rich",d:"0h 35m",dif:"Easy",desc:"Patriarchal oppression and freedom through art.",p:0},
+  ],
+  cs:[
+    {t:"Python Revision Tour",i:"🐍",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Ch.1",tp:"Data Types, Functions, Recursion",d:"3h 00m",dif:"Easy",desc:"Revision of Python: data types, operators, loops, functions, recursion.",p:90},
+    {t:"Data Handling using NumPy",i:"🔢",g:"linear-gradient(135deg,#001a3d,#004d8c)",ch:"Ch.2",tp:"Arrays, Indexing, Mathematical Ops",d:"2h 30m",dif:"Medium",desc:"NumPy arrays, indexing, slicing, broadcasting, mathematical functions.",p:50},
+    {t:"Data Handling using Pandas",i:"🐼",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.3",tp:"Series, DataFrame, Groupby",d:"3h 20m",dif:"Medium",desc:"Series, DataFrame, CSV import, groupby, aggregation functions.",p:30},
+    {t:"Plotting with Matplotlib",i:"📊",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.4",tp:"Line, Bar, Histogram, Pie Charts",d:"2h 00m",dif:"Easy",desc:"Line, bar, histogram, pie and scatter charts with customisation.",p:10},
+    {t:"Computer Networks",i:"🌐",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.5",tp:"Topologies, OSI, TCP/IP, Protocols",d:"3h 40m",dif:"Medium",desc:"Network topologies, OSI and TCP/IP models, IP addressing, protocols.",p:0},
+    {t:"Database Concepts",i:"🗃️",g:"linear-gradient(135deg,#0d001a,#280060)",ch:"Ch.6",tp:"DBMS, Relational Model, Keys",d:"2h 50m",dif:"Medium",desc:"DBMS, relational model, keys, integrity constraints, E-R model.",p:0},
+    {t:"SQL Queries",i:"💾",g:"linear-gradient(135deg,#00001a,#000060)",ch:"Ch.7",tp:"DDL, DML, DQL, Joins, Aggregates",d:"4h 00m",dif:"Hard",desc:"DDL, DML, SELECT queries, WHERE, GROUP BY, HAVING, joins.",p:0},
+    {t:"Django Web Framework",i:"🕸️",g:"linear-gradient(135deg,#001a0d,#004d20)",ch:"Ch.8",tp:"MVT, Models, Views, Templates",d:"4h 30m",dif:"Hard",desc:"Django MVT architecture, models, views, templates, URL routing.",p:0},
+    {t:"Cybersecurity & Ethics",i:"🔐",g:"linear-gradient(135deg,#1a0000,#500000)",ch:"Ch.9",tp:"Threats, Encryption, Cyber Laws",d:"2h 20m",dif:"Medium",desc:"Cyber threats, encryption, firewalls, digital signatures, IT Act 2000.",p:0},
+    {t:"Societal Impacts of IT",i:"🌍",g:"linear-gradient(135deg,#001a00,#003d00)",ch:"Ch.10",tp:"Digital Footprint, AI Ethics, e-Waste",d:"1h 50m",dif:"Easy",desc:"Net neutrality, data privacy, AI ethics, intellectual property, e-waste.",p:0},
+  ]
+};
+
+// Subject colors for badge
+const SC={physics:"#0a3d8f",chemistry:"#1a6b3a",maths:"#4a0080",biology:"#8c2d00",english:"#006b6b",cs:"#003d6b"};
+
+// ═══════════ INTRO → AUTH ═══════════
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.getElementById('intro').classList.add('out');
+    setTimeout(()=>{
+      document.getElementById('intro').style.display='none';
+      document.getElementById('auth').classList.add('show');
+    },1000);
+  },3600);
+});
+
+// ═══════════ AUTH ═══════════
+function go(n){
+  document.querySelectorAll('.ascr').forEach(s=>s.classList.remove('on'));
+  document.getElementById('scr-'+n).classList.add('on');
+  document.querySelectorAll('.aerr,.aok').forEach(e=>e.style.display='none');
+}
+function doLogin(){
+  const em=document.getElementById('lem').value.trim();
+  const pw=document.getElementById('lpw').value;
+  if(!em||!pw){err('lerr','Please enter email and password.');return;}
+  enterApp(em.split('@')[0]);
+}
+function doSignup(){
+  const nm=document.getElementById('snm').value.trim();
+  const em=document.getElementById('sem').value.trim();
+  const pw=document.getElementById('spw').value;
+  if(!nm||!em||pw.length<8){err('serr','Please fill all fields. Password min 8 characters.');return;}
+  enterApp(nm);
+}
+function doForgot(){
+  const em=document.getElementById('fem').value.trim();
+  if(!em||!em.includes('@')){err('ferr','Please enter a valid email address.');return;}
+  document.getElementById('fok').style.display='block';
+  setTimeout(()=>go('login'),3000);
+}
+function err(id,msg){const e=document.getElementById(id);e.textContent=msg;e.style.display='block'}
+function enterApp(name){
+  document.getElementById('auth').style.display='none';
+  document.getElementById('app').classList.add('show');
+  document.getElementById('uinit').textContent=name.charAt(0).toUpperCase();
+  renderAll();
+}
+
+// ═══════════ RENDER ═══════════
+const ROWMAP={physics:'rp',chemistry:'rch',maths:'rm',biology:'rb',english:'re',cs:'rcs'};
+
+function renderAll(){
+  const cont=[];
+  for(const[s,arr] of Object.entries(D))
+    arr.filter(c=>c.p>0&&c.p<100).forEach(c=>cont.push({...c,subj:s}));
+  if(cont.length){
+    document.getElementById('row-continue').style.display='block';
+    renderRow('rc',cont,true);
+  }
+  for(const[s,arr] of Object.entries(D))
+    renderRow(ROWMAP[s],arr.map(c=>({...c,subj:s})));
+}
+
+function renderRow(id,items,sp=false){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.innerHTML='';
+  items.forEach(item=>el.appendChild(mkCard(item,sp)));
+}
+
+function mkCard(item,sp=false){
+  const w=document.createElement('div');
+  w.className='card';
+  const hp=sp&&item.p>0;
+  const scolor=SC[item.subj]||'#333';
+
+  w.innerHTML=`
+    <div class="cin">
+      <div class="ct">
+        <div class="ctbg" style="background:${item.g}"></div>
+        <div class="ctscrim"></div>
+        <div class="ctc">
+          <span class="emi">${item.i}</span>
+          <span class="chl">${item.ch}</span>
+        </div>
+        <div class="cstag">${(item.subj||'').toUpperCase()}</div>
+      </div>
+      ${hp?`<div class="cpbar"><div class="cpfill" style="width:${item.p}%"></div></div>`:''}
+    </div>
+    <div class="cexp">
+      <div class="cacts">
+        <div class="ca play" title="Play">
+          <span class="tip">Play</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="black"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+        <div class="ca" title="Add to My List">
+          <span class="tip">My List</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </div>
+        <div class="ca" title="Like">
+          <span class="tip">Like</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+        </div>
+        <div class="ca caml" title="Share">
+          <span class="tip">Share</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        </div>
+        <div class="ca moreinfo" title="More Info">
+          <span class="tip">More Info</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.8"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+      <div class="cn">${item.t}</div>
+      <div class="ctags">
+        <span class="tg">${item.dif}</span>
+        <span class="ti"><span class="tdot"></span>${item.d}</span>
+        <span class="ti"><span class="tdot"></span>${item.ch}</span>
+      </div>
+    </div>`;
+
+  w._item=item;
+  // Wire up buttons
+  w.querySelector('.play').addEventListener('click',e=>{e.stopPropagation();showToast('▶ Playing: '+item.t)});
+  w.querySelectorAll('.ca')[1].addEventListener('click',e=>{e.stopPropagation();addList()});
+  w.querySelectorAll('.ca')[2].addEventListener('click',e=>{e.stopPropagation();showToast('👍 Liked!')});
+  w.querySelector('.caml').addEventListener('click',e=>{e.stopPropagation();shareNow(item.t)});
+  w.querySelector('.moreinfo').addEventListener('click',e=>{e.stopPropagation();openMI(item)});
+  w.addEventListener('click',()=>openMI(item));
+  return w;
+}
+
+// ═══════════ SEARCH ═══════════
+const inp=document.getElementById('srchInput');
+const drop=document.getElementById('srchDrop');
+const box=document.getElementById('srchBox');
+
+inp.addEventListener('focus',()=>{box.classList.add('focused');if(inp.value.trim())doSearch(inp.value);else showRecent()});
+inp.addEventListener('input',()=>doSearch(inp.value));
+document.addEventListener('click',e=>{if(!document.querySelector('.srchwrap').contains(e.target)){drop.classList.remove('open');box.classList.remove('focused')}});
+
+// All chapters flat array for search
+let allChaps=[];
+for(const[s,arr] of Object.entries(D))
+  arr.forEach(c=>allChaps.push({...c,subj:s}));
+
+let recentSearches=[];
+
+function showRecent(){
+  if(!recentSearches.length){drop.classList.remove('open');return;}
+  let html=`<div class="sdr-header">Recent Searches</div>`;
+  recentSearches.slice(0,5).forEach(r=>{
+    const c=allChaps.find(x=>x.t===r);
+    if(!c)return;
+    html+=`<div class="sdr-item" onclick="clickResult('${c.subj}','${c.t.replace(/'/g,"\\'")}')">
+      <div class="sdr-thumb" style="background:${c.g}">${c.i}</div>
+      <div class="sdr-info"><div class="sdr-title">${c.t}</div><div class="sdr-sub">${(c.subj).charAt(0).toUpperCase()+c.subj.slice(1)} · ${c.ch}</div></div>
+      <div class="sdr-badge" style="background:${SC[c.subj]||'#333'}">${c.dif}</div>
+    </div>`;
+  });
+  html+=`<div class="sdr-clear" onclick="recentSearches=[];drop.classList.remove('open')">Clear recent searches</div>`;
+  drop.innerHTML=html;drop.classList.add('open');
+}
+
+function doSearch(q){
+  q=q.trim().toLowerCase();
+  if(!q){showRecent();return;}
+  const res=allChaps.filter(c=>
+    c.t.toLowerCase().includes(q)||
+    c.subj.toLowerCase().includes(q)||
+    c.ch.toLowerCase().includes(q)||
+    c.tp.toLowerCase().includes(q)||
+    c.dif.toLowerCase().includes(q)
+  );
+  if(!res.length){
+    drop.innerHTML=`<div class="sdr-empty">No results for "<strong>${q}</strong>"</div>`;
+    drop.classList.add('open');return;
+  }
+  // Group by subject
+  const groups={};
+  res.forEach(c=>{if(!groups[c.subj])groups[c.subj]=[];groups[c.subj].push(c)});
+  let html='';
+  for(const[subj,items] of Object.entries(groups)){
+    html+=`<div class="sdr-header">${subj.charAt(0).toUpperCase()+subj.slice(1)}</div>`;
+    items.slice(0,4).forEach(c=>{
+      html+=`<div class="sdr-item" onclick="clickResult('${c.subj}','${c.t.replace(/'/g,"\\'")}')">
+        <div class="sdr-thumb" style="background:${c.g}">${c.i}</div>
+        <div class="sdr-info">
+          <div class="sdr-title">${highlight(c.t,q)}</div>
+          <div class="sdr-sub">${c.ch} · ${c.tp.split(',')[0]}</div>
+        </div>
+        <div class="sdr-badge" style="background:${SC[c.subj]||'#333'};color:#fff;padding:2px 6px;border-radius:2px;font-size:10px;font-weight:700">${c.dif}</div>
+      </div>`;
+    });
+  }
+  drop.innerHTML=html;drop.classList.add('open');
+}
+
+function highlight(text,q){
+  const re=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+  return text.replace(re,'<span style="color:var(--red);font-weight:800">$1</span>');
+}
+
+function clickResult(subj,title){
+  const item=allChaps.find(c=>c.t===title&&c.subj===subj);
+  if(!item)return;
+  if(!recentSearches.includes(title))recentSearches.unshift(title);
+  if(recentSearches.length>8)recentSearches.pop();
+  inp.value='';
+  drop.classList.remove('open');
+  box.classList.remove('focused');
+  openMI(item);
+}
+
+// ═══════════ MODAL ═══════════
+function openMBI(s,i){openMI({...D[s][i],subj:s})}
+function openMI(item){
+  document.getElementById('mtitle').textContent=item.t;
+  const bg=document.getElementById('mhbg');
+  bg.textContent=item.i;bg.style.background=item.g;bg.style.fontSize='100px';
+  document.getElementById('mdesc').textContent=item.desc;
+  document.getElementById('msubj').textContent=(item.subj||'').charAt(0).toUpperCase()+(item.subj||'').slice(1);
+  document.getElementById('mtop').textContent=item.tp;
+  document.getElementById('mdur').textContent=item.d;
+  document.getElementById('mdif').textContent=item.dif;
+  document.getElementById('mch').textContent=item.ch;
+  const sec=document.getElementById('mchaps');
+  const rel=(D[item.subj]||[]).filter(c=>c.t!==item.t).slice(0,5);
+  if(rel.length){
+    sec.innerHTML=`<div class="chlt">More from ${(item.subj||'').charAt(0).toUpperCase()+(item.subj||'').slice(1)}</div>`;
+    rel.forEach((c,i)=>{
+      const d=document.createElement('div');d.className='chi';
+      d.innerHTML=`<div class="chin">${i+1}</div>
+        <div class="chtmb" style="background:${c.g}">
+          <span style="position:relative;z-index:1;font-size:30px">${c.i}</span>
+          <div class="chov"><div class="chpl"><svg width="14" height="14" viewBox="0 0 24 24" fill="black"><polygon points="5,3 19,12 5,21"/></svg></div></div>
+        </div>
+        <div class="chif"><h4>${c.t}</h4><p>${c.desc.substring(0,76)}…</p></div>
+        <div class="chd">${c.d}</div>`;
+      d.addEventListener('click',()=>openMI({...c,subj:item.subj}));
+      sec.appendChild(d);
+    });
+  }else sec.innerHTML='';
+  document.getElementById('ov').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeMdl(){document.getElementById('ov').classList.remove('open');document.body.style.overflow=''}
+function closeOv(e){if(e.target===document.getElementById('ov'))closeMdl()}
+
+// ═══════════ HELPERS ═══════════
+function sr(id,dir){const el=document.getElementById(id);if(el)el.scrollBy({left:dir*720,behavior:'smooth'})}
+function setTab(el,s){
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on'));el.classList.add('on');
+  ['physics','chemistry','maths','biology','english','cs'].forEach(k=>{
+    const r=document.getElementById('row-'+k);
+    if(r)r.style.display=(s==='all'||s===k)?'block':'none';
+  });
+}
+let tt;
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2700)}
+function shareNow(title){
+  navigator.clipboard&&navigator.clipboard.writeText(location.href+(title?'?ch='+encodeURIComponent(title):'')).catch(()=>{});
+  showToast('🔗 Link copied to clipboard!');
+}
+function addList(){showToast('✅ Added to My List!')}
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('sc',scrollY>60));
+</script>
+</body>
+</html>
