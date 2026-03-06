@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gurukul — Watch</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--red:#e50914;--bg:#141414;--card:#1f1f1f;--border:#2a2a2a;--text:#fff;--muted:#999}
+html,body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* ══ NAVBAR ══ */
+.nav{display:flex;align-items:center;gap:20px;padding:0 48px;height:64px;background:rgba(0,0,0,0.95);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border)}
+.nlogo{font-family:'Bebas Neue',cursive;font-size:28px;color:var(--red);letter-spacing:2px;cursor:pointer;text-decoration:none}
+.nback{display:flex;align-items:center;gap:6px;color:#ccc;font-size:13px;cursor:pointer;transition:color .2s;text-decoration:none;margin-left:8px}
+.nback:hover{color:#fff}
+.nback svg{transition:transform .2s}
+.nback:hover svg{transform:translateX(-3px)}
+.ntitle{font-size:15px;font-weight:700;color:#fff;margin-left:4px}
+.nright{margin-left:auto;display:flex;align-items:center;gap:16px}
+.nav-av{width:32px;height:32px;border-radius:4px;background:linear-gradient(135deg,var(--red),#ff6b6b);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800}
+
+/* ══ MAIN LAYOUT ══ */
+.layout{display:grid;grid-template-columns:1fr 360px;gap:0;min-height:calc(100vh - 64px)}
+
+/* ══ LEFT — VIDEO + INFO ══ */
+.main{background:var(--bg);overflow-y:auto}
+
+/* VIDEO PLAYER */
+.player-wrap{width:100%;background:#000;position:relative}
+.player-wrap iframe{width:100%;aspect-ratio:16/9;display:block;border:none}
+
+/* placeholder when no video */
+.player-placeholder{
+  width:100%;aspect-ratio:16/9;background:#000;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+}
+.placeholder-icon{font-size:64px;opacity:0.4}
+.placeholder-text{color:#555;font-size:15px;text-align:center;line-height:1.6;max-width:340px}
+.placeholder-text strong{color:#888}
+
+/* VIDEO INFO */
+.vinfo{padding:24px 32px}
+.vbreadcrumb{font-size:12px;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.vbreadcrumb span{color:#fff;font-weight:600}
+.vtitle{font-family:'Bebas Neue',cursive;font-size:clamp(28px,3vw,40px);letter-spacing:1px;margin-bottom:12px;line-height:1.1}
+.vmeta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.vmatch{color:#46d369;font-weight:700;font-size:14px}
+.vbadge{padding:3px 8px;border-radius:3px;font-size:11px;font-weight:700;letter-spacing:1px}
+.vbadge.easy{background:rgba(70,211,105,0.15);color:#46d369;border:1px solid rgba(70,211,105,0.3)}
+.vbadge.medium{background:rgba(255,170,0,0.15);color:#ffaa00;border:1px solid rgba(255,170,0,0.3)}
+.vbadge.hard{background:rgba(229,9,20,0.15);color:#ff6b6b;border:1px solid rgba(229,9,20,0.3)}
+.vdur{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:5px}
+
+.vactions{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.vbtn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:4px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:inherit}
+.vbtn.primary{background:#fff;color:#000}.vbtn.primary:hover{background:rgba(255,255,255,.82)}
+.vbtn.secondary{background:rgba(109,109,110,.5);color:#fff;border:1px solid rgba(255,255,255,.2)}.vbtn.secondary:hover{background:rgba(109,109,110,.75)}
+.vbtn.quiz-btn{background:linear-gradient(135deg,var(--red),#ff4444);color:#fff}.vbtn.quiz-btn:hover{opacity:.88}
+.vbtn.quiz-btn .pulse{width:8px;height:8px;background:#fff;border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+
+.vdesc{font-size:14px;line-height:1.78;color:#ccc;margin-bottom:20px;border-top:1px solid var(--border);padding-top:18px}
+.vtopics{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.vtopic{padding:5px 12px;background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:20px;font-size:12px;color:#ccc;cursor:pointer;transition:all .15s}
+.vtopic:hover{background:rgba(229,9,20,.15);border-color:rgba(229,9,20,.4);color:#fff}
+
+/* PROGRESS BAR */
+.vprogress{background:rgba(255,255,255,.05);border-radius:8px;padding:16px 20px;margin-bottom:20px;border:1px solid var(--border)}
+.vp-label{font-size:12px;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between}
+.vp-label span:last-child{color:#46d369;font-weight:700}
+.vp-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.vp-fill{height:100%;background:linear-gradient(90deg,var(--red),#ff6b6b);border-radius:3px;transition:width .5s ease}
+
+/* ══ RIGHT — CHAPTER LIST ══ */
+.sidebar{background:#0f0f0f;border-left:1px solid var(--border);overflow-y:auto;max-height:calc(100vh - 64px);position:sticky;top:64px}
+.sb-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#0f0f0f;z-index:10}
+.sb-title{font-size:15px;font-weight:800}
+.sb-count{font-size:12px;color:var(--muted)}
+
+.sb-filter{display:flex;gap:0;padding:10px 12px;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.sb-filter::-webkit-scrollbar{display:none}
+.sf{padding:6px 12px;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;border-radius:20px;white-space:nowrap;transition:all .15s}
+.sf.on{background:var(--red);color:#fff}
+.sf:not(.on):hover{color:#fff;background:rgba(255,255,255,.08)}
+
+/* chapter item */
+.chap{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;transition:background .15s;border-bottom:1px solid rgba(255,255,255,.04);position:relative}
+.chap:hover{background:rgba(255,255,255,.05)}
+.chap.active{background:rgba(229,9,20,.08);border-left:3px solid var(--red)}
+.chap.active .ch-name{color:#fff}
+.chap.completed .ch-num{background:rgba(70,211,105,.15);color:#46d369}
+
+.ch-num{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);flex-shrink:0;transition:all .2s}
+.chap.active .ch-num{background:var(--red);color:#fff}
+
+.ch-thumb{width:80px;height:45px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;position:relative;overflow:hidden}
+.ch-thumb-bg{position:absolute;inset:0}
+.ch-thumb-icon{position:relative;z-index:1}
+.ch-play-ov{position:absolute;inset:0;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:2}
+.chap:hover .ch-play-ov{background:rgba(0,0,0,.45)}
+.ch-play-btn{width:24px;height:24px;background:rgba(255,255,255,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.7);transition:all .2s}
+.chap:hover .ch-play-btn,.chap.active .ch-play-btn{opacity:1;transform:scale(1)}
+
+.ch-info{flex:1;min-width:0}
+.ch-name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#ccc;transition:color .15s;margin-bottom:3px}
+.ch-meta{display:flex;align-items:center;gap:6px;font-size:10px;color:#666}
+.ch-dot{width:2px;height:2px;background:#666;border-radius:50%}
+.ch-prog-mini{height:2px;background:var(--border);border-radius:1px;margin-top:4px;overflow:hidden}
+.ch-prog-fill{height:100%;background:var(--red);border-radius:1px}
+.ch-check{width:16px;height:16px;border-radius:50%;background:#46d369;display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:0;transition:opacity .2s}
+.chap.completed .ch-check{opacity:1}
+
+/* ══ QUIZ PANEL ══ */
+#quizPanel{
+  position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9000;
+  display:none;align-items:center;justify-content:center;padding:20px;
+  backdrop-filter:blur(6px);
+}
+#quizPanel.open{display:flex}
+.quiz-box{
+  background:#181818;border-radius:12px;width:100%;max-width:680px;
+  box-shadow:0 0 80px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.08);
+  overflow:hidden;max-height:90vh;overflow-y:auto;
+}
+.quiz-header{
+  padding:24px 28px 20px;
+  background:linear-gradient(135deg,rgba(229,9,20,.15),rgba(0,0,0,0));
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.quiz-header-left h2{font-family:'Bebas Neue',cursive;font-size:28px;letter-spacing:1px}
+.quiz-header-left p{font-size:13px;color:var(--muted);margin-top:3px}
+.quiz-close{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.quiz-close:hover{background:rgba(255,255,255,.15)}
+
+/* progress dots */
+.quiz-dots{display:flex;gap:6px;padding:16px 28px;border-bottom:1px solid var(--border)}
+.qdot{height:4px;border-radius:2px;flex:1;background:var(--border);transition:background .3s}
+.qdot.done{background:#46d369}
+.qdot.current{background:var(--red)}
+
+.quiz-body{padding:28px}
+.q-type{font-size:10px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.q-type::after{content:'';flex:1;height:1px;background:var(--border)}
+.q-num{font-size:12px;color:var(--muted);margin-bottom:8px}
+.q-text{font-size:18px;font-weight:700;line-height:1.5;margin-bottom:22px;color:#fff}
+
+/* MCQ options */
+.q-options{display:grid;gap:10px;margin-bottom:20px}
+.qopt{
+  padding:14px 18px;border-radius:6px;
+  border:1px solid var(--border);background:rgba(255,255,255,.03);
+  cursor:pointer;font-size:14px;color:#ccc;
+  transition:all .2s;display:flex;align-items:center;gap:12px;
+  font-family:inherit;text-align:left;width:100%;
+}
+.qopt:hover:not(:disabled){background:rgba(255,255,255,.07);border-color:#555;color:#fff}
+.qopt.selected{border-color:var(--red);background:rgba(229,9,20,.1);color:#fff}
+.qopt.correct{border-color:#46d369;background:rgba(70,211,105,.1);color:#46d369}
+.qopt.wrong{border-color:#ff4444;background:rgba(255,68,68,.1);color:#ff6b6b}
+.qopt:disabled{cursor:default}
+.opt-letter{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;transition:all .2s}
+.qopt.selected .opt-letter{background:var(--red)}
+.qopt.correct .opt-letter{background:#46d369;color:#000}
+.qopt.wrong .opt-letter{background:#ff4444}
+
+/* Fill in blank */
+.q-fill input{
+  width:100%;padding:14px 18px;background:rgba(255,255,255,.05);
+  border:1px solid var(--border);border-radius:6px;color:#fff;font-size:15px;
+  outline:none;transition:border-color .2s;font-family:inherit;margin-bottom:16px;
+}
+.q-fill input:focus{border-color:var(--red)}
+.q-fill input.correct-input{border-color:#46d369;background:rgba(70,211,105,.08)}
+.q-fill input.wrong-input{border-color:#ff4444;background:rgba(255,68,68,.08)}
+
+/* True/False */
+.tf-opts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+
+/* feedback */
+.q-feedback{
+  padding:12px 16px;border-radius:6px;font-size:13px;
+  margin-bottom:16px;display:none;line-height:1.6;
+}
+.q-feedback.show{display:block}
+.q-feedback.right{background:rgba(70,211,105,.1);border:1px solid rgba(70,211,105,.3);color:#46d369}
+.q-feedback.wrong{background:rgba(255,68,68,.1);border:1px solid rgba(255,68,68,.3);color:#ff8888}
+
+.quiz-footer{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-top:1px solid var(--border)}
+.q-score{font-size:13px;color:var(--muted)}
+.q-score strong{color:#fff}
+.qnext{padding:11px 28px;background:var(--red);border:none;border-radius:4px;color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;font-family:inherit;display:flex;align-items:center;gap:8px}
+.qnext:hover{background:#f40612}
+.qnext:disabled{opacity:.4;cursor:not-allowed}
+
+/* RESULTS SCREEN */
+.quiz-result{padding:36px 28px;text-align:center}
+.result-emoji{font-size:64px;margin-bottom:16px}
+.result-title{font-family:'Bebas Neue',cursive;font-size:42px;margin-bottom:8px}
+.result-sub{font-size:15px;color:var(--muted);margin-bottom:28px}
+.result-score{
+  display:inline-flex;flex-direction:column;align-items:center;
+  padding:24px 40px;background:rgba(255,255,255,.04);border-radius:12px;
+  border:1px solid var(--border);margin-bottom:24px;
+}
+.rs-num{font-family:'Bebas Neue',cursive;font-size:64px;line-height:1;color:var(--red)}
+.rs-label{font-size:13px;color:var(--muted);margin-top:4px}
+.result-breakdown{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
+.rb-item{background:rgba(255,255,255,.04);border-radius:8px;padding:14px;border:1px solid var(--border)}
+.rb-num{font-size:24px;font-weight:800;margin-bottom:4px}
+.rb-label{font-size:11px;color:var(--muted)}
+.rb-item.correct .rb-num{color:#46d369}
+.rb-item.wrong .rb-num{color:#ff6b6b}
+.rb-item.skip .rb-num{color:#ffaa00}
+.result-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+/* ══ TOAST ══ */
+#toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:#fff;color:#000;padding:11px 22px;border-radius:4px;font-size:14px;font-weight:700;z-index:99999;opacity:0;pointer-events:none;transition:all .3s;box-shadow:0 4px 24px rgba(0,0,0,.5)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:static;max-height:none;border-left:none;border-top:1px solid var(--border)}
+  .nav{padding:0 20px}
+  .vinfo{padding:18px 20px}
+}
+@media(max-width:600px){
+  .result-breakdown{grid-template-columns:repeat(3,1fr)}
+  .tf-opts{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="nav">
+  <a class="nlogo" href="index.html">GURUKUL</a>
+  <a class="nback" href="index.html">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg>
+    Back
+  </a>
+  <span class="ntitle" id="navTitle">Loading…</span>
+  <div class="nright">
+    <div class="nav-av">S</div>
+  </div>
+</nav>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- LEFT: VIDEO + INFO -->
+  <div class="main">
+
+    <!-- VIDEO PLAYER -->
+    <div class="player-wrap" id="playerWrap">
+      <div class="player-placeholder" id="placeholder">
+        <div class="placeholder-icon">🎬</div>
+        <div class="placeholder-text">
+          <strong>Select a chapter to start watching</strong><br>
+          or click Play on the chapter below
+        </div>
+      </div>
+    </div>
+
+    <!-- VIDEO INFO -->
+    <div class="vinfo">
+      <div class="vbreadcrumb" id="vBreadcrumb">
+        <span id="vSubject">Physics</span> › <span id="vChapter">Ch.1</span>
+      </div>
+      <h1 class="vtitle" id="vTitle">Electric Charges & Fields</h1>
+      <div class="vmeta">
+        <span class="vmatch">97% Match</span>
+        <span class="vbadge medium" id="vDiff">Medium</span>
+        <span class="vdur">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span id="vDur">4h 20m</span>
+        </span>
+        <span style="font-size:12px;color:#555">CBSE 2024</span>
+      </div>
+
+      <div class="vactions">
+        <button class="vbtn primary" id="playBtn" onclick="playVideo()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="black"><polygon points="5,3 19,12 5,21"/></svg>
+          Play
+        </button>
+        <button class="vbtn secondary" onclick="addList()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          My List
+        </button>
+        <button class="vbtn secondary" onclick="shareThis()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Share
+        </button>
+        <button class="vbtn quiz-btn" onclick="openQuiz()">
+          <span class="pulse"></span>
+          Take Quiz
+        </button>
+      </div>
+
+      <!-- PROGRESS -->
+      <div class="vprogress">
+        <div class="vp-label">
+          <span>Your Progress</span>
+          <span id="progPct">0% Complete</span>
+        </div>
+        <div class="vp-bar"><div class="vp-fill" id="progFill" style="width:0%"></div></div>
+      </div>
+
+      <p class="vdesc" id="vDesc">Select a chapter from the list to start learning.</p>
+
+      <div class="vtopics" id="vTopics"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: CHAPTER SIDEBAR -->
+  <div class="sidebar">
+    <div class="sb-header">
+      <div class="sb-title">Chapters</div>
+      <div class="sb-count" id="sbCount">14 chapters</div>
+    </div>
+    <div class="sb-filter">
+      <div class="sf on" onclick="filterChaps(this,'all')">All</div>
+      <div class="sf" onclick="filterChaps(this,'physics')">⚛️ Physics</div>
+      <div class="sf" onclick="filterChaps(this,'chemistry')">🧪 Chemistry</div>
+      <div class="sf" onclick="filterChaps(this,'maths')">📐 Maths</div>
+      <div class="sf" onclick="filterChaps(this,'biology')">🧬 Biology</div>
+      <div class="sf" onclick="filterChaps(this,'english')">📖 English</div>
+      <div class="sf" onclick="filterChaps(this,'cs')">💻 CS</div>
+    </div>
+    <div id="chapList"></div>
+  </div>
+
+</div>
+
+<!-- ══ QUIZ PANEL ══ -->
+<div id="quizPanel">
+  <div class="quiz-box" id="quizBox">
+    <!-- filled by JS -->
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════
+// CHAPTER DATA with YouTube video IDs
+// Replace videoId with real YouTube IDs later
+// ═══════════════════════════════════════════
+const CHAPTERS = {
+  physics:[
+    {t:"Electric Charges & Fields",i:"⚡",g:"linear-gradient(135deg,#080836,#0c0c66)",ch:"Ch.1",tp:["Coulomb's Law","Electric Field","Gauss's Theorem","Field Lines"],dur:"4h 20m",dif:"Medium",desc:"Fundamental nature of electric charge, Coulomb's law in vector form, continuous charge distributions, electric field lines, Gauss's theorem with applications.",prog:65,
+     videoId:"SxbklfcCMAo"}, // replace with your actual YouTube video ID
+    {t:"Electrostatic Potential & Capacitance",i:"🔋",g:"linear-gradient(135deg,#160a4e,#2a1070)",ch:"Ch.2",tp:["Electric Potential","Capacitance","Dielectrics","Energy Stored"],dur:"3h 45m",dif:"Medium",desc:"Electric potential, equipotential surfaces, capacitors in series/parallel, energy stored in capacitor, dielectrics and their effect.",prog:30,videoId:"TFlVWf8JX4A"},
+    {t:"Current Electricity",i:"💡",g:"linear-gradient(135deg,#0a280a,#1a5c1a)",ch:"Ch.3",tp:["Ohm's Law","Kirchhoff's Laws","Wheatstone Bridge","Potentiometer"],dur:"5h 10m",dif:"Hard",desc:"Drift velocity, Ohm's law, resistivity, Kirchhoff's laws, Wheatstone bridge, potentiometer experiments.",prog:10,videoId:"g-wjP1otQWI"},
+    {t:"Moving Charges & Magnetism",i:"🧲",g:"linear-gradient(135deg,#3d0000,#8b0000)",ch:"Ch.4",tp:["Biot-Savart Law","Ampere's Law","Lorentz Force","Cyclotron"],dur:"4h 50m",dif:"Hard",desc:"Magnetic force, Biot-Savart law, Ampere's circuital law, solenoid, motion in magnetic field, cyclotron.",prog:0,videoId:"kWnwbSqOxoQ"},
+    {t:"Magnetism & Matter",i:"🌍",g:"linear-gradient(135deg,#0a183a,#182c6b)",ch:"Ch.5",tp:["Bar Magnet","Earth's Magnetism","Hysteresis"],dur:"2h 40m",dif:"Easy",desc:"Magnetic dipole, earth's magnetic field, magnetic properties of materials, hysteresis loop.",prog:0,videoId:"fxgmH2q-YuA"},
+    {t:"Electromagnetic Induction",i:"🌀",g:"linear-gradient(135deg,#1a1a00,#5c5c00)",ch:"Ch.6",tp:["Faraday's Law","Lenz's Law","Motional EMF","Inductance"],dur:"3h 30m",dif:"Medium",desc:"Faraday's laws, Lenz's law, motional EMF, self and mutual inductance.",prog:0,videoId:"s94suB5uLWw"},
+    {t:"Alternating Current",i:"〰️",g:"linear-gradient(135deg,#2e0c0c,#6b1a1a)",ch:"Ch.7",tp:["RLC Circuit","Resonance","Power Factor","Transformer"],dur:"4h 00m",dif:"Hard",desc:"Phasors, RLC series circuit, resonance, power factor, LC oscillations, transformers.",prog:0,videoId:"vN9NioIgccM"},
+    {t:"Electromagnetic Waves",i:"📡",g:"linear-gradient(135deg,#001a2d,#003d6b)",ch:"Ch.8",tp:["Maxwell's Equations","EM Spectrum","Displacement Current"],dur:"2h 20m",dif:"Easy",desc:"Displacement current, Maxwell's equations, properties of EM waves, EM spectrum.",prog:0,videoId:"IJQxQJpAcr0"},
+    {t:"Ray Optics",i:"🔭",g:"linear-gradient(135deg,#00001a,#000066)",ch:"Ch.9",tp:["Refraction","Lenses","Mirrors","Telescope"],dur:"5h 20m",dif:"Medium",desc:"Reflection, refraction, TIR, prism, lenses, lens maker's equation, microscope, telescope.",prog:85,videoId:"e6F5YyxR5rg"},
+    {t:"Wave Optics",i:"🌊",g:"linear-gradient(135deg,#001a1a,#005c5c)",ch:"Ch.10",tp:["Huygens Principle","Interference","Diffraction","Polarisation"],dur:"3h 40m",dif:"Hard",desc:"Huygens principle, Young's double slit, coherence, diffraction, polarisation.",prog:0,videoId:"xPqMNnBLPzQ"},
+    {t:"Dual Nature of Radiation",i:"☢️",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Ch.11",tp:["Photoelectric Effect","de Broglie","Work Function"],dur:"2h 50m",dif:"Medium",desc:"Photoelectric effect, Einstein's equation, wave-particle duality, de Broglie wavelength.",prog:0,videoId:"7BXvc9W97iU"},
+    {t:"Atoms",i:"⚛️",g:"linear-gradient(135deg,#001a0d,#004018)",ch:"Ch.12",tp:["Bohr Model","Hydrogen Spectrum","Energy Levels"],dur:"2h 30m",dif:"Easy",desc:"Rutherford's model, Bohr's model of hydrogen atom, hydrogen spectrum, energy levels.",prog:0,videoId:"GqMzbbaN6T4"},
+    {t:"Nuclei",i:"💥",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.13",tp:["Binding Energy","Radioactivity","Fission","Fusion"],dur:"3h 10m",dif:"Medium",desc:"Binding energy, radioactivity, alpha/beta/gamma decay, nuclear fission and fusion.",prog:0,videoId:"KCo7DwMmBpI"},
+    {t:"Semiconductor Electronics",i:"🖥️",g:"linear-gradient(135deg,#0d0d1a,#1a1a4d)",ch:"Ch.14",tp:["PN Junction","Diode","Transistor","Logic Gates"],dur:"4h 30m",dif:"Hard",desc:"p-n junction, diode, rectifiers, Zener diode, transistor, logic gates.",prog:40,videoId:"33vbFFFn04k"},
+  ],
+  chemistry:[
+    {t:"The Solid State",i:"💎",g:"linear-gradient(135deg,#0d0d3d,#1a1a6b)",ch:"Ch.1",tp:["Crystal Structure","Unit Cell","Packing","Defects"],dur:"3h 20m",dif:"Medium",desc:"Crystal lattices, unit cells, packing efficiency, crystal defects.",prog:0,videoId:"QpQPdXXZ9xQ"},
+    {t:"Solutions",i:"🧪",g:"linear-gradient(135deg,#003d3d,#007070)",ch:"Ch.2",tp:["Raoult's Law","Colligative Properties","Osmosis"],dur:"3h 40m",dif:"Medium",desc:"Concentration, Raoult's law, elevation of BP, depression of FP, osmotic pressure.",prog:50,videoId:"9iSlFSKCRJo"},
+    {t:"Electrochemistry",i:"⚗️",g:"linear-gradient(135deg,#2d0d4e,#5c1a9e)",ch:"Ch.3",tp:["Galvanic Cell","Nernst Equation","Electrolysis","Conductance"],dur:"4h 20m",dif:"Hard",desc:"Galvanic cells, Nernst equation, electrolysis, Faraday's laws, conductance, batteries.",prog:20,videoId:"lQ6FRA1LlC8"},
+    {t:"Chemical Kinetics",i:"💨",g:"linear-gradient(135deg,#3d1a00,#7a3300)",ch:"Ch.4",tp:["Rate Laws","Order of Reaction","Arrhenius Equation"],dur:"3h 10m",dif:"Medium",desc:"Rate expression, order of reactions, Arrhenius equation, activation energy, catalysis.",prog:0,videoId:"wYqQCojggyM"},
+    {t:"Surface Chemistry",i:"🔵",g:"linear-gradient(135deg,#001a3d,#003470)",ch:"Ch.5",tp:["Adsorption","Colloids","Catalysis","Emulsions"],dur:"2h 30m",dif:"Easy",desc:"Adsorption isotherms, catalysis, colloids, emulsions.",prog:0,videoId:"0Zs_SPdMqYY"},
+  ],
+  maths:[
+    {t:"Relations & Functions",i:"🔗",g:"linear-gradient(135deg,#0d001a,#280040)",ch:"Ch.1",tp:["Types of Relations","Composite Functions","Inverse","Binary Operations"],dur:"3h 20m",dif:"Easy",desc:"Types of relations and functions, composition, invertible functions, binary operations.",prog:100,videoId:"e7nLKlV9K08"},
+    {t:"Inverse Trigonometric Functions",i:"📐",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.2",tp:["Domain & Range","Graphs","Identities"],dur:"2h 40m",dif:"Medium",desc:"Definition, domain and range, graphs, elementary properties and identities.",prog:75,videoId:"YXWKpgmLB0Q"},
+    {t:"Matrices",i:"🔢",g:"linear-gradient(135deg,#1a1a00,#454500)",ch:"Ch.3",tp:["Operations","Transpose","Inverse","Symmetric"],dur:"3h 50m",dif:"Medium",desc:"Types of matrices, operations, transpose, symmetric, invertible matrices.",prog:40,videoId:"xyAuNHPsq-g"},
+    {t:"Determinants",i:"📊",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.4",tp:["Properties","Cofactors","Adjoint","Cramer's Rule"],dur:"3h 30m",dif:"Medium",desc:"Properties, cofactors, adjoint, inverse, Cramer's rule.",prog:20,videoId:"aKX5_DucNq8"},
+    {t:"Continuity & Differentiability",i:"📈",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Ch.5",tp:["Limits","Chain Rule","MVT","Rolle's Theorem"],dur:"5h 30m",dif:"Hard",desc:"Continuity, differentiability, chain rule, implicit/parametric differentiation, MVT.",prog:0,videoId:"viaPc8zDcRI"},
+    {t:"Integrals",i:"∫",g:"linear-gradient(135deg,#001a1a,#005050)",ch:"Ch.7",tp:["Substitution","By Parts","Partial Fractions","Definite"],dur:"6h 20m",dif:"Hard",desc:"Methods of integration, definite integrals, fundamental theorem of calculus.",prog:0,videoId:"rfG8ce4nNh0"},
+    {t:"Probability",i:"🎲",g:"linear-gradient(135deg,#1a0010,#4d0030)",ch:"Ch.13",tp:["Bayes Theorem","Random Variable","Binomial Distribution"],dur:"4h 10m",dif:"Hard",desc:"Conditional probability, Bayes' theorem, random variables, binomial distribution.",prog:0,videoId:"uzkc-qNVoOk"},
+  ],
+  biology:[
+    {t:"Molecular Basis of Inheritance",i:"🔬",g:"linear-gradient(135deg,#1a1a3d,#2d2d8c)",ch:"Ch.6",tp:["DNA Structure","Replication","Transcription","Translation"],dur:"5h 00m",dif:"Hard",desc:"DNA structure, replication, transcription, genetic code, translation, gene regulation.",prog:20,videoId:"gG7uCskUOrA"},
+    {t:"Evolution",i:"🦋",g:"linear-gradient(135deg,#2d0d00,#6b1a00)",ch:"Ch.7",tp:["Origin of Life","Natural Selection","Hardy-Weinberg","Speciation"],dur:"3h 10m",dif:"Medium",desc:"Origin of life, Darwinism, Hardy-Weinberg principle, speciation.",prog:0,videoId:"GhHOjC4oxh8"},
+  ],
+};
+
+// ═══════════════════════════════════════════
+// QUIZ DATA — mix of MCQ, Fill, True/False
+// ═══════════════════════════════════════════
+const QUIZZES = {
+  "Electric Charges & Fields":[
+    {type:"mcq",q:"What is the SI unit of electric charge?",opts:["Ampere","Coulomb","Volt","Farad"],ans:1,explain:"The SI unit of electric charge is the Coulomb (C), named after Charles-Augustin de Coulomb."},
+    {type:"truefalse",q:"Electric field lines can intersect each other at a point.",ans:false,explain:"Electric field lines NEVER intersect. If they did, it would mean two directions of field at one point — which is impossible."},
+    {type:"fill",q:"The force between two point charges is given by ______ law.",ans:"coulomb",explain:"Coulomb's Law states F = kq₁q₂/r². The force is directly proportional to product of charges and inversely proportional to square of distance."},
+    {type:"mcq",q:"Electric field inside a hollow conductor is:",opts:["Maximum at centre","Zero everywhere","Equal to outer field","Depends on charge"],ans:1,explain:"By Gauss's theorem, the electric field inside a hollow conductor is zero because no net charge exists inside."},
+    {type:"truefalse",q:"Gauss's theorem applies only to symmetric charge distributions.",ans:false,explain:"Gauss's theorem is valid for ANY charge distribution. However, it is most USEFUL for symmetric distributions to calculate field easily."},
+    {type:"fill",q:"The number of electric field lines per unit area is called electric field ______.",ans:"intensity",explain:"Electric field intensity (or strength) is defined as the number of field lines passing through a unit area held perpendicular to the field."},
+    {type:"mcq",q:"If the distance between two charges is doubled, the force becomes:",opts:["Double","Half","One-fourth","Four times"],ans:2,explain:"By Coulomb's law, F ∝ 1/r². If r is doubled (r→2r), F becomes 1/4th of original force."},
+  ],
+  "Solutions":[
+    {type:"mcq",q:"Which of the following is a colligative property?",opts:["Viscosity","Osmotic pressure","Surface tension","Refractive index"],ans:1,explain:"Colligative properties depend only on the number of solute particles, not their nature. Osmotic pressure is a colligative property."},
+    {type:"truefalse",q:"Raoult's law states that vapour pressure of a solution is equal to vapour pressure of pure solvent.",ans:false,explain:"Raoult's law states that the vapour pressure of solution EQUALS vapour pressure of pure solvent MULTIPLIED BY mole fraction of solvent."},
+    {type:"fill",q:"The process by which solvent molecules pass through a semipermeable membrane from lower to higher concentration is called ______.",ans:"osmosis",explain:"Osmosis is the spontaneous movement of solvent through a semipermeable membrane from a region of low solute concentration to high solute concentration."},
+    {type:"mcq",q:"Molarity is defined as:",opts:["Moles of solute per kg of solvent","Moles of solute per litre of solution","Moles of solute per mole of solution","Grams of solute per litre"],ans:1,explain:"Molarity (M) = moles of solute / volume of solution in litres. It is the most commonly used concentration unit."},
+  ],
+  "Matrices":[
+    {type:"mcq",q:"A matrix with equal number of rows and columns is called a:",opts:["Row matrix","Column matrix","Square matrix","Null matrix"],ans:2,explain:"A square matrix has equal number of rows and columns. For example, a 3×3 matrix is a square matrix."},
+    {type:"truefalse",q:"Matrix multiplication is commutative, i.e., AB = BA always.",ans:false,explain:"Matrix multiplication is NOT commutative. AB ≠ BA in general. This is one of the key differences from ordinary multiplication."},
+    {type:"fill",q:"The transpose of a matrix A is denoted as ______.",ans:"A'",explain:"The transpose of matrix A (written A' or Aᵀ) is obtained by interchanging rows and columns of A."},
+    {type:"mcq",q:"The determinant of an identity matrix of any order is:",opts:["0","1","-1","Undefined"],ans:1,explain:"The determinant of an identity matrix is always 1. This is because the identity matrix has 1s on diagonal and 0s elsewhere."},
+  ],
+};
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let currentChapter = null;
+let currentSubject = 'physics';
+let currentFilter = 'all';
+let quizQuestions = [];
+let quizIndex = 0;
+let quizScore = 0;
+let quizAnswered = false;
+let quizResults = [];
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  renderChapList('all');
+  // load from URL param if any
+  const params = new URLSearchParams(location.search);
+  const subj = params.get('subj') || 'physics';
+  const idx = parseInt(params.get('idx') || '0');
+  if (CHAPTERS[subj] && CHAPTERS[subj][idx]) {
+    loadChapter(CHAPTERS[subj][idx], subj);
+  } else {
+    loadChapter(CHAPTERS.physics[0], 'physics');
+  }
+});
+
+// ═══════════════════════════════════════════
+// RENDER CHAPTER LIST
+// ═══════════════════════════════════════════
+function renderChapList(filter) {
+  const list = document.getElementById('chapList');
+  list.innerHTML = '';
+  let count = 0;
+
+  for (const [subj, arr] of Object.entries(CHAPTERS)) {
+    if (filter !== 'all' && filter !== subj) continue;
+    arr.forEach((c, i) => {
+      count++;
+      const div = document.createElement('div');
+      const isActive = currentChapter && currentChapter.t === c.t;
+      const isDone = c.prog === 100;
+      div.className = `chap${isActive ? ' active' : ''}${isDone ? ' completed' : ''}`;
+      div.innerHTML = `
+        <div class="ch-num">${isDone ? '✓' : count}</div>
+        <div class="ch-thumb">
+          <div class="ch-thumb-bg" style="background:${c.g}"></div>
+          <div class="ch-thumb-icon">${c.i}</div>
+          <div class="ch-play-ov">
+            <div class="ch-play-btn">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="black"><polygon points="5,3 19,12 5,21"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="ch-info">
+          <div class="ch-name">${c.t}</div>
+          <div class="ch-meta">
+            <span>${c.ch}</span><span class="ch-dot"></span>
+            <span>${c.dur}</span><span class="ch-dot"></span>
+            <span style="color:${c.dif==='Easy'?'#46d369':c.dif==='Hard'?'#ff6b6b':'#ffaa00'}">${c.dif}</span>
+          </div>
+          ${c.prog > 0 ? `<div class="ch-prog-mini"><div class="ch-prog-fill" style="width:${c.prog}%"></div></div>` : ''}
+        </div>
+        <div class="ch-check">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>`;
+      div.addEventListener('click', () => loadChapter(c, subj));
+      list.appendChild(div);
+    });
+  }
+  document.getElementById('sbCount').textContent = `${count} chapter${count!==1?'s':''}`;
+}
+
+// ═══════════════════════════════════════════
+// LOAD CHAPTER
+// ═══════════════════════════════════════════
+function loadChapter(c, subj) {
+  currentChapter = c;
+  currentSubject = subj;
+
+  // Update info panel
+  document.getElementById('navTitle').textContent = c.t;
+  document.getElementById('vTitle').textContent = c.t;
+  document.getElementById('vSubject').textContent = subj.charAt(0).toUpperCase() + subj.slice(1);
+  document.getElementById('vChapter').textContent = c.ch;
+  document.getElementById('vDiff').textContent = c.dif;
+  document.getElementById('vDiff').className = `vbadge ${c.dif.toLowerCase()}`;
+  document.getElementById('vDur').textContent = c.dur;
+  document.getElementById('vDesc').textContent = c.desc;
+
+  // Topics
+  const tp = document.getElementById('vTopics');
+  tp.innerHTML = c.tp.map(t => `<span class="vtopic">${t}</span>`).join('');
+
+  // Progress
+  document.getElementById('progPct').textContent = c.prog + '% Complete';
+  document.getElementById('progFill').style.width = c.prog + '%';
+
+  // Load video
+  loadVideo(c.videoId);
+
+  // Re-render list to update active
+  renderChapList(currentFilter);
+
+  // Scroll list to active item
+  setTimeout(() => {
+    const active = document.querySelector('.chap.active');
+    if (active) active.scrollIntoView({behavior:'smooth', block:'center'});
+  }, 100);
+}
+
+// ═══════════════════════════════════════════
+// VIDEO PLAYER
+// ═══════════════════════════════════════════
+function loadVideo(videoId) {
+  const wrap = document.getElementById('playerWrap');
+  if (!videoId) {
+    wrap.innerHTML = `<div class="player-placeholder">
+      <div class="placeholder-icon">📹</div>
+      <div class="placeholder-text"><strong>Video coming soon!</strong><br>This chapter's lecture will be uploaded shortly.</div>
+    </div>`;
+    return;
+  }
+  wrap.innerHTML = `<iframe
+    src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&color=red"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen></iframe>`;
+}
+
+function playVideo() {
+  if (currentChapter) loadVideo(currentChapter.videoId);
+}
+
+// ═══════════════════════════════════════════
+// FILTER
+// ═══════════════════════════════════════════
+function filterChaps(el, filter) {
+  document.querySelectorAll('.sf').forEach(s => s.classList.remove('on'));
+  el.classList.add('on');
+  currentFilter = filter;
+  renderChapList(filter);
+}
+
+// ═══════════════════════════════════════════
+// QUIZ
+// ═══════════════════════════════════════════
+function openQuiz() {
+  if (!currentChapter) { showToast('Please select a chapter first!'); return; }
+  const qs = QUIZZES[currentChapter.t];
+  if (!qs || !qs.length) {
+    showToast('Quiz for this chapter coming soon! 📝');
+    return;
+  }
+  quizQuestions = [...qs].sort(() => Math.random() - 0.5).slice(0, Math.min(qs.length, 7));
+  quizIndex = 0;
+  quizScore = 0;
+  quizAnswered = false;
+  quizResults = [];
+  document.getElementById('quizPanel').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  renderQuestion();
+}
+
+function closeQuiz() {
+  document.getElementById('quizPanel').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function renderQuestion() {
+  const box = document.getElementById('quizBox');
+  if (quizIndex >= quizQuestions.length) { renderResults(); return; }
+  const q = quizQuestions[quizIndex];
+  const total = quizQuestions.length;
+
+  const dots = quizQuestions.map((_, i) => {
+    let cls = i < quizIndex ? 'done' : i === quizIndex ? 'current' : '';
+    return `<div class="qdot ${cls}"></div>`;
+  }).join('');
+
+  let qBody = '';
+  if (q.type === 'mcq') {
+    qBody = `<div class="q-type">Multiple Choice</div>
+    <div class="q-text">${q.q}</div>
+    <div class="q-options">
+      ${q.opts.map((o,i) => `<button class="qopt" onclick="answerMCQ(${i})" id="opt${i}">
+        <div class="opt-letter">${'ABCD'[i]}</div>${o}
+      </button>`).join('')}
+    </div>`;
+  } else if (q.type === 'truefalse') {
+    qBody = `<div class="q-type">True / False</div>
+    <div class="q-text">${q.q}</div>
+    <div class="tf-opts">
+      <button class="qopt" onclick="answerTF(true)" id="opt-true">
+        <div class="opt-letter">T</div>True ✅
+      </button>
+      <button class="qopt" onclick="answerTF(false)" id="opt-false">
+        <div class="opt-letter">F</div>False ❌
+      </button>
+    </div>`;
+  } else if (q.type === 'fill') {
+    qBody = `<div class="q-type">Fill in the Blank</div>
+    <div class="q-text">${q.q}</div>
+    <div class="q-fill">
+      <input type="text" id="fillInput" placeholder="Type your answer here…" onkeydown="if(event.key==='Enter')answerFill()">
+    </div>`;
+  }
+
+  box.innerHTML = `
+    <div class="quiz-header">
+      <div class="quiz-header-left">
+        <h2>📝 Chapter Quiz</h2>
+        <p>${currentChapter.t} · Question ${quizIndex+1} of ${total}</p>
+      </div>
+      <button class="quiz-close" onclick="closeQuiz()">✕</button>
+    </div>
+    <div class="quiz-dots">${dots}</div>
+    <div class="quiz-body">
+      ${qBody}
+      <div class="q-feedback" id="qFeedback"></div>
+    </div>
+    <div class="quiz-footer">
+      <div class="q-score">Score: <strong>${quizScore}/${quizIndex}</strong></div>
+      <button class="qnext" id="qNextBtn" onclick="nextQuestion()" disabled>
+        ${quizIndex < total-1 ? 'Next Question →' : 'See Results 🎯'}
+      </button>
+    </div>`;
+
+  // focus fill input
+  if (q.type === 'fill') {
+    setTimeout(() => document.getElementById('fillInput')?.focus(), 100);
+  }
+}
+
+function answerMCQ(idx) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const q = quizQuestions[quizIndex];
+  const correct = idx === q.ans;
+  if (correct) quizScore++;
+  quizResults.push({correct, q});
+
+  document.querySelectorAll('.qopt').forEach((b, i) => {
+    b.disabled = true;
+    if (i === q.ans) b.classList.add('correct');
+    else if (i === idx && !correct) b.classList.add('wrong');
+  });
+  showFeedback(correct, q.explain);
+  document.getElementById('qNextBtn').disabled = false;
+}
+
+function answerTF(val) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const q = quizQuestions[quizIndex];
+  const correct = val === q.ans;
+  if (correct) quizScore++;
+  quizResults.push({correct, q});
+
+  document.querySelectorAll('.qopt').forEach(b => b.disabled = true);
+  const trueBtn = document.getElementById('opt-true');
+  const falseBtn = document.getElementById('opt-false');
+  if (q.ans === true) trueBtn.classList.add('correct');
+  else falseBtn.classList.add('correct');
+  if (val !== q.ans) {
+    (val ? trueBtn : falseBtn).classList.add('wrong');
+  }
+  showFeedback(correct, q.explain);
+  document.getElementById('qNextBtn').disabled = false;
+}
+
+function answerFill() {
+  if (quizAnswered) return;
+  const inp = document.getElementById('fillInput');
+  if (!inp) return;
+  const val = inp.value.trim().toLowerCase();
+  if (!val) return;
+  quizAnswered = true;
+  const q = quizQuestions[quizIndex];
+  const correct = val === q.ans.toLowerCase() || q.ans.toLowerCase().includes(val);
+  if (correct) quizScore++;
+  quizResults.push({correct, q});
+  inp.disabled = true;
+  inp.classList.add(correct ? 'correct-input' : 'wrong-input');
+  showFeedback(correct, q.explain, correct ? '' : `Correct answer: "${q.ans}"`);
+  document.getElementById('qNextBtn').disabled = false;
+}
+
+function showFeedback(correct, explain, extra='') {
+  const fb = document.getElementById('qFeedback');
+  fb.className = `q-feedback show ${correct ? 'right' : 'wrong'}`;
+  fb.innerHTML = `<strong>${correct ? '✅ Correct!' : '❌ Incorrect'}</strong>${extra ? ' — ' + extra : ''}<br><span style="opacity:.85">${explain}</span>`;
+}
+
+function nextQuestion() {
+  quizIndex++;
+  quizAnswered = false;
+  renderQuestion();
+}
+
+function renderResults() {
+  const total = quizQuestions.length;
+  const pct = Math.round((quizScore / total) * 100);
+  const wrong = total - quizScore;
+  let emoji, title, sub;
+  if (pct >= 90) { emoji='🏆'; title='EXCELLENT!'; sub='Outstanding performance! You truly know this chapter.' }
+  else if (pct >= 70) { emoji='🎉'; title='GREAT JOB!'; sub='Really good! Review the ones you missed.' }
+  else if (pct >= 50) { emoji='📚'; title='KEEP GOING!'; sub='You\'re getting there! Watch the lecture again.' }
+  else { emoji='💪'; title='NEEDS PRACTICE'; sub='Don\'t give up! Rewatch the chapter and try again.' }
+
+  document.getElementById('quizBox').innerHTML = `
+    <div class="quiz-header">
+      <div class="quiz-header-left"><h2>📝 Quiz Results</h2><p>${currentChapter.t}</p></div>
+      <button class="quiz-close" onclick="closeQuiz()">✕</button>
+    </div>
+    <div class="quiz-result">
+      <div class="result-emoji">${emoji}</div>
+      <div class="result-title">${title}</div>
+      <div class="result-sub">${sub}</div>
+      <div class="result-score">
+        <div class="rs-num">${pct}%</div>
+        <div class="rs-label">${quizScore} out of ${total} correct</div>
+      </div>
+      <div class="result-breakdown">
+        <div class="rb-item correct"><div class="rb-num">${quizScore}</div><div class="rb-label">Correct</div></div>
+        <div class="rb-item wrong"><div class="rb-num">${wrong}</div><div class="rb-label">Wrong</div></div>
+        <div class="rb-item skip"><div class="rb-num">${total}</div><div class="rb-label">Total</div></div>
+      </div>
+      <div class="result-btns">
+        <button class="vbtn primary" onclick="closeQuiz()">Continue Watching</button>
+        <button class="vbtn secondary" onclick="openQuiz()">Retry Quiz 🔄</button>
+      </div>
+    </div>`;
+
+  // Update chapter progress after quiz
+  if (currentChapter && pct >= 70) {
+    currentChapter.prog = Math.max(currentChapter.prog, pct);
+    document.getElementById('progPct').textContent = currentChapter.prog + '% Complete';
+    document.getElementById('progFill').style.width = currentChapter.prog + '%';
+  }
+}
+
+// ═══════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════
+let tt;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(tt);
+  tt = setTimeout(() => t.classList.remove('show'), 2700);
+}
+function addList() { showToast('✅ Added to My List!'); }
+function shareThis() {
+  navigator.clipboard && navigator.clipboard.writeText(location.href).catch(() => {});
+  showToast('🔗 Link copied!');
+}
+
+// Close quiz on overlay click
+document.getElementById('quizPanel').addEventListener('click', e => {
+  if (e.target === document.getElementById('quizPanel')) closeQuiz();
+});
+</script>
+</body>
+</html>
