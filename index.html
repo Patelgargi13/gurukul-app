@@ -406,7 +406,7 @@ footer{background:#141414;border-top:1px solid #222;padding:48px 60px 34px}
       <div class="mhi">
         <h1 class="mtitle" id="mtitle"></h1>
         <div class="mbtns">
-          <button class="btn bw"><svg width="18" height="18" viewBox="0 0 24 24" fill="black"><polygon points="5,3 19,12 5,21"/></svg>Play</button>
+          <button class="btn bw" id="modalPlayBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="black"><polygon points="5,3 19,12 5,21"/></svg>Play</button>
           <button class="btn bg" onclick="addList()">+ My List</button>
           <button class="btn bg" onclick="shareNow()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Share</button>
         </div>
@@ -658,7 +658,11 @@ function mkCard(item,sp=false){
 
   w._item=item;
   // Wire up buttons
-  w.querySelector('.play').addEventListener('click',e=>{e.stopPropagation();showToast('▶ Playing: '+item.t)});
+w.querySelector('.play').addEventListener('click',e=>{
+  e.stopPropagation();
+  const idx = D[item.subj].findIndex(c=>c.t===item.t);
+  window.location.href=`watch.html?subj=${item.subj}&idx=${idx}`;
+});
   w.querySelectorAll('.ca')[1].addEventListener('click',e=>{e.stopPropagation();addList()});
   w.querySelectorAll('.ca')[2].addEventListener('click',e=>{e.stopPropagation();showToast('👍 Liked!')});
   w.querySelector('.caml').addEventListener('click',e=>{e.stopPropagation();shareNow(item.t)});
@@ -783,6 +787,10 @@ function openMI(item){
 }
 function closeMdl(){document.getElementById('ov').classList.remove('open');document.body.style.overflow=''}
 function closeOv(e){if(e.target===document.getElementById('ov'))closeMdl()}
+document.getElementById('modalPlayBtn').onclick = function(){
+  const idx = D[currentItem.subj].findIndex(c=>c.t===currentItem.t);
+  window.location.href=`watch.html?subj=${currentItem.subj}&idx=${idx}`;
+};
 
 // ═══════════ HELPERS ═══════════
 function sr(id,dir){const el=document.getElementById(id);if(el)el.scrollBy({left:dir*720,behavior:'smooth'})}
