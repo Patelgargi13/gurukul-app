@@ -780,21 +780,36 @@ function enterApp(name,email){
 (async function checkAutoLogin(){
   const sid=getSession();
   const savedUser=localStorage.getItem('gk_user');
-  if(sid&&savedUser){
+
+  // Validate session is a real Appwrite session ID (long string, not old fake data)
+  const isRealSession = sid && sid.length > 10 && !sid.startsWith('fake');
+
+  if(isRealSession && savedUser){
     try{
-      _user=JSON.parse(savedUser);
-      // Skip intro & auth — go straight to app
-      document.getElementById('intro').classList.add('out');
-      setTimeout(()=>{
-        document.getElementById('intro').style.display='none';
-        document.getElementById('auth').style.display='none';
-      },600);
-      await loadUserProgress(sid);
-      enterApp(_user.name,_user.email);
-      return;
-    }catch(e){clearSession();}
+      // Verify session is still valid with Appwrite
+      const acct = await AH.req('GET','/account',null,sid);
+      if(acct && acct.$id){
+        _user=JSON.parse(savedUser);
+        _user.name = acct.name || _user.name;
+        document.getElementById('intro').classList.add('out');
+        setTimeout(()=>{
+          document.getElementById('intro').style.display='none';
+          document.getElementById('auth').style.display='none';
+        },600);
+        await loadUserProgress(sid);
+        enterApp(_user.name, _user.email);
+        return;
+      }
+    }catch(e){
+      // Session expired or invalid — clear and show login
+      clearSession();
+    }
+  } else {
+    // Clear any old/fake session data
+    clearSession();
   }
-  // Normal intro flow
+
+  // Normal intro → auth flow
   window.addEventListener('load',()=>{
     setTimeout(()=>{
       document.getElementById('intro').classList.add('out');
