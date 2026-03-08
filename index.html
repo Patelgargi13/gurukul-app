@@ -59,8 +59,8 @@ html,body{background:#000;color:#fff;font-family:'Inter',sans-serif;overflow-x:h
 .alink{color:#fff;font-weight:700;cursor:pointer}.alink:hover{text-decoration:underline}
 .asm{color:#8c8c8c;font-size:14px;margin-top:14px;text-align:center}
 .flink{color:#8c8c8c;font-size:13px;cursor:pointer;text-align:right;display:block;margin-top:6px}.flink:hover{color:#fff}
-.aerr{color:#e87c03;font-size:13px;margin-top:8px;display:none}
-.aok{color:#46d369;font-size:13px;margin-top:8px;display:none}
+.aerr{color:#e87c03;font-size:13px;margin-top:10px;display:none;padding:10px 14px;background:rgba(232,124,3,.1);border-radius:4px;border-left:3px solid #e87c03}
+.aok{color:#46d369;font-size:13px;margin-top:10px;display:none;padding:10px 14px;background:rgba(70,211,105,.1);border-radius:4px;border-left:3px solid #46d369}
 
 /* ══ NAVBAR ══ */
 #app{display:none}#app.show{display:block}
@@ -100,7 +100,16 @@ html,body{background:#000;color:#fff;font-family:'Inter',sans-serif;overflow-x:h
 .sdr-clear{padding:10px 14px;font-size:12px;color:#888;cursor:pointer;text-align:center;border-top:1px solid #2a2a2a}
 .sdr-clear:hover{color:#fff}
 
-.nav-av{width:32px;height:32px;border-radius:4px;background:linear-gradient(135deg,var(--red),#ff6b6b);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;cursor:pointer}
+.nav-av{width:32px;height:32px;border-radius:4px;background:linear-gradient(135deg,var(--red),#ff6b6b);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;cursor:pointer;position:relative;user-select:none}
+.umenu{position:absolute;top:calc(100% + 10px);right:0;background:#181818;border:1px solid #333;border-radius:6px;min-width:210px;box-shadow:0 8px 30px rgba(0,0,0,.85);display:none;z-index:600;overflow:hidden}
+.umenu.open{display:block}
+.um-head{padding:14px 16px;border-bottom:1px solid #2a2a2a;background:rgba(229,9,20,.08)}
+.um-name{font-size:14px;font-weight:800;margin-bottom:2px}
+.um-email{font-size:11px;color:#777;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.um-item{display:flex;align-items:center;gap:10px;padding:11px 16px;font-size:13px;color:#ccc;cursor:pointer;transition:background .15s;text-decoration:none;width:100%;border:none;background:none;font-family:inherit;text-align:left}
+.um-item:hover{background:rgba(255,255,255,.07);color:#fff}
+.um-div{height:1px;background:#2a2a2a;margin:4px 0}
+.um-out{color:#ff6b6b!important}
 
 /* ══ HERO ══ */
 .hero{height:96vh;min-height:600px;position:relative;display:flex;align-items:flex-end;padding:0 60px 110px;overflow:hidden}
@@ -293,7 +302,7 @@ footer{background:#141414;border-top:1px solid #222;padding:48px 60px 34px}
       <div class="fg"><input type="email" id="lem" placeholder=" "><label>Email or mobile number</label></div>
       <div class="fg"><input type="password" id="lpw" placeholder=" "><label>Password</label></div>
       <div class="aerr" id="lerr"></div>
-      <button class="abtn" onclick="doLogin()">Sign In</button>
+      <button class="abtn" id="lbtn" onclick="doLogin()">Sign In</button>
       <span class="flink" onclick="go('forgot')">Forgot password?</span>
       <div class="aor"><span>OR</span></div>
       <div class="asm">New to Gurukul? <span class="alink" onclick="go('signup')">Sign up now.</span></div>
@@ -306,7 +315,7 @@ footer{background:#141414;border-top:1px solid #222;padding:48px 60px 34px}
       <div class="fg"><input type="password" id="spw" placeholder=" "><label>Password (min 8 chars)</label></div>
       <div class="fg"><input type="text" id="scl" placeholder=" "><label>Class / Grade (e.g. 12th)</label></div>
       <div class="aerr" id="serr"></div>
-      <button class="abtn" onclick="doSignup()">Create Account</button>
+      <button class="abtn" id="sbtn" onclick="doSignup()">Create Account</button>
       <div class="asm" style="margin-top:14px">Already have an account? <span class="alink" onclick="go('login')">Sign in.</span></div>
     </div>
 
@@ -316,7 +325,7 @@ footer{background:#141414;border-top:1px solid #222;padding:48px 60px 34px}
       <div class="fg"><input type="email" id="fem" placeholder=" "><label>Email address</label></div>
       <div class="aok" id="fok">✓ Reset link sent! Check your inbox.</div>
       <div class="aerr" id="ferr"></div>
-      <button class="abtn" onclick="doForgot()">Send Reset Link</button>
+      <button class="abtn" id="fbtn" onclick="doForgot()">Send Reset Link</button>
       <div class="asm" style="margin-top:14px">Remember it? <span class="alink" onclick="go('login')">Sign in.</span></div>
     </div>
 
@@ -344,7 +353,20 @@ footer{background:#141414;border-top:1px solid #222;padding:48px 60px 34px}
         </div>
         <div id="srchDrop"></div>
       </div>
-      <div class="nav-av" id="uinit" onclick="window.location.href='profile.html'" style="cursor:pointer" title="View Profile">S</div>
+      <div class="nav-av" id="uinit" onclick="toggleMenu()">S
+        <div class="umenu" id="umenu" onclick="event.stopPropagation()">
+          <div class="um-head">
+            <div class="um-name" id="umName">Student</div>
+            <div class="um-email" id="umEmail"></div>
+          </div>
+          <a class="um-item" href="profile.html">👤 My Profile</a>
+          <a class="um-item" href="mylist.html">📋 My List</a>
+          <a class="um-item" href="tests.html">📝 Tests</a>
+          <a class="um-item" href="leaderboard.html">🏆 Leaderboard</a>
+          <div class="um-div"></div>
+          <button class="um-item um-out" onclick="doLogout()">🚪 Sign Out</button>
+        </div>
+      </div>
     </div>
   </nav>
 
@@ -551,38 +573,250 @@ window.addEventListener('load',()=>{
   },3600);
 });
 
-// ═══════════ AUTH ═══════════
+// ════════════════════════════════════════
+// 🔥 APPWRITE CONFIG — your real keys
+// ════════════════════════════════════════
+const AW = {
+  endpoint:   'https://cloud.appwrite.io/v1',
+  projectId:  '69ad50980037c7258e5c',
+  databaseId: '69ad50ee0034f0e7f32a',
+  tableId:    'users'
+};
+
+// Appwrite SDK helpers (using REST API — no npm needed!)
+const AH = {
+  headers(session){
+    const h = {'Content-Type':'application/json','X-Appwrite-Project':AW.projectId};
+    if(session) h['X-Appwrite-Session'] = session;
+    return h;
+  },
+  async req(method, path, body, session){
+    const r = await fetch(AW.endpoint+path,{method,headers:AH.headers(session),body:body?JSON.stringify(body):undefined});
+    const j = await r.json();
+    if(!r.ok) throw j;
+    return j;
+  }
+};
+
+// Session stored in localStorage
+let _session = null;
+let _user = null;
+
+function getSession(){ return localStorage.getItem('gk_session'); }
+function setSession(s){ localStorage.setItem('gk_session',s); _session=s; }
+function clearSession(){ localStorage.removeItem('gk_session'); localStorage.removeItem('gk_user'); _session=null; _user=null; }
+
+// ═══════════ AUTH SCREENS ═══════════
 function go(n){
   document.querySelectorAll('.ascr').forEach(s=>s.classList.remove('on'));
   document.getElementById('scr-'+n).classList.add('on');
   document.querySelectorAll('.aerr,.aok').forEach(e=>e.style.display='none');
 }
-function doLogin(){
-  const em=document.getElementById('lem').value.trim();
-  const pw=document.getElementById('lpw').value;
-  if(!em||!pw){err('lerr','Please enter email and password.');return;}
-  enterApp(em.split('@')[0]);
+
+function setBtnLoad(id,loading,label){
+  const b=document.getElementById(id);
+  if(!b)return;
+  b.disabled=loading;
+  b.textContent=loading?'Please wait…':(label||b.dataset.label||b.textContent);
+  if(label)b.dataset.label=label;
 }
-function doSignup(){
+
+// ── SIGN UP ──
+async function doSignup(){
   const nm=document.getElementById('snm').value.trim();
   const em=document.getElementById('sem').value.trim();
   const pw=document.getElementById('spw').value;
-  if(!nm||!em||pw.length<8){err('serr','Please fill all fields. Password min 8 characters.');return;}
-  enterApp(nm);
+  const cl=document.getElementById('scl').value.trim()||'12th';
+  document.querySelectorAll('.aerr').forEach(e=>e.style.display='none');
+  if(!nm){return err('serr','Please enter your full name.');}
+  if(!em.includes('@')){return err('serr','Please enter a valid email address.');}
+  if(pw.length<8){return err('serr','Password must be at least 8 characters.');}
+  setBtnLoad('sbtn',true);
+  try{
+    // 1. Create Appwrite account
+    await AH.req('POST','/account',{userId:'unique()',email:em,password:pw,name:nm});
+    // 2. Create session (login)
+    const sess = await AH.req('POST','/account/sessions/email',{email:em,password:pw});
+    setSession(sess.$id);
+    // 3. Save extra user data in database
+    try{
+      await AH.req('POST',`/databases/${AW.databaseId}/collections/${AW.tableId}/documents`,{
+        documentId:'unique()',
+        data:{Name:nm,email:em,class:cl,progress:'{}',mylist:'[]',testscores:'[]',streak:0,totalscore:0}
+      }, sess.$id);
+    }catch(e2){console.warn('DB save:',e2);}
+    _user={name:nm,email:em};
+    localStorage.setItem('gk_user',JSON.stringify(_user));
+    showToast('🎉 Account created! Welcome, '+nm+'!');
+    enterApp(nm,em);
+  }catch(e){
+    const msgs={'user_already_exists':'This email is already registered. Try signing in.',
+      'general_argument_invalid':'Invalid email or password format.'};
+    err('serr', msgs[e.type]||e.message||'Sign up failed. Please try again.');
+  }
+  setBtnLoad('sbtn',false,'Create Account');
 }
-function doForgot(){
+
+// ── LOGIN ──
+async function doLogin(){
+  const em=document.getElementById('lem').value.trim();
+  const pw=document.getElementById('lpw').value;
+  document.querySelectorAll('.aerr').forEach(e=>e.style.display='none');
+  if(!em||!pw){return err('lerr','Please enter email and password.');}
+  setBtnLoad('lbtn',true);
+  try{
+    const sess = await AH.req('POST','/account/sessions/email',{email:em,password:pw});
+    setSession(sess.$id);
+    // Get user info
+    const acct = await AH.req('GET','/account',null,sess.$id);
+    _user={name:acct.name||em.split('@')[0],email:em};
+    localStorage.setItem('gk_user',JSON.stringify(_user));
+    // Load saved progress from DB
+    await loadUserProgress(sess.$id);
+    showToast('👋 Welcome back, '+_user.name+'!');
+    enterApp(_user.name, em);
+  }catch(e){
+    const msgs={'user_invalid_credentials':'Wrong email or password. Please try again.',
+      'user_not_found':'No account found. Please sign up first.',
+      'general_rate_limit_exceeded':'Too many attempts. Please wait a few minutes.'};
+    err('lerr', msgs[e.type]||e.message||'Login failed. Please try again.');
+  }
+  setBtnLoad('lbtn',false,'Sign In');
+}
+
+// ── FORGOT PASSWORD ──
+async function doForgot(){
   const em=document.getElementById('fem').value.trim();
-  if(!em||!em.includes('@')){err('ferr','Please enter a valid email address.');return;}
-  document.getElementById('fok').style.display='block';
-  setTimeout(()=>go('login'),3000);
+  document.querySelectorAll('.aerr,.aok').forEach(e=>e.style.display='none');
+  if(!em.includes('@')){return err('ferr','Please enter a valid email address.');}
+  setBtnLoad('fbtn',true);
+  try{
+    await AH.req('POST','/account/recovery',{email:em,url:location.origin+'/index.html'});
+    document.getElementById('fok').style.display='block';
+    showToast('📧 Reset email sent! Check your inbox.');
+    setTimeout(()=>go('login'),4000);
+  }catch(e){
+    const msgs={'user_not_found':'No account found with this email.'};
+    err('ferr', msgs[e.type]||e.message||'Failed to send reset email.');
+  }
+  setBtnLoad('fbtn',false,'Send Reset Link');
 }
-function err(id,msg){const e=document.getElementById(id);e.textContent=msg;e.style.display='block'}
-function enterApp(name){
+
+// ── LOAD PROGRESS ──
+async function loadUserProgress(sid){
+  try{
+    const docs = await AH.req('GET',`/databases/${AW.databaseId}/collections/${AW.tableId}/documents`,null,sid||getSession());
+    if(docs.documents&&docs.documents.length>0){
+      const d = docs.documents[0];
+      if(d.progress){
+        try{
+          const prog=JSON.parse(d.progress);
+          for(const[subj,arr] of Object.entries(D))
+            arr.forEach(c=>{const k=subj+'_'+c.ch;if(prog[k]!==undefined)c.p=prog[k];});
+        }catch(e){}
+      }
+      window._dbDocId = docs.documents[0].$id;
+    }
+  }catch(e){console.warn('Load progress:',e);}
+}
+
+// ── SAVE PROGRESS ──
+async function saveProgress(subj,ch,pct){
+  const sid=getSession();
+  const docId=window._dbDocId;
+  if(!sid||!docId)return;
+  try{
+    // Read current progress, merge, save back
+    const doc=await AH.req('GET',`/databases/${AW.databaseId}/collections/${AW.tableId}/documents/${docId}`,null,sid);
+    const prog=JSON.parse(doc.progress||'{}');
+    prog[subj+'_'+ch]=pct;
+    await AH.req('PATCH',`/databases/${AW.databaseId}/collections/${AW.tableId}/documents/${docId}`,
+      {data:{progress:JSON.stringify(prog)}},sid);
+  }catch(e){console.warn('Save progress:',e);}
+}
+
+// ── SAVE MY LIST ──
+async function saveMyList(item){
+  const sid=getSession();
+  const docId=window._dbDocId;
+  if(!sid||!docId){showToast('✅ Added to My List!');return;}
+  try{
+    const doc=await AH.req('GET',`/databases/${AW.databaseId}/collections/${AW.tableId}/documents/${docId}`,null,sid);
+    const list=JSON.parse(doc.mylist||'[]');
+    if(!list.find(x=>x.t===item.t)){
+      list.push({t:item.t,subj:item.subj,ch:item.ch,savedAt:new Date().toISOString()});
+      await AH.req('PATCH',`/databases/${AW.databaseId}/collections/${AW.tableId}/documents/${docId}`,
+        {data:{mylist:JSON.stringify(list)}},sid);
+    }
+    showToast('✅ Saved to My List!');
+  }catch(e){showToast('✅ Added to My List!');}
+}
+
+// ── LOGOUT ──
+async function doLogout(){
+  const sid=getSession();
+  if(sid){
+    try{await AH.req('DELETE','/account/sessions/current',null,sid);}catch(e){}
+  }
+  clearSession();
+  document.getElementById('app').classList.remove('show');
+  document.getElementById('auth').classList.add('show');
+  go('login');
+  showToast('👋 Signed out successfully.');
+  document.getElementById('umenu').classList.remove('open');
+}
+
+// ── ENTER APP ──
+function enterApp(name,email){
   document.getElementById('auth').style.display='none';
   document.getElementById('app').classList.add('show');
-  document.getElementById('uinit').textContent=name.charAt(0).toUpperCase();
+  document.getElementById('uinit').childNodes[0].textContent=name.charAt(0).toUpperCase();
+  if(document.getElementById('umName')) document.getElementById('umName').textContent=name;
+  if(document.getElementById('umEmail')) document.getElementById('umEmail').textContent=email||'';
   renderAll();
 }
+
+// ── AUTO LOGIN CHECK ──
+(async function checkAutoLogin(){
+  const sid=getSession();
+  const savedUser=localStorage.getItem('gk_user');
+  if(sid&&savedUser){
+    try{
+      _user=JSON.parse(savedUser);
+      // Skip intro & auth — go straight to app
+      document.getElementById('intro').classList.add('out');
+      setTimeout(()=>{
+        document.getElementById('intro').style.display='none';
+        document.getElementById('auth').style.display='none';
+      },600);
+      await loadUserProgress(sid);
+      enterApp(_user.name,_user.email);
+      return;
+    }catch(e){clearSession();}
+  }
+  // Normal intro flow
+  window.addEventListener('load',()=>{
+    setTimeout(()=>{
+      document.getElementById('intro').classList.add('out');
+      setTimeout(()=>{
+        document.getElementById('intro').style.display='none';
+        document.getElementById('auth').classList.add('show');
+      },1000);
+    },3600);
+  });
+})();
+
+function err(id,msg){const e=document.getElementById(id);e.textContent=msg;e.style.display='block'}
+
+// ── USER MENU TOGGLE ──
+function toggleMenu(){
+  document.getElementById('umenu').classList.toggle('open');
+}
+document.addEventListener('click',e=>{
+  const av=document.getElementById('uinit');
+  const menu=document.getElementById('umenu');
+  if(menu&&!av.contains(e.target)) menu.classList.remove('open');
+});
 
 // ═══════════ RENDER ═══════════
 const ROWMAP={physics:'rp',chemistry:'rch',maths:'rm',biology:'rb',english:'re',cs:'rcs'};
@@ -752,6 +986,7 @@ function clickResult(subj,title){
 // ═══════════ MODAL ═══════════
 function openMBI(s,i){openMI({...D[s][i],subj:s})}
 function openMI(item){
+  window._currentModalItem = item;
   document.getElementById('mtitle').textContent=item.t;
   const bg=document.getElementById('mhbg');
   bg.textContent=item.i;bg.style.background=item.g;bg.style.fontSize='100px';
@@ -799,7 +1034,7 @@ function shareNow(title){
   navigator.clipboard&&navigator.clipboard.writeText(location.href+(title?'?ch='+encodeURIComponent(title):'')).catch(()=>{});
   showToast('🔗 Link copied to clipboard!');
 }
-function addList(){showToast('✅ Added to My List!')}
+function addList(){if(window._currentModalItem)saveMyList(window._currentModalItem);else showToast('✅ Added to My List!')}
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('sc',scrollY>60));
 </script>
 </body>
