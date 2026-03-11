@@ -111,6 +111,21 @@ html,body{background:#000;color:#fff;font-family:'Inter',sans-serif;overflow-x:h
 .um-div{height:1px;background:#2a2a2a;margin:4px 0}
 .um-out{color:#ff6b6b!important}
 
+/* ══ GRADE DROPDOWN ══ */
+.grade-wrap{position:relative}
+.grade-btn{display:flex;align-items:center;gap:6px;padding:5px 12px;border:1px solid rgba(255,255,255,.25);border-radius:4px;background:rgba(255,255,255,.08);color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap}
+.grade-btn:hover{border-color:#fff;background:rgba(255,255,255,.15)}
+.grade-badge{background:var(--red);color:#fff;font-size:10px;font-weight:800;padding:1px 7px;border-radius:10px;margin-left:2px}
+.grade-menu{position:absolute;top:calc(100% + 8px);left:0;background:#181818;border:1px solid #333;border-radius:8px;min-width:280px;box-shadow:0 8px 40px rgba(0,0,0,.9);display:none;z-index:600;padding:10px}
+.grade-menu.open{display:block}
+.grade-menu-title{font-size:10px;font-weight:700;color:#555;letter-spacing:1.5px;text-transform:uppercase;padding:4px 6px 10px}
+.grade-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.grade-item{padding:10px 4px;text-align:center;border-radius:6px;cursor:pointer;transition:background .15s;border:1px solid transparent}
+.grade-item:hover{background:rgba(255,255,255,.08)}
+.grade-item.active{background:rgba(229,9,20,.15);border-color:rgba(229,9,20,.5)}
+.grade-item .gnum{font-size:17px;font-weight:800;display:block;color:#fff}
+.grade-item .glbl{font-size:9px;color:#666;display:block;margin-top:2px}
+
 /* ══ HERO ══ */
 .hero{height:96vh;min-height:600px;position:relative;display:flex;align-items:flex-end;padding:0 60px 110px;overflow:hidden}
 .hbg{position:absolute;inset:0;
@@ -320,6 +335,17 @@ footer{background:#141414;border-top:1px solid #222;padding:48px 60px 34px}
       <li><a href="#">Leaderboard</a></li>
     </ul>
     <div class="nright">
+      <!-- GRADE SELECTOR -->
+      <div class="grade-wrap">
+        <button class="grade-btn" onclick="toggleGradeMenu()">
+          📚 Grade <span class="grade-badge" id="gradeLabel">12</span>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="grade-menu" id="gradeMenu">
+          <div class="grade-menu-title">Select Your Grade</div>
+          <div class="grade-grid" id="gradeGrid"></div>
+        </div>
+      </div>
       <!-- SEARCH WITH DROPDOWN -->
       <div class="srchwrap">
         <div class="srch" id="srchBox">
@@ -362,12 +388,6 @@ footer{background:#141414;border-top:1px solid #222;padding:48px 60px 34px}
   <div class="rwrap">
     <div class="stabs" id="stabs">
       <div class="stab on" onclick="setTab(this,'all')">All</div>
-      <div class="stab" onclick="setTab(this,'physics')">⚛️ Physics</div>
-      <div class="stab" onclick="setTab(this,'chemistry')">🧪 Chemistry</div>
-      <div class="stab" onclick="setTab(this,'maths')">📐 Mathematics</div>
-      <div class="stab" onclick="setTab(this,'biology')">🧬 Biology</div>
-      <div class="stab" onclick="setTab(this,'english')">📖 English</div>
-      <div class="stab" onclick="setTab(this,'cs')">💻 Comp. Sci</div>
     </div>
     <div style="height:32px"></div>
 
@@ -375,12 +395,7 @@ footer{background:#141414;border-top:1px solid #222;padding:48px 60px 34px}
       <div class="rtitle">▶ Continue Watching <span class="rmore">See all ›</span></div>
       <div class="slwrap"><button class="slbtn l" onclick="sr('rc',-1)">‹</button><div class="crow" id="rc"></div><button class="slbtn r" onclick="sr('rc',1)">›</button></div>
     </div>
-    <div class="row" id="row-physics"><div class="rtitle">⚛️ Physics <span class="rmore">See all ›</span></div><div class="slwrap"><button class="slbtn l" onclick="sr('rp',-1)">‹</button><div class="crow" id="rp"></div><button class="slbtn r" onclick="sr('rp',1)">›</button></div></div>
-    <div class="row" id="row-chemistry"><div class="rtitle">🧪 Chemistry <span class="rmore">See all ›</span></div><div class="slwrap"><button class="slbtn l" onclick="sr('rch',-1)">‹</button><div class="crow" id="rch"></div><button class="slbtn r" onclick="sr('rch',1)">›</button></div></div>
-    <div class="row" id="row-maths"><div class="rtitle">📐 Mathematics <span class="rmore">See all ›</span></div><div class="slwrap"><button class="slbtn l" onclick="sr('rm',-1)">‹</button><div class="crow" id="rm"></div><button class="slbtn r" onclick="sr('rm',1)">›</button></div></div>
-    <div class="row" id="row-biology"><div class="rtitle">🧬 Biology <span class="rmore">See all ›</span></div><div class="slwrap"><button class="slbtn l" onclick="sr('rb',-1)">‹</button><div class="crow" id="rb"></div><button class="slbtn r" onclick="sr('rb',1)">›</button></div></div>
-    <div class="row" id="row-english"><div class="rtitle">📖 English <span class="rmore">See all ›</span></div><div class="slwrap"><button class="slbtn l" onclick="sr('re',-1)">‹</button><div class="crow" id="re"></div><button class="slbtn r" onclick="sr('re',1)">›</button></div></div>
-    <div class="row" id="row-cs"><div class="rtitle">💻 Computer Science <span class="rmore">See all ›</span></div><div class="slwrap"><button class="slbtn l" onclick="sr('rcs',-1)">‹</button><div class="crow" id="rcs"></div><button class="slbtn r" onclick="sr('rcs',1)">›</button></div></div>
+    <!-- Subject rows injected dynamically by buildAllRows() -->
   </div>
 
   <footer>
@@ -436,106 +451,628 @@ footer{background:#141414;border-top:1px solid #222;padding:48px 60px 34px}
 
 <script>
 // ═══════════════════════════════════════
-// DATA — All 12th Std Chapters
+// CURRICULUM DATA — All Grades 1 to 12
 // ═══════════════════════════════════════
-const D = {
-  physics:[
-    {t:"Electric Charges & Fields",i:"⚡",g:"linear-gradient(135deg,#080836,#0c0c66)",ch:"Ch.1",tp:"Coulomb's Law, Gauss's Theorem",d:"4h 20m",dif:"Medium",desc:"Fundamental nature of electric charge, Coulomb's law in vector form, electric field lines, Gauss's theorem with applications.",p:65},
-    {t:"Electrostatic Potential & Capacitance",i:"🔋",g:"linear-gradient(135deg,#160a4e,#2a1070)",ch:"Ch.2",tp:"Potential, Capacitance, Dielectrics",d:"3h 45m",dif:"Medium",desc:"Electric potential, equipotential surfaces, capacitors in series/parallel, energy stored, dielectrics.",p:30},
-    {t:"Current Electricity",i:"💡",g:"linear-gradient(135deg,#0a280a,#1a5c1a)",ch:"Ch.3",tp:"Ohm's Law, Kirchhoff's Laws",d:"5h 10m",dif:"Hard",desc:"Drift velocity, Ohm's law, Kirchhoff's laws, Wheatstone bridge, potentiometer.",p:10},
-    {t:"Moving Charges & Magnetism",i:"🧲",g:"linear-gradient(135deg,#3d0000,#8b0000)",ch:"Ch.4",tp:"Biot-Savart, Ampere, Cyclotron",d:"4h 50m",dif:"Hard",desc:"Biot-Savart law, Ampere's law, motion in EM fields, galvanometer, cyclotron.",p:0},
-    {t:"Magnetism & Matter",i:"🌍",g:"linear-gradient(135deg,#0a183a,#182c6b)",ch:"Ch.5",tp:"Bar Magnet, Earth's Magnetism",d:"2h 40m",dif:"Easy",desc:"Magnetic dipole, earth's field, magnetic properties of materials, hysteresis.",p:0},
-    {t:"Electromagnetic Induction",i:"🌀",g:"linear-gradient(135deg,#1a1a00,#5c5c00)",ch:"Ch.6",tp:"Faraday, Lenz, Inductance",d:"3h 30m",dif:"Medium",desc:"Faraday's laws, Lenz's law, motional EMF, self and mutual inductance.",p:0},
-    {t:"Alternating Current",i:"〰️",g:"linear-gradient(135deg,#2e0c0c,#6b1a1a)",ch:"Ch.7",tp:"RLC, Resonance, Transformer",d:"4h 00m",dif:"Hard",desc:"Phasors, RLC series circuit, resonance, power factor, LC oscillations, transformers.",p:0},
-    {t:"Electromagnetic Waves",i:"📡",g:"linear-gradient(135deg,#001a2d,#003d6b)",ch:"Ch.8",tp:"Maxwell's Equations, EM Spectrum",d:"2h 20m",dif:"Easy",desc:"Displacement current, Maxwell's equations, EM spectrum from radio to gamma rays.",p:0},
-    {t:"Ray Optics & Optical Instruments",i:"🔭",g:"linear-gradient(135deg,#00001a,#000066)",ch:"Ch.9",tp:"Lenses, Mirrors, Microscope, Telescope",d:"5h 20m",dif:"Medium",desc:"Reflection, refraction, TIR, prism, lenses, eye, microscope, telescope.",p:85},
-    {t:"Wave Optics",i:"🌊",g:"linear-gradient(135deg,#001a1a,#005c5c)",ch:"Ch.10",tp:"Huygens, Interference, Diffraction",d:"3h 40m",dif:"Hard",desc:"Huygens principle, Young's double slit, coherence, diffraction, polarisation.",p:0},
-    {t:"Dual Nature of Radiation & Matter",i:"☢️",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Ch.11",tp:"Photoelectric Effect, de Broglie",d:"2h 50m",dif:"Medium",desc:"Photoelectric effect, Einstein's equation, wave-particle duality, de Broglie wavelength.",p:0},
-    {t:"Atoms",i:"⚛️",g:"linear-gradient(135deg,#001a0d,#004018)",ch:"Ch.12",tp:"Bohr Model, Hydrogen Spectrum",d:"2h 30m",dif:"Easy",desc:"Rutherford's model, Bohr's model, hydrogen spectrum, energy levels.",p:0},
-    {t:"Nuclei",i:"💥",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.13",tp:"Binding Energy, Radioactivity, Fission",d:"3h 10m",dif:"Medium",desc:"Binding energy, radioactivity, alpha/beta/gamma decay, fission and fusion.",p:0},
-    {t:"Semiconductor Electronics",i:"🖥️",g:"linear-gradient(135deg,#0d0d1a,#1a1a4d)",ch:"Ch.14",tp:"Diode, Transistor, Logic Gates",d:"4h 30m",dif:"Hard",desc:"p-n junction, diode, rectifiers, Zener, transistor, logic gates and digital circuits.",p:40},
-  ],
-  chemistry:[
-    {t:"The Solid State",i:"💎",g:"linear-gradient(135deg,#0d0d3d,#1a1a6b)",ch:"Ch.1",tp:"Crystal Structure, Packing, Defects",d:"3h 20m",dif:"Medium",desc:"Crystal lattices, unit cells, packing efficiency, crystal defects, electrical and magnetic properties.",p:0},
-    {t:"Solutions",i:"🧪",g:"linear-gradient(135deg,#003d3d,#007070)",ch:"Ch.2",tp:"Raoult's Law, Colligative Properties",d:"3h 40m",dif:"Medium",desc:"Concentration, Raoult's law, elevation of BP, depression of FP, osmotic pressure, abnormal molar mass.",p:50},
-    {t:"Electrochemistry",i:"⚗️",g:"linear-gradient(135deg,#2d0d4e,#5c1a9e)",ch:"Ch.3",tp:"Galvanic Cell, Nernst, Electrolysis",d:"4h 20m",dif:"Hard",desc:"Galvanic cells, Nernst equation, electrolysis, Faraday's laws, conductance, batteries, fuel cells.",p:20},
-    {t:"Chemical Kinetics",i:"💨",g:"linear-gradient(135deg,#3d1a00,#7a3300)",ch:"Ch.4",tp:"Rate Laws, Activation Energy, Arrhenius",d:"3h 10m",dif:"Medium",desc:"Rate expression, order of reactions, Arrhenius equation, activation energy, catalysis.",p:0},
-    {t:"Surface Chemistry",i:"🔵",g:"linear-gradient(135deg,#001a3d,#003470)",ch:"Ch.5",tp:"Adsorption, Colloids, Catalysis",d:"2h 30m",dif:"Easy",desc:"Adsorption, adsorption isotherms, catalysis, colloids, emulsions.",p:0},
-    {t:"Isolation of Elements",i:"⛏️",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.6",tp:"Metallurgy, Thermodynamics, Refining",d:"2h 10m",dif:"Easy",desc:"Concentration of ores, extraction, thermodynamic principles, refining methods.",p:0},
-    {t:"The p-Block Elements",i:"🧬",g:"linear-gradient(135deg,#0d3d00,#1a6b00)",ch:"Ch.7",tp:"Group 15-18 Elements & Compounds",d:"4h 40m",dif:"Hard",desc:"Groups 15-18: trends, preparation and properties of important compounds.",p:0},
-    {t:"The d & f Block Elements",i:"🔩",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.8",tp:"Transition Metals, Lanthanoids",d:"3h 00m",dif:"Medium",desc:"Transition metals properties, colour, magnetic properties, lanthanoids and actinoids.",p:0},
-    {t:"Coordination Compounds",i:"🌐",g:"linear-gradient(135deg,#001a3d,#003470)",ch:"Ch.9",tp:"IUPAC, Werner, Isomerism, CFT",d:"4h 00m",dif:"Hard",desc:"Ligands, IUPAC nomenclature, isomerism, bonding, crystal field theory, colour.",p:0},
-    {t:"Haloalkanes & Haloarenes",i:"🌡️",g:"linear-gradient(135deg,#1a3d00,#2d6600)",ch:"Ch.10",tp:"SN1, SN2, Elimination Reactions",d:"3h 50m",dif:"Hard",desc:"Nomenclature, SN1/SN2 mechanisms, stereochemistry, Grignard reagent.",p:10},
-    {t:"Alcohols, Phenols & Ethers",i:"🍶",g:"linear-gradient(135deg,#3d0d00,#6b1a00)",ch:"Ch.11",tp:"Preparation, Reactions, Acidity",d:"3h 20m",dif:"Medium",desc:"Classification, preparation, reactions, acidic character of phenol.",p:0},
-    {t:"Aldehydes, Ketones & Carboxylic Acids",i:"🧴",g:"linear-gradient(135deg,#0d1a3d,#1a2d6b)",ch:"Ch.12",tp:"Nucleophilic Addition, Reactions",d:"4h 10m",dif:"Hard",desc:"Nucleophilic addition, reactions, acidity of carboxylic acids, acid derivatives.",p:0},
-    {t:"Amines",i:"🔬",g:"linear-gradient(135deg,#2d0d00,#5c1a00)",ch:"Ch.13",tp:"Classification, Basicity, Reactions",d:"2h 50m",dif:"Medium",desc:"Classification, basicity, preparation, diazotisation and coupling reactions.",p:0},
-    {t:"Biomolecules",i:"🧫",g:"linear-gradient(135deg,#001a00,#003300)",ch:"Ch.14",tp:"Carbohydrates, Proteins, DNA, Vitamins",d:"3h 30m",dif:"Medium",desc:"Carbohydrates, amino acids, proteins, enzymes, nucleic acids, vitamins, hormones.",p:0},
-  ],
-  maths:[
-    {t:"Relations & Functions",i:"🔗",g:"linear-gradient(135deg,#0d001a,#280040)",ch:"Ch.1",tp:"Types of Relations, Composite, Inverse",d:"3h 20m",dif:"Easy",desc:"Types of relations, types of functions, composition, invertible functions, binary operations.",p:100},
-    {t:"Inverse Trigonometric Functions",i:"📐",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.2",tp:"Domain, Range, Graphs, Identities",d:"2h 40m",dif:"Medium",desc:"Definition, domain and range, graphs, elementary properties and identities.",p:75},
-    {t:"Matrices",i:"🔢",g:"linear-gradient(135deg,#1a1a00,#454500)",ch:"Ch.3",tp:"Operations, Transpose, Inverse",d:"3h 50m",dif:"Medium",desc:"Types of matrices, operations, transpose, symmetric, invertible matrices.",p:40},
-    {t:"Determinants",i:"📊",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.4",tp:"Properties, Cofactors, Cramer's Rule",d:"3h 30m",dif:"Medium",desc:"Properties, cofactors, adjoint, inverse, applications in solving equations.",p:20},
-    {t:"Continuity & Differentiability",i:"📈",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Ch.5",tp:"Limits, Chain Rule, MVT",d:"5h 30m",dif:"Hard",desc:"Continuity, differentiability, chain rule, implicit, parametric, log differentiation, MVT.",p:0},
-    {t:"Application of Derivatives",i:"📉",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Ch.6",tp:"Tangents, Maxima, Minima",d:"4h 20m",dif:"Hard",desc:"Rate of change, increasing/decreasing, tangents, normals, maxima and minima.",p:0},
-    {t:"Integrals",i:"∫",g:"linear-gradient(135deg,#001a1a,#005050)",ch:"Ch.7",tp:"Substitution, By Parts, Definite",d:"6h 20m",dif:"Hard",desc:"Methods of integration, definite integrals, fundamental theorem of calculus.",p:0},
-    {t:"Application of Integrals",i:"🏔️",g:"linear-gradient(135deg,#0d1a0d,#1a4d1a)",ch:"Ch.8",tp:"Area Under Curves",d:"2h 40m",dif:"Medium",desc:"Area under simple curves and area between two curves.",p:0},
-    {t:"Differential Equations",i:"🌀",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Ch.9",tp:"Order, Variable Separable, Linear",d:"4h 00m",dif:"Hard",desc:"Order and degree, formation, variable separable, homogeneous, linear DEs.",p:0},
-    {t:"Vector Algebra",i:"➡️",g:"linear-gradient(135deg,#001a3d,#003d8c)",ch:"Ch.10",tp:"Dot Product, Cross Product",d:"3h 20m",dif:"Medium",desc:"Vectors, dot and cross products, scalar triple product, applications.",p:0},
-    {t:"Three Dimensional Geometry",i:"📦",g:"linear-gradient(135deg,#00001a,#000050)",ch:"Ch.11",tp:"Lines, Planes, Direction Cosines",d:"3h 45m",dif:"Medium",desc:"Direction cosines, equations of line and plane, shortest distance.",p:0},
-    {t:"Linear Programming",i:"📋",g:"linear-gradient(135deg,#1a1000,#4d3000)",ch:"Ch.12",tp:"LPP, Corner Point Method",d:"2h 30m",dif:"Easy",desc:"LPPs, graphical method, feasible region, corner point method.",p:0},
-    {t:"Probability",i:"🎲",g:"linear-gradient(135deg,#1a0010,#4d0030)",ch:"Ch.13",tp:"Bayes Theorem, Distributions",d:"4h 10m",dif:"Hard",desc:"Conditional probability, Bayes' theorem, random variables, binomial distribution.",p:0},
-  ],
-  biology:[
-    {t:"Reproduction in Organisms",i:"🌸",g:"linear-gradient(135deg,#1a003d,#3d0080)",ch:"Ch.1",tp:"Asexual, Sexual Reproduction",d:"2h 30m",dif:"Easy",desc:"Modes of reproduction, asexual and sexual reproduction, vegetative propagation.",p:90},
-    {t:"Sexual Reproduction in Flowering Plants",i:"🌺",g:"linear-gradient(135deg,#3d000d,#8c001a)",ch:"Ch.2",tp:"Pollination, Fertilisation, Seed",d:"3h 40m",dif:"Medium",desc:"Flower structure, male/female gametophytes, pollination, double fertilisation, seed.",p:60},
-    {t:"Human Reproduction",i:"👶",g:"linear-gradient(135deg,#001a3d,#003d8c)",ch:"Ch.3",tp:"Gametogenesis, Menstrual Cycle",d:"3h 20m",dif:"Medium",desc:"Reproductive systems, gametogenesis, menstrual cycle, fertilisation, implantation.",p:30},
-    {t:"Reproductive Health",i:"💊",g:"linear-gradient(135deg,#003d00,#007000)",ch:"Ch.4",tp:"Contraception, MTP, STIs",d:"2h 10m",dif:"Easy",desc:"Reproductive health, contraception methods, MTP, STIs.",p:0},
-    {t:"Principles of Inheritance & Variation",i:"🧬",g:"linear-gradient(135deg,#001a1a,#005c5c)",ch:"Ch.5",tp:"Mendel's Laws, Codominance, Sex Determination",d:"4h 40m",dif:"Hard",desc:"Mendel's laws, codominance, incomplete dominance, sex determination, chromosomal disorders.",p:55},
-    {t:"Molecular Basis of Inheritance",i:"🔬",g:"linear-gradient(135deg,#1a1a3d,#2d2d8c)",ch:"Ch.6",tp:"DNA, Replication, Transcription, Translation",d:"5h 00m",dif:"Hard",desc:"DNA structure, replication, transcription, genetic code, translation, gene regulation.",p:20},
-    {t:"Evolution",i:"🦋",g:"linear-gradient(135deg,#2d0d00,#6b1a00)",ch:"Ch.7",tp:"Origin of Life, Natural Selection",d:"3h 10m",dif:"Medium",desc:"Origin of life, Darwinism, Hardy-Weinberg principle, speciation.",p:0},
-    {t:"Human Health and Disease",i:"🏥",g:"linear-gradient(135deg,#003d1a,#007030)",ch:"Ch.8",tp:"Immunity, AIDS, Cancer, Vaccines",d:"3h 20m",dif:"Medium",desc:"Common diseases, immunity, vaccination, AIDS, cancer, drugs and alcohol.",p:0},
-    {t:"Food Production Strategies",i:"🌾",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.9",tp:"Plant Breeding, Animal Husbandry",d:"2h 20m",dif:"Easy",desc:"Animal husbandry, plant breeding, biofortification, tissue culture.",p:0},
-    {t:"Microbes in Human Welfare",i:"🦠",g:"linear-gradient(135deg,#001a3d,#003d8c)",ch:"Ch.10",tp:"Fermentation, Biogas, Biocontrol",d:"2h 40m",dif:"Easy",desc:"Microbes in food, industrial products, sewage treatment, biogas, biofertilisers.",p:0},
-    {t:"Biotechnology: Principles",i:"⚗️",g:"linear-gradient(135deg,#1a003d,#400080)",ch:"Ch.11",tp:"Recombinant DNA, PCR, Electrophoresis",d:"3h 30m",dif:"Hard",desc:"Recombinant DNA technology, restriction enzymes, vectors, PCR, electrophoresis.",p:0},
-    {t:"Biotechnology: Applications",i:"💉",g:"linear-gradient(135deg,#003d1a,#007040)",ch:"Ch.12",tp:"GM Crops, Insulin, Gene Therapy",d:"3h 10m",dif:"Hard",desc:"Applications in agriculture, medicine, GM organisms, gene therapy, bioethics.",p:0},
-    {t:"Organisms & Populations",i:"🌿",g:"linear-gradient(135deg,#0d1a0d,#204020)",ch:"Ch.13",tp:"Habitat, Niche, Population Growth",d:"2h 50m",dif:"Medium",desc:"Organisms and environment, population attributes, growth models, interactions.",p:0},
-    {t:"Ecosystem",i:"🌍",g:"linear-gradient(135deg,#003d00,#006b00)",ch:"Ch.14",tp:"Food Chains, Energy Flow, Nutrient Cycling",d:"2h 50m",dif:"Easy",desc:"Ecosystem structure, productivity, energy flow, ecological pyramids, nutrient cycling.",p:0},
-    {t:"Biodiversity & Conservation",i:"🦁",g:"linear-gradient(135deg,#1a1000,#4d3000)",ch:"Ch.15",tp:"Hotspots, In-situ, Ex-situ",d:"2h 20m",dif:"Easy",desc:"Biodiversity levels, loss, conservation hotspots, protected areas.",p:0},
-    {t:"Environmental Issues",i:"♻️",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Ch.16",tp:"Pollution, Ozone, Deforestation",d:"2h 10m",dif:"Easy",desc:"Air, water, soil pollution, greenhouse effect, ozone depletion, deforestation.",p:0},
-  ],
-  english:[
-    {t:"The Last Lesson",i:"📚",g:"linear-gradient(135deg,#0d1a2d,#1a3d6b)",ch:"Prose 1",tp:"Alphonse Daudet",d:"1h 20m",dif:"Easy",desc:"Last French lesson in Alsace after Prussian conquest. Themes: patriotism, language, loss.",p:100},
-    {t:"Lost Spring",i:"🌱",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Prose 2",tp:"Anees Jung",d:"1h 10m",dif:"Easy",desc:"Stories of Saheb and Mukesh — poverty and child labour.",p:80},
-    {t:"Deep Water",i:"🌊",g:"linear-gradient(135deg,#001a3d,#00336b)",ch:"Prose 3",tp:"William O. Douglas",d:"1h 00m",dif:"Easy",desc:"Author's journey overcoming the fear of water. Themes: fear, determination.",p:50},
-    {t:"The Rattrap",i:"🪤",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Prose 4",tp:"Selma Lagerlöf",d:"1h 20m",dif:"Easy",desc:"Peddler's worldview as a rattrap. Themes: redemption, human goodness.",p:20},
-    {t:"Indigo",i:"💙",g:"linear-gradient(135deg,#00001a,#000066)",ch:"Prose 5",tp:"Louis Fischer",d:"1h 00m",dif:"Easy",desc:"Gandhi's Champaran movement. Themes: civil disobedience, justice.",p:0},
-    {t:"Poets and Pancakes",i:"🎭",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Prose 6",tp:"Asokamitran",d:"1h 10m",dif:"Easy",desc:"Life inside Gemini Studios. Themes: bureaucracy, creativity, film industry.",p:0},
-    {t:"The Interview",i:"🎤",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Prose 7",tp:"Christopher Silvester / Umberto Eco",d:"1h 00m",dif:"Easy",desc:"Importance of interviews in modern journalism. Themes: media, fame, privacy.",p:0},
-    {t:"Going Places",i:"✈️",g:"linear-gradient(135deg,#1a0d0d,#4d1a1a)",ch:"Prose 8",tp:"A.R. Barton",d:"1h 00m",dif:"Easy",desc:"Sophie's world of fantasy and escapism. Themes: adolescent dreams, hero worship.",p:0},
-    {t:"My Mother at Sixty-Six",i:"👩",g:"linear-gradient(135deg,#0d1a0d,#204020)",ch:"Poem 1",tp:"Kamala Das",d:"0h 45m",dif:"Easy",desc:"Fear of losing ageing mother. Themes: old age, separation, mother-child love.",p:0},
-    {t:"Elementary School Classroom in a Slum",i:"🏫",g:"linear-gradient(135deg,#1a1000,#4d3000)",ch:"Poem 2",tp:"Stephen Spender",d:"0h 40m",dif:"Easy",desc:"Slum children and inequality. Themes: poverty, education, liberation.",p:0},
-    {t:"Keeping Quiet",i:"🤫",g:"linear-gradient(135deg,#001a2d,#004d8c)",ch:"Poem 3",tp:"Pablo Neruda",d:"0h 40m",dif:"Easy",desc:"Call for universal silence. Themes: peace, introspection, ecological harmony.",p:0},
-    {t:"A Thing of Beauty",i:"🌅",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Poem 4",tp:"John Keats",d:"0h 35m",dif:"Easy",desc:"Beauty as a source of eternal joy. Themes: aesthetics, nature, immortality.",p:0},
-    {t:"A Roadside Stand",i:"🏪",g:"linear-gradient(135deg,#001a00,#003d00)",ch:"Poem 5",tp:"Robert Frost",d:"0h 35m",dif:"Easy",desc:"Rural poor and urban indifference. Themes: poverty, false promises.",p:0},
-    {t:"Aunt Jennifer's Tigers",i:"🐯",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Poem 6",tp:"Adrienne Rich",d:"0h 35m",dif:"Easy",desc:"Patriarchal oppression and freedom through art.",p:0},
-  ],
-  cs:[
-    {t:"Python Revision Tour",i:"🐍",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Ch.1",tp:"Data Types, Functions, Recursion",d:"3h 00m",dif:"Easy",desc:"Revision of Python: data types, operators, loops, functions, recursion.",p:90},
-    {t:"Data Handling using NumPy",i:"🔢",g:"linear-gradient(135deg,#001a3d,#004d8c)",ch:"Ch.2",tp:"Arrays, Indexing, Mathematical Ops",d:"2h 30m",dif:"Medium",desc:"NumPy arrays, indexing, slicing, broadcasting, mathematical functions.",p:50},
-    {t:"Data Handling using Pandas",i:"🐼",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.3",tp:"Series, DataFrame, Groupby",d:"3h 20m",dif:"Medium",desc:"Series, DataFrame, CSV import, groupby, aggregation functions.",p:30},
-    {t:"Plotting with Matplotlib",i:"📊",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.4",tp:"Line, Bar, Histogram, Pie Charts",d:"2h 00m",dif:"Easy",desc:"Line, bar, histogram, pie and scatter charts with customisation.",p:10},
-    {t:"Computer Networks",i:"🌐",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.5",tp:"Topologies, OSI, TCP/IP, Protocols",d:"3h 40m",dif:"Medium",desc:"Network topologies, OSI and TCP/IP models, IP addressing, protocols.",p:0},
-    {t:"Database Concepts",i:"🗃️",g:"linear-gradient(135deg,#0d001a,#280060)",ch:"Ch.6",tp:"DBMS, Relational Model, Keys",d:"2h 50m",dif:"Medium",desc:"DBMS, relational model, keys, integrity constraints, E-R model.",p:0},
-    {t:"SQL Queries",i:"💾",g:"linear-gradient(135deg,#00001a,#000060)",ch:"Ch.7",tp:"DDL, DML, DQL, Joins, Aggregates",d:"4h 00m",dif:"Hard",desc:"DDL, DML, SELECT queries, WHERE, GROUP BY, HAVING, joins.",p:0},
-    {t:"Django Web Framework",i:"🕸️",g:"linear-gradient(135deg,#001a0d,#004d20)",ch:"Ch.8",tp:"MVT, Models, Views, Templates",d:"4h 30m",dif:"Hard",desc:"Django MVT architecture, models, views, templates, URL routing.",p:0},
-    {t:"Cybersecurity & Ethics",i:"🔐",g:"linear-gradient(135deg,#1a0000,#500000)",ch:"Ch.9",tp:"Threats, Encryption, Cyber Laws",d:"2h 20m",dif:"Medium",desc:"Cyber threats, encryption, firewalls, digital signatures, IT Act 2000.",p:0},
-    {t:"Societal Impacts of IT",i:"🌍",g:"linear-gradient(135deg,#001a00,#003d00)",ch:"Ch.10",tp:"Digital Footprint, AI Ethics, e-Waste",d:"1h 50m",dif:"Easy",desc:"Net neutrality, data privacy, AI ethics, intellectual property, e-waste.",p:0},
-  ]
+const GRADES = {
+  1:{
+    label:"Grade 1", emoji:"🌟",
+    subjects:{
+      maths:[
+        {t:"Numbers 1 to 100",i:"🔢",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.1",tp:"Counting, Writing, Ordering",d:"1h 30m",dif:"Easy",desc:"Counting, reading and writing numbers up to 100.",p:0},
+        {t:"Addition & Subtraction",i:"➕",g:"linear-gradient(135deg,#1a0033,#3d006b)",ch:"Ch.2",tp:"Single & Double Digit",d:"1h 20m",dif:"Easy",desc:"Adding and subtracting single and double digit numbers.",p:0},
+        {t:"Shapes Around Us",i:"🔺",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.3",tp:"Circle, Square, Triangle, Rectangle",d:"1h 00m",dif:"Easy",desc:"Identifying basic 2D shapes and their properties.",p:0},
+        {t:"Measurement",i:"📏",g:"linear-gradient(135deg,#330000,#660000)",ch:"Ch.4",tp:"Length, Weight, Capacity",d:"1h 00m",dif:"Easy",desc:"Measuring length, weight and capacity using non-standard units.",p:0},
+        {t:"Patterns",i:"🎨",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.5",tp:"Repeating Patterns, Number Patterns",d:"0h 45m",dif:"Easy",desc:"Identifying and creating repeating patterns.",p:0},
+        {t:"Money",i:"💰",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Ch.6",tp:"Coins, Notes, Simple Transactions",d:"0h 50m",dif:"Easy",desc:"Recognising coins and notes, basic transactions.",p:0},
+      ],
+      english:[
+        {t:"Alphabet & Phonics",i:"🔤",g:"linear-gradient(135deg,#0d001a,#280045)",ch:"Ch.1",tp:"A to Z, Vowels, Consonants",d:"1h 30m",dif:"Easy",desc:"Learning alphabet, vowels, consonants and basic phonics.",p:0},
+        {t:"Simple Words & Spelling",i:"📝",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.2",tp:"3-Letter Words, Word Families",d:"1h 20m",dif:"Easy",desc:"Reading and spelling simple 3 and 4 letter words.",p:0},
+        {t:"Simple Sentences",i:"💬",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.3",tp:"Subject, Verb, Object",d:"1h 00m",dif:"Easy",desc:"Building and reading simple sentences.",p:0},
+        {t:"Poems & Rhymes",i:"🎵",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Ch.4",tp:"Nursery Rhymes, Action Songs",d:"0h 45m",dif:"Easy",desc:"Enjoying and reciting simple poems and rhymes.",p:0},
+        {t:"Short Stories",i:"📖",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.5",tp:"Comprehension, Sequencing",d:"1h 00m",dif:"Easy",desc:"Reading short stories and answering simple questions.",p:0},
+      ],
+      evs:[
+        {t:"My Family",i:"👨‍👩‍👧‍👦",g:"linear-gradient(135deg,#330d00,#6b1a00)",ch:"Ch.1",tp:"Family Members, Relationships",d:"0h 45m",dif:"Easy",desc:"Family members and their roles.",p:0},
+        {t:"My Body",i:"🧍",g:"linear-gradient(135deg,#001a33,#003d6b)",ch:"Ch.2",tp:"Body Parts, Senses, Care",d:"0h 45m",dif:"Easy",desc:"Parts of the body and the five senses.",p:0},
+        {t:"Animals Around Us",i:"🐘",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.3",tp:"Pets, Wild Animals, Birds",d:"0h 50m",dif:"Easy",desc:"Domestic, wild and pet animals.",p:0},
+        {t:"Plants Around Us",i:"🌱",g:"linear-gradient(135deg,#1a1a00,#454500)",ch:"Ch.4",tp:"Roots, Leaves, Flowers, Fruits",d:"0h 45m",dif:"Easy",desc:"Parts of a plant and their functions.",p:0},
+        {t:"Food We Eat",i:"🍎",g:"linear-gradient(135deg,#1a0000,#500000)",ch:"Ch.5",tp:"Healthy Food, Fruits, Vegetables",d:"0h 40m",dif:"Easy",desc:"Types of food and healthy eating habits.",p:0},
+      ]
+    }
+  },
+  2:{
+    label:"Grade 2", emoji:"⭐",
+    subjects:{
+      maths:[
+        {t:"Numbers up to 1000",i:"🔢",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.1",tp:"Hundreds, Tens, Ones",d:"1h 30m",dif:"Easy",desc:"Place value, reading and writing numbers up to 1000.",p:0},
+        {t:"Addition with Carrying",i:"➕",g:"linear-gradient(135deg,#1a0033,#3d006b)",ch:"Ch.2",tp:"2 & 3 Digit Addition",d:"1h 20m",dif:"Easy",desc:"Addition of 2 and 3 digit numbers with carrying.",p:0},
+        {t:"Subtraction with Borrowing",i:"➖",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.3",tp:"2 & 3 Digit Subtraction",d:"1h 20m",dif:"Easy",desc:"Subtraction of 2 and 3 digit numbers with borrowing.",p:0},
+        {t:"Multiplication",i:"✖️",g:"linear-gradient(135deg,#330000,#660000)",ch:"Ch.4",tp:"Tables 1-10, Groups",d:"1h 30m",dif:"Easy",desc:"Understanding multiplication as repeated addition, tables 1-10.",p:0},
+        {t:"Division",i:"➗",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.5",tp:"Sharing, Grouping",d:"1h 20m",dif:"Easy",desc:"Division as equal sharing and grouping.",p:0},
+        {t:"Fractions",i:"½",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.6",tp:"Half, Quarter, One-third",d:"1h 00m",dif:"Easy",desc:"Introduction to simple fractions.",p:0},
+        {t:"Time & Calendar",i:"🕐",g:"linear-gradient(135deg,#0d001a,#280045)",ch:"Ch.7",tp:"Hours, Minutes, Days, Months",d:"1h 00m",dif:"Easy",desc:"Reading time on clock and using a calendar.",p:0},
+      ],
+      english:[
+        {t:"Grammar Basics",i:"📖",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Ch.1",tp:"Nouns, Pronouns, Verbs",d:"1h 30m",dif:"Easy",desc:"Introduction to nouns, pronouns and verbs.",p:0},
+        {t:"Adjectives & Describing Words",i:"🌈",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.2",tp:"Colours, Size, Shape, Taste",d:"1h 00m",dif:"Easy",desc:"Using adjectives to describe nouns.",p:0},
+        {t:"Reading Comprehension",i:"📚",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.3",tp:"Short Passages, Questions",d:"1h 00m",dif:"Easy",desc:"Reading short passages and answering questions.",p:0},
+        {t:"Creative Writing",i:"✏️",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Ch.4",tp:"Sentences, Short Paragraphs",d:"1h 00m",dif:"Easy",desc:"Writing simple sentences and short paragraphs.",p:0},
+      ],
+      evs:[
+        {t:"Our Neighbourhood",i:"🏘️",g:"linear-gradient(135deg,#330d00,#6b1a00)",ch:"Ch.1",tp:"Community Helpers, Places",d:"0h 50m",dif:"Easy",desc:"Community helpers and important places in neighbourhood.",p:0},
+        {t:"Transport & Communication",i:"🚗",g:"linear-gradient(135deg,#001a33,#003d6b)",ch:"Ch.2",tp:"Land, Water, Air Transport",d:"0h 50m",dif:"Easy",desc:"Modes of transport and communication.",p:0},
+        {t:"Weather & Seasons",i:"🌦️",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.3",tp:"Summer, Winter, Monsoon, Spring",d:"0h 45m",dif:"Easy",desc:"Four seasons and weather changes.",p:0},
+        {t:"Water & Air",i:"💧",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.4",tp:"Uses, Saving, Pollution",d:"0h 45m",dif:"Easy",desc:"Importance of water and air, conservation.",p:0},
+      ]
+    }
+  },
+  3:{
+    label:"Grade 3", emoji:"🏅",
+    subjects:{
+      maths:[
+        {t:"Large Numbers",i:"🔢",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.1",tp:"Up to 10,000, Place Value",d:"1h 30m",dif:"Easy",desc:"Reading, writing and comparing large numbers.",p:0},
+        {t:"Multiplication Tables",i:"✖️",g:"linear-gradient(135deg,#1a0033,#3d006b)",ch:"Ch.2",tp:"Tables 2-20",d:"1h 30m",dif:"Easy",desc:"Multiplication tables from 2 to 20.",p:0},
+        {t:"Division",i:"➗",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.3",tp:"Long Division, Remainders",d:"1h 20m",dif:"Easy",desc:"Long division and understanding remainders.",p:0},
+        {t:"Fractions",i:"🍕",g:"linear-gradient(135deg,#330000,#660000)",ch:"Ch.4",tp:"Equivalent Fractions, Comparison",d:"1h 20m",dif:"Easy",desc:"Equivalent fractions and comparing fractions.",p:0},
+        {t:"Geometry",i:"📐",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.5",tp:"Lines, Angles, Shapes",d:"1h 30m",dif:"Easy",desc:"Lines, angles and 2D shapes.",p:0},
+        {t:"Measurement",i:"📏",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.6",tp:"cm, m, km, g, kg, L",d:"1h 00m",dif:"Easy",desc:"Standard units of length, weight and capacity.",p:0},
+      ],
+      english:[
+        {t:"Parts of Speech",i:"📝",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Ch.1",tp:"Noun, Verb, Adjective, Adverb",d:"1h 30m",dif:"Easy",desc:"Understanding basic parts of speech.",p:0},
+        {t:"Tenses",i:"🕐",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.2",tp:"Present, Past, Future",d:"1h 30m",dif:"Easy",desc:"Simple present, past and future tenses.",p:0},
+        {t:"Comprehension",i:"📖",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.3",tp:"Passages, Questions, Inference",d:"1h 00m",dif:"Easy",desc:"Reading passages and answering various types of questions.",p:0},
+        {t:"Composition",i:"✏️",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Ch.4",tp:"Paragraphs, Letters, Stories",d:"1h 00m",dif:"Easy",desc:"Writing paragraphs, letters and short stories.",p:0},
+      ],
+      science:[
+        {t:"Plants — Their World",i:"🌿",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.1",tp:"Types, Parts, Functions",d:"1h 00m",dif:"Easy",desc:"Types of plants, parts and their functions.",p:0},
+        {t:"Animals — Habitats",i:"🦁",g:"linear-gradient(135deg,#330d00,#6b1a00)",ch:"Ch.2",tp:"Land, Water, Air Animals",d:"1h 00m",dif:"Easy",desc:"Animal habitats and adaptations.",p:0},
+        {t:"Food & Nutrition",i:"🥗",g:"linear-gradient(135deg,#1a1a00,#454500)",ch:"Ch.3",tp:"Carbohydrates, Proteins, Vitamins",d:"0h 50m",dif:"Easy",desc:"Nutrients in food and balanced diet.",p:0},
+        {t:"Air, Water & Weather",i:"🌤️",g:"linear-gradient(135deg,#001a33,#003d6b)",ch:"Ch.4",tp:"Properties, Uses, Weather Types",d:"0h 50m",dif:"Easy",desc:"Properties of air and water, weather types.",p:0},
+        {t:"Soil",i:"🪨",g:"linear-gradient(135deg,#2d1a00,#5c3300)",ch:"Ch.5",tp:"Types, Uses, Erosion",d:"0h 45m",dif:"Easy",desc:"Types of soil and soil erosion.",p:0},
+      ],
+      sst:[
+        {t:"Our Earth",i:"🌍",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.1",tp:"Globe, Maps, Directions",d:"1h 00m",dif:"Easy",desc:"Earth, globe, maps and cardinal directions.",p:0},
+        {t:"India — Our Country",i:"🇮🇳",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.2",tp:"States, Capital, National Symbols",d:"1h 00m",dif:"Easy",desc:"India's states, capital and national symbols.",p:0},
+        {t:"Our Past",i:"🏛️",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.3",tp:"Ancient Civilisations, Monuments",d:"1h 00m",dif:"Easy",desc:"Ancient civilisations and important monuments of India.",p:0},
+      ]
+    }
+  },
+  4:{
+    label:"Grade 4", emoji:"🎯",
+    subjects:{
+      maths:[
+        {t:"Numbers to 1,00,000",i:"🔢",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.1",tp:"Place Value, Expanded Form",d:"1h 30m",dif:"Easy",desc:"Numbers up to 1 lakh with place value.",p:0},
+        {t:"Factors & Multiples",i:"✖️",g:"linear-gradient(135deg,#1a0033,#3d006b)",ch:"Ch.2",tp:"HCF, LCM",d:"1h 30m",dif:"Easy",desc:"Finding factors, multiples, HCF and LCM.",p:0},
+        {t:"Fractions & Decimals",i:"🍕",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.3",tp:"Operations on Fractions, Decimals",d:"1h 30m",dif:"Easy",desc:"Addition, subtraction of fractions and introduction to decimals.",p:0},
+        {t:"Geometry",i:"📐",g:"linear-gradient(135deg,#330000,#660000)",ch:"Ch.4",tp:"Angles, Triangles, Quadrilaterals",d:"1h 30m",dif:"Easy",desc:"Types of angles, triangles and quadrilaterals.",p:0},
+        {t:"Perimeter & Area",i:"📏",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.5",tp:"Formulas for Common Shapes",d:"1h 00m",dif:"Easy",desc:"Calculating perimeter and area of basic shapes.",p:0},
+        {t:"Data Handling",i:"📊",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.6",tp:"Tally, Bar Graph, Pictograph",d:"1h 00m",dif:"Easy",desc:"Collecting, organising and representing data.",p:0},
+      ],
+      english:[
+        {t:"Grammar — Advanced",i:"📖",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Ch.1",tp:"Tenses, Voice, Narration",d:"1h 30m",dif:"Easy",desc:"Active/passive voice, direct/indirect narration.",p:0},
+        {t:"Reading Skills",i:"📚",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.2",tp:"Skimming, Scanning, Inference",d:"1h 00m",dif:"Easy",desc:"Developing reading comprehension strategies.",p:0},
+        {t:"Writing Skills",i:"✏️",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.3",tp:"Essays, Letters, Notices",d:"1h 00m",dif:"Easy",desc:"Writing essays, formal and informal letters.",p:0},
+        {t:"Literature",i:"🎭",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Ch.4",tp:"Prose, Poetry, Drama",d:"1h 00m",dif:"Easy",desc:"Prose passages, poems and short drama excerpts.",p:0},
+      ],
+      science:[
+        {t:"The Living World",i:"🧬",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.1",tp:"Cell, Life Processes",d:"1h 00m",dif:"Easy",desc:"Characteristics of living things, introduction to cells.",p:0},
+        {t:"Matter & Materials",i:"🧪",g:"linear-gradient(135deg,#001a3d,#003d8c)",ch:"Ch.2",tp:"Solids, Liquids, Gases",d:"1h 00m",dif:"Easy",desc:"States of matter and their properties.",p:0},
+        {t:"Force & Motion",i:"⚽",g:"linear-gradient(135deg,#330d00,#6b1a00)",ch:"Ch.3",tp:"Push, Pull, Gravity, Friction",d:"1h 00m",dif:"Easy",desc:"Types of forces and their effects.",p:0},
+        {t:"Light & Shadow",i:"💡",g:"linear-gradient(135deg,#1a1a00,#454500)",ch:"Ch.4",tp:"Sources, Transparent, Opaque, Shadow",d:"0h 50m",dif:"Easy",desc:"Sources of light, shadows and reflection.",p:0},
+        {t:"Our Environment",i:"♻️",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.5",tp:"Pollution, Conservation, Ecosystem",d:"1h 00m",dif:"Easy",desc:"Environmental pollution and conservation.",p:0},
+      ],
+      sst:[
+        {t:"Landforms of India",i:"🏔️",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.1",tp:"Mountains, Plateaus, Plains, Coasts",d:"1h 00m",dif:"Easy",desc:"Major landforms of India.",p:0},
+        {t:"Rivers of India",i:"🌊",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.2",tp:"Himalayan, Peninsular Rivers",d:"1h 00m",dif:"Easy",desc:"Major rivers of India and their importance.",p:0},
+        {t:"Ancient India",i:"🏛️",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.3",tp:"Indus Valley, Vedic Period",d:"1h 00m",dif:"Easy",desc:"Indus Valley civilisation and Vedic period.",p:0},
+        {t:"Government & Democracy",i:"🏛️",g:"linear-gradient(135deg,#0d001a,#280045)",ch:"Ch.4",tp:"Constitution, Rights, Parliament",d:"1h 00m",dif:"Easy",desc:"Indian government, democracy and constitution.",p:0},
+      ]
+    }
+  },
+  5:{
+    label:"Grade 5", emoji:"🌠",
+    subjects:{
+      maths:[
+        {t:"Large Numbers & Operations",i:"🔢",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.1",tp:"Crores, BODMAS",d:"1h 30m",dif:"Easy",desc:"Numbers up to crores, BODMAS rule.",p:0},
+        {t:"Fractions & Decimals",i:"🍕",g:"linear-gradient(135deg,#1a0033,#3d006b)",ch:"Ch.2",tp:"Multiplication, Division of Fractions",d:"1h 30m",dif:"Easy",desc:"Multiplying and dividing fractions and decimals.",p:0},
+        {t:"Percentage",i:"💯",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.3",tp:"Percent, Profit & Loss",d:"1h 30m",dif:"Medium",desc:"Introduction to percentage, profit and loss.",p:0},
+        {t:"Ratio & Proportion",i:"⚖️",g:"linear-gradient(135deg,#330000,#660000)",ch:"Ch.4",tp:"Simple Ratio, Unitary Method",d:"1h 20m",dif:"Medium",desc:"Ratio, proportion and unitary method.",p:0},
+        {t:"Geometry",i:"📐",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.5",tp:"Circles, Polygons, Symmetry",d:"1h 30m",dif:"Medium",desc:"Circles, polygons and lines of symmetry.",p:0},
+        {t:"Volume & Surface Area",i:"📦",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.6",tp:"Cube, Cuboid",d:"1h 20m",dif:"Medium",desc:"Volume and surface area of cube and cuboid.",p:0},
+      ],
+      english:[
+        {t:"Advanced Grammar",i:"📖",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Ch.1",tp:"Clauses, Phrases, Conjunctions",d:"1h 30m",dif:"Medium",desc:"Clauses, phrases and use of conjunctions.",p:0},
+        {t:"Reading — Non-Fiction",i:"📰",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.2",tp:"Articles, Reports, Editorials",d:"1h 00m",dif:"Medium",desc:"Reading and analysing non-fiction texts.",p:0},
+        {t:"Creative Writing",i:"✏️",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.3",tp:"Stories, Dialogues, Descriptions",d:"1h 00m",dif:"Medium",desc:"Writing creative stories and descriptions.",p:0},
+        {t:"Literature — Prose & Poetry",i:"📚",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Ch.4",tp:"NCERT Chapters & Poems",d:"1h 30m",dif:"Easy",desc:"NCERT prose and poetry chapters.",p:0},
+      ],
+      science:[
+        {t:"Microorganisms",i:"🦠",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.1",tp:"Bacteria, Virus, Fungi, Protozoa",d:"1h 00m",dif:"Medium",desc:"Types of microorganisms and their effects.",p:0},
+        {t:"Crops & Agriculture",i:"🌾",g:"linear-gradient(135deg,#1a1a00,#454500)",ch:"Ch.2",tp:"Kharif, Rabi, Crop Production",d:"1h 00m",dif:"Easy",desc:"Types of crops and agricultural practices.",p:0},
+        {t:"Reproduction in Plants",i:"🌸",g:"linear-gradient(135deg,#330d00,#6b1a00)",ch:"Ch.3",tp:"Pollination, Seed Dispersal",d:"1h 00m",dif:"Medium",desc:"Modes of reproduction in plants.",p:0},
+        {t:"Electricity",i:"⚡",g:"linear-gradient(135deg,#001a33,#003d6b)",ch:"Ch.4",tp:"Circuits, Conductors, Insulators",d:"1h 00m",dif:"Medium",desc:"Electric circuits, conductors and insulators.",p:0},
+        {t:"Our Solar System",i:"🪐",g:"linear-gradient(135deg,#00001a,#000055)",ch:"Ch.5",tp:"Planets, Moon, Stars, Satellites",d:"1h 00m",dif:"Easy",desc:"Solar system, planets and celestial bodies.",p:0},
+      ],
+      sst:[
+        {t:"Climate of India",i:"☀️",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.1",tp:"Monsoon, Seasons, Regions",d:"1h 00m",dif:"Easy",desc:"Indian climate zones and monsoon.",p:0},
+        {t:"Natural Resources",i:"🌿",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.2",tp:"Forests, Minerals, Water, Soil",d:"1h 00m",dif:"Easy",desc:"Natural resources of India and conservation.",p:0},
+        {t:"The Mughal Empire",i:"🕌",g:"linear-gradient(135deg,#1a0000,#500000)",ch:"Ch.3",tp:"Akbar, Shah Jahan, Aurangzeb",d:"1h 00m",dif:"Medium",desc:"The Mughal Empire — key rulers and contributions.",p:0},
+        {t:"Freedom Movement",i:"🇮🇳",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.4",tp:"Gandhi, Nehru, 1857, Independence",d:"1h 00m",dif:"Medium",desc:"India's freedom struggle and key leaders.",p:0},
+      ]
+    }
+  },
+  6:{
+    label:"Grade 6", emoji:"🚀",
+    subjects:{
+      maths:[
+        {t:"Knowing Our Numbers",i:"🔢",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.1",tp:"Comparing, Estimation, Rounding",d:"1h 30m",dif:"Easy",desc:"Large numbers, international system, estimation.",p:0},
+        {t:"Whole Numbers",i:"0️⃣",g:"linear-gradient(135deg,#1a0033,#3d006b)",ch:"Ch.2",tp:"Properties, Number Line",d:"1h 20m",dif:"Easy",desc:"Whole numbers and their properties.",p:0},
+        {t:"Playing with Numbers",i:"🎲",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.3",tp:"Factors, Multiples, HCF, LCM",d:"1h 30m",dif:"Medium",desc:"Factors, multiples, divisibility rules, HCF, LCM.",p:0},
+        {t:"Basic Geometrical Ideas",i:"📐",g:"linear-gradient(135deg,#330000,#660000)",ch:"Ch.4",tp:"Points, Lines, Angles, Polygons",d:"1h 20m",dif:"Easy",desc:"Fundamental concepts of geometry.",p:0},
+        {t:"Fractions",i:"🍕",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.5",tp:"Types, Comparison, Operations",d:"1h 30m",dif:"Medium",desc:"Types of fractions and arithmetic operations.",p:0},
+        {t:"Decimals",i:".",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.6",tp:"Tenths, Hundredths, Operations",d:"1h 20m",dif:"Medium",desc:"Decimal notation and operations.",p:0},
+        {t:"Algebra — Introduction",i:"🔤",g:"linear-gradient(135deg,#0d001a,#280045)",ch:"Ch.7",tp:"Variables, Expressions, Equations",d:"1h 30m",dif:"Medium",desc:"Introduction to algebraic expressions and equations.",p:0},
+        {t:"Ratio & Proportion",i:"⚖️",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.8",tp:"Ratio, Proportion, Unitary Method",d:"1h 20m",dif:"Medium",desc:"Ratio, proportion and unitary method problems.",p:0},
+      ],
+      science:[
+        {t:"Food: Where Does It Come From?",i:"🍽️",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.1",tp:"Plant & Animal Sources",d:"0h 50m",dif:"Easy",desc:"Sources of food from plants and animals.",p:0},
+        {t:"Components of Food",i:"🥗",g:"linear-gradient(135deg,#1a1a00,#454500)",ch:"Ch.2",tp:"Nutrients, Balanced Diet, Deficiency",d:"1h 00m",dif:"Easy",desc:"Nutrients in food and deficiency diseases.",p:0},
+        {t:"Fibre to Fabric",i:"🧵",g:"linear-gradient(135deg,#330d00,#6b1a00)",ch:"Ch.3",tp:"Natural & Synthetic Fibres",d:"0h 50m",dif:"Easy",desc:"Types of fibres and fabric making.",p:0},
+        {t:"Sorting Materials",i:"🧲",g:"linear-gradient(135deg,#001a33,#003d6b)",ch:"Ch.4",tp:"Properties of Materials",d:"1h 00m",dif:"Easy",desc:"Classification of materials based on properties.",p:0},
+        {t:"Changes Around Us",i:"🔥",g:"linear-gradient(135deg,#1a0000,#500000)",ch:"Ch.5",tp:"Reversible, Irreversible Changes",d:"1h 00m",dif:"Easy",desc:"Physical and chemical changes.",p:0},
+        {t:"The Living Organisms",i:"🦋",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.6",tp:"Characteristics, Habitats, Adaptation",d:"1h 00m",dif:"Easy",desc:"Characteristics of living organisms and adaptation.",p:0},
+        {t:"Motion & Measurement",i:"📏",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.7",tp:"Types of Motion, SI Units",d:"1h 00m",dif:"Easy",desc:"Types of motion and standard units of measurement.",p:0},
+      ],
+      sst:[
+        {t:"The Earth in Solar System",i:"🌍",g:"linear-gradient(135deg,#00001a,#000055)",ch:"Ch.1",tp:"Planets, Moon, Solar System",d:"1h 00m",dif:"Easy",desc:"Earth's place in the solar system.",p:0},
+        {t:"Globe — Latitudes & Longitudes",i:"🌐",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.2",tp:"Parallels, Meridians, Time Zones",d:"1h 00m",dif:"Medium",desc:"Latitudes, longitudes and time zones.",p:0},
+        {t:"Motions of the Earth",i:"🌀",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.3",tp:"Rotation, Revolution, Seasons",d:"1h 00m",dif:"Easy",desc:"Rotation and revolution and their effects.",p:0},
+        {t:"From Gathering to Growing Food",i:"🌾",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.4",tp:"Prehistoric Life, Farming Origins",d:"1h 00m",dif:"Easy",desc:"Early human life and origin of agriculture.",p:0},
+        {t:"The Earliest Cities",i:"🏙️",g:"linear-gradient(135deg,#1a0000,#500000)",ch:"Ch.5",tp:"Harappan Civilisation",d:"1h 00m",dif:"Easy",desc:"The Harappan/Indus Valley Civilisation.",p:0},
+      ],
+      english:[
+        {t:"Who Did Patrick's Homework?",i:"📚",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Prose 1",tp:"Story, Moral",d:"0h 50m",dif:"Easy",desc:"A boy learns the importance of doing his own work.",p:0},
+        {t:"How the Dog Found Himself a Master",i:"🐕",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Prose 2",tp:"Folk Tale, Strength",d:"0h 50m",dif:"Easy",desc:"A folk tale about a dog seeking a master.",p:0},
+        {t:"Taro's Reward",i:"🎋",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Prose 3",tp:"Japanese Story, Kindness",d:"0h 45m",dif:"Easy",desc:"A woodcutter's kindness brings reward.",p:0},
+        {t:"Grammar & Writing",i:"✏️",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Grammar",tp:"Nouns, Verbs, Tenses, Letter Writing",d:"1h 30m",dif:"Easy",desc:"Grammar topics and formal writing.",p:0},
+      ]
+    }
+  },
+  7:{
+    label:"Grade 7", emoji:"💫",
+    subjects:{
+      maths:[
+        {t:"Integers",i:"➖",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.1",tp:"Number Line, Operations, Properties",d:"1h 30m",dif:"Medium",desc:"Integers, operations and properties on a number line.",p:0},
+        {t:"Fractions & Decimals",i:"🍕",g:"linear-gradient(135deg,#1a0033,#3d006b)",ch:"Ch.2",tp:"Multiplication, Division",d:"1h 30m",dif:"Medium",desc:"Multiplying and dividing fractions and decimals.",p:0},
+        {t:"Data Handling",i:"📊",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.3",tp:"Mean, Median, Mode, Bar Graphs",d:"1h 20m",dif:"Medium",desc:"Mean, median, mode and data representation.",p:0},
+        {t:"Simple Equations",i:"⚖️",g:"linear-gradient(135deg,#330000,#660000)",ch:"Ch.4",tp:"Linear Equations in One Variable",d:"1h 30m",dif:"Medium",desc:"Forming and solving simple linear equations.",p:0},
+        {t:"Lines & Angles",i:"📐",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.5",tp:"Complementary, Supplementary, Parallel",d:"1h 20m",dif:"Medium",desc:"Types of angles and parallel lines.",p:0},
+        {t:"The Triangle",i:"🔺",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.6",tp:"Properties, Congruence, Pythagoras",d:"1h 30m",dif:"Medium",desc:"Triangle properties, congruence and Pythagoras theorem.",p:0},
+        {t:"Ratio & Proportion",i:"⚖️",g:"linear-gradient(135deg,#0d001a,#280045)",ch:"Ch.7",tp:"Percentage, Profit-Loss, SI",d:"1h 30m",dif:"Medium",desc:"Ratio, proportion, percentage and simple interest.",p:0},
+        {t:"Algebra — Expressions",i:"🔤",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.8",tp:"Monomials, Polynomials, Operations",d:"1h 20m",dif:"Medium",desc:"Algebraic expressions and their operations.",p:0},
+      ],
+      science:[
+        {t:"Nutrition in Plants",i:"🌿",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.1",tp:"Photosynthesis, Parasitic, Symbiotic",d:"1h 00m",dif:"Easy",desc:"How plants make food and modes of nutrition.",p:0},
+        {t:"Nutrition in Animals",i:"🦁",g:"linear-gradient(135deg,#330d00,#6b1a00)",ch:"Ch.2",tp:"Digestion, Absorption, Assimilation",d:"1h 00m",dif:"Medium",desc:"Digestive system and nutrition in animals.",p:0},
+        {t:"Heat",i:"🌡️",g:"linear-gradient(135deg,#1a0000,#500000)",ch:"Ch.3",tp:"Temperature, Conduction, Convection, Radiation",d:"1h 00m",dif:"Medium",desc:"Heat transfer — conduction, convection and radiation.",p:0},
+        {t:"Acids, Bases & Salts",i:"⚗️",g:"linear-gradient(135deg,#001a33,#003d6b)",ch:"Ch.4",tp:"pH, Indicators, Neutralisation",d:"1h 00m",dif:"Medium",desc:"Properties of acids, bases and salts.",p:0},
+        {t:"Physical & Chemical Changes",i:"🔥",g:"linear-gradient(135deg,#1a1a00,#454500)",ch:"Ch.5",tp:"Reversible, Irreversible, Rusting",d:"1h 00m",dif:"Medium",desc:"Differences between physical and chemical changes.",p:0},
+        {t:"Weather, Climate & Adaptations",i:"🌦️",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.6",tp:"Climate Zones, Animal Adaptations",d:"1h 00m",dif:"Easy",desc:"Climate types and animal adaptations.",p:0},
+        {t:"Motion & Time",i:"⏱️",g:"linear-gradient(135deg,#0d001a,#280045)",ch:"Ch.7",tp:"Speed, Distance, Time, Graphs",d:"1h 00m",dif:"Medium",desc:"Speed, distance-time graphs and measuring time.",p:0},
+        {t:"Electric Current & Circuits",i:"⚡",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.8",tp:"Series, Parallel, Heating, Magnetic",d:"1h 00m",dif:"Medium",desc:"Electric circuits, effects of electric current.",p:0},
+      ],
+      sst:[
+        {t:"Environment",i:"🌍",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.1",tp:"Natural & Human Environment",d:"1h 00m",dif:"Easy",desc:"Components of environment and human impact.",p:0},
+        {t:"Inside Our Earth",i:"🌋",g:"linear-gradient(135deg,#1a0000,#500000)",ch:"Ch.2",tp:"Layers, Rocks, Minerals, Volcanoes",d:"1h 00m",dif:"Medium",desc:"Interior of earth, rocks and minerals.",p:0},
+        {t:"Our Changing Earth",i:"🏔️",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.3",tp:"Earthquakes, Volcanoes, Erosion",d:"1h 00m",dif:"Medium",desc:"Natural forces changing the earth's surface.",p:0},
+        {t:"Tracing Changes Through 1000 Years",i:"📜",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.4",tp:"Medieval India, Sources, Maps",d:"1h 00m",dif:"Medium",desc:"Historical sources and medieval Indian history.",p:0},
+        {t:"The Mughal Empire",i:"🕌",g:"linear-gradient(135deg,#2d0d00,#6b1a00)",ch:"Ch.5",tp:"Akbar, Administration, Culture",d:"1h 00m",dif:"Medium",desc:"The Mughal Empire — key rulers and administration.",p:0},
+      ],
+      english:[
+        {t:"The Tiny Teacher",i:"🐜",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Prose 1",tp:"Ant Colony, Organisation",d:"0h 45m",dif:"Easy",desc:"Lessons from an ant colony.",p:0},
+        {t:"Golu Grows a Nose",i:"🐘",g:"linear-gradient(135deg,#330d00,#6b1a00)",ch:"Prose 2",tp:"Elephant, Curiosity, Adaptation",d:"0h 45m",dif:"Easy",desc:"How the elephant got its trunk.",p:0},
+        {t:"Grammar",i:"📝",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Grammar",tp:"Tenses, Voice, Reported Speech",d:"1h 30m",dif:"Medium",desc:"Advanced grammar topics.",p:0},
+      ]
+    }
+  },
+  8:{
+    label:"Grade 8", emoji:"🌈",
+    subjects:{
+      maths:[
+        {t:"Rational Numbers",i:"½",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.1",tp:"Properties, Number Line, Operations",d:"1h 30m",dif:"Medium",desc:"Rational numbers and their properties.",p:0},
+        {t:"Linear Equations",i:"⚖️",g:"linear-gradient(135deg,#1a0033,#3d006b)",ch:"Ch.2",tp:"Word Problems, Cross Multiplication",d:"1h 30m",dif:"Medium",desc:"Linear equations in one variable with applications.",p:0},
+        {t:"Quadrilaterals",i:"🔷",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.3",tp:"Types, Properties, Constructions",d:"1h 20m",dif:"Medium",desc:"Types of quadrilaterals and their properties.",p:0},
+        {t:"Algebraic Expressions",i:"🔤",g:"linear-gradient(135deg,#330000,#660000)",ch:"Ch.4",tp:"Identities, Factorisation",d:"1h 30m",dif:"Medium",desc:"Algebraic identities and factorisation.",p:0},
+        {t:"Mensuration",i:"📦",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.5",tp:"Area, Volume, Surface Area",d:"1h 30m",dif:"Medium",desc:"Area of polygons, surface area and volume of 3D shapes.",p:0},
+        {t:"Exponents & Powers",i:"🚀",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.6",tp:"Laws of Exponents, Scientific Notation",d:"1h 20m",dif:"Medium",desc:"Laws of exponents and scientific notation.",p:0},
+        {t:"Direct & Inverse Proportion",i:"📈",g:"linear-gradient(135deg,#0d001a,#280045)",ch:"Ch.7",tp:"Direct, Inverse, Real-life Applications",d:"1h 20m",dif:"Medium",desc:"Direct and inverse proportion problems.",p:0},
+        {t:"Data Handling",i:"📊",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.8",tp:"Pie Chart, Histogram, Probability",d:"1h 20m",dif:"Medium",desc:"Pie charts, histograms and introduction to probability.",p:0},
+      ],
+      science:[
+        {t:"Crop Production & Management",i:"🌾",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.1",tp:"Kharif, Rabi, Irrigation, Storage",d:"1h 00m",dif:"Easy",desc:"Agricultural practices and crop management.",p:0},
+        {t:"Microorganisms",i:"🦠",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.2",tp:"Bacteria, Virus, Fungi, Uses, Diseases",d:"1h 00m",dif:"Medium",desc:"Types and uses of microorganisms.",p:0},
+        {t:"Materials: Metals & Non-metals",i:"⚙️",g:"linear-gradient(135deg,#1a1a00,#454500)",ch:"Ch.3",tp:"Properties, Uses, Reactions",d:"1h 00m",dif:"Medium",desc:"Properties and uses of metals and non-metals.",p:0},
+        {t:"Coal & Petroleum",i:"⛽",g:"linear-gradient(135deg,#1a0000,#500000)",ch:"Ch.4",tp:"Fossil Fuels, Formation, Uses",d:"1h 00m",dif:"Easy",desc:"Fossil fuels — formation and uses.",p:0},
+        {t:"Force & Pressure",i:"💪",g:"linear-gradient(135deg,#001a33,#003d6b)",ch:"Ch.5",tp:"Contact, Non-contact, Pascal's Law",d:"1h 00m",dif:"Medium",desc:"Types of force, pressure and Pascal's law.",p:0},
+        {t:"Friction",i:"🛞",g:"linear-gradient(135deg,#330d00,#6b1a00)",ch:"Ch.6",tp:"Types, Factors, Advantages, Disadvantages",d:"1h 00m",dif:"Easy",desc:"Friction — types, factors and applications.",p:0},
+        {t:"Sound",i:"🔊",g:"linear-gradient(135deg,#0d001a,#280045)",ch:"Ch.7",tp:"Vibration, Frequency, Amplitude, Noise",d:"1h 00m",dif:"Medium",desc:"Sound production, propagation and characteristics.",p:0},
+        {t:"Cell — Structure & Function",i:"🔬",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.8",tp:"Plant vs Animal Cell, Organelles",d:"1h 00m",dif:"Medium",desc:"Cell structure and functions of organelles.",p:0},
+      ],
+      sst:[
+        {t:"Resources",i:"🌿",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.1",tp:"Natural, Human, Man-made Resources",d:"1h 00m",dif:"Easy",desc:"Types of resources and conservation.",p:0},
+        {t:"Industries",i:"🏭",g:"linear-gradient(135deg,#1a1a00,#454500)",ch:"Ch.2",tp:"Types, Location Factors, Industrial Regions",d:"1h 00m",dif:"Medium",desc:"Types of industries and their location factors.",p:0},
+        {t:"The Indian Constitution",i:"📜",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.3",tp:"Preamble, Fundamental Rights, Duties",d:"1h 00m",dif:"Medium",desc:"Indian Constitution — Preamble, rights and duties.",p:0},
+        {t:"The Revolt of 1857",i:"⚔️",g:"linear-gradient(135deg,#1a0000,#500000)",ch:"Ch.4",tp:"Causes, Events, Consequences",d:"1h 00m",dif:"Medium",desc:"The first war of Indian independence.",p:0},
+        {t:"Women, Caste & Reform",i:"⚖️",g:"linear-gradient(135deg,#2d0d00,#6b1a00)",ch:"Ch.5",tp:"Social Reformers, Movements",d:"1h 00m",dif:"Medium",desc:"19th century social reform movements in India.",p:0},
+      ],
+      english:[
+        {t:"The Best Christmas Present",i:"🎁",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Prose 1",tp:"War, Humanity, Hope",d:"0h 50m",dif:"Easy",desc:"A story of humanity during World War I.",p:0},
+        {t:"The Tsunami",i:"🌊",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Prose 2",tp:"Natural Disaster, Survival",d:"0h 50m",dif:"Easy",desc:"Survival stories from the 2004 tsunami.",p:0},
+        {t:"Grammar",i:"📝",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Grammar",tp:"Passive Voice, Reported Speech, Conditionals",d:"1h 30m",dif:"Medium",desc:"Advanced grammar — passive, reported speech.",p:0},
+      ]
+    }
+  },
+  9:{
+    label:"Grade 9", emoji:"⚡",
+    subjects:{
+      maths:[
+        {t:"Number Systems",i:"🔢",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.1",tp:"Real, Irrational, Surds, Laws of Exponents",d:"2h 00m",dif:"Medium",desc:"Real numbers, irrational numbers and surds.",p:0},
+        {t:"Polynomials",i:"📈",g:"linear-gradient(135deg,#1a0033,#3d006b)",ch:"Ch.2",tp:"Degree, Factor Theorem, Identities",d:"2h 00m",dif:"Medium",desc:"Polynomials, zeroes, remainder theorem and identities.",p:0},
+        {t:"Coordinate Geometry",i:"📊",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.3",tp:"Cartesian Plane, Plotting Points",d:"1h 30m",dif:"Easy",desc:"Cartesian coordinate system and plotting points.",p:0},
+        {t:"Linear Equations in Two Variables",i:"⚖️",g:"linear-gradient(135deg,#330000,#660000)",ch:"Ch.4",tp:"Graph, Solutions, Real-life",d:"1h 30m",dif:"Medium",desc:"Linear equations in two variables and their graphs.",p:0},
+        {t:"Euclid's Geometry",i:"📐",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.5",tp:"Axioms, Postulates, Theorems",d:"1h 30m",dif:"Medium",desc:"Euclid's axioms, postulates and basic theorems.",p:0},
+        {t:"Lines & Angles",i:"📏",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.6",tp:"Parallel Lines, Transversal, Angle Sum",d:"1h 30m",dif:"Medium",desc:"Properties of lines, angles and parallel lines.",p:0},
+        {t:"Triangles",i:"🔺",g:"linear-gradient(135deg,#0d001a,#280045)",ch:"Ch.7",tp:"Congruence, Inequalities, Theorems",d:"2h 00m",dif:"Medium",desc:"Congruence rules and triangle theorems.",p:0},
+        {t:"Circles",i:"⭕",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.8",tp:"Chord, Arc, Cyclic Quadrilateral",d:"2h 00m",dif:"Hard",desc:"Theorems on circles, chords and cyclic quadrilaterals.",p:0},
+        {t:"Heron's Formula",i:"🔺",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.9",tp:"Area of Triangle, Quadrilateral",d:"1h 20m",dif:"Medium",desc:"Heron's formula for area of triangle and quadrilateral.",p:0},
+        {t:"Surface Area & Volume",i:"📦",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Ch.10",tp:"Cone, Sphere, Cylinder, Cube",d:"2h 00m",dif:"Medium",desc:"Surface area and volume of 3D shapes.",p:0},
+        {t:"Statistics",i:"📊",g:"linear-gradient(135deg,#001a33,#003d6b)",ch:"Ch.11",tp:"Mean, Median, Mode, Frequency",d:"1h 30m",dif:"Medium",desc:"Statistical measures and frequency distributions.",p:0},
+        {t:"Probability",i:"🎲",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Ch.12",tp:"Experimental, Classical Probability",d:"1h 20m",dif:"Medium",desc:"Introduction to probability with experiments.",p:0},
+      ],
+      science:[
+        {t:"Matter in Our Surroundings",i:"💧",g:"linear-gradient(135deg,#001a33,#003d6b)",ch:"Ch.1",tp:"States, Evaporation, Sublimation",d:"1h 30m",dif:"Easy",desc:"States of matter and changes of state.",p:0},
+        {t:"Is Matter Around Us Pure?",i:"⚗️",g:"linear-gradient(135deg,#2d0d4e,#5c1a9e)",ch:"Ch.2",tp:"Mixtures, Solutions, Colloids",d:"1h 30m",dif:"Medium",desc:"Pure substances, mixtures, solutions and colloids.",p:0},
+        {t:"Atoms & Molecules",i:"⚛️",g:"linear-gradient(135deg,#001a0d,#004018)",ch:"Ch.3",tp:"Atomic Theory, Formulae, Mole Concept",d:"2h 00m",dif:"Medium",desc:"Atomic theory, chemical formulae and mole concept.",p:0},
+        {t:"Structure of Atom",i:"🔬",g:"linear-gradient(135deg,#0d0d1a,#1a1a4d)",ch:"Ch.4",tp:"Thomson, Rutherford, Bohr, Electrons",d:"1h 30m",dif:"Medium",desc:"Atomic models and electronic configuration.",p:0},
+        {t:"The Fundamental Unit of Life",i:"🦠",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.5",tp:"Cell Structure, Organelles, Osmosis",d:"1h 30m",dif:"Medium",desc:"Cell theory, structure and organelles.",p:0},
+        {t:"Tissues",i:"🧬",g:"linear-gradient(135deg,#1a1a3d,#2d2d8c)",ch:"Ch.6",tp:"Plant & Animal Tissues",d:"1h 30m",dif:"Medium",desc:"Types of plant and animal tissues.",p:0},
+        {t:"Motion",i:"🚗",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.7",tp:"Velocity, Acceleration, Equations of Motion",d:"2h 00m",dif:"Medium",desc:"Motion, velocity, acceleration and equations.",p:0},
+        {t:"Force & Newton's Laws",i:"🍎",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Ch.8",tp:"Newton's 3 Laws, Momentum, Friction",d:"2h 00m",dif:"Medium",desc:"Newton's laws of motion and momentum.",p:0},
+        {t:"Gravitation",i:"🌍",g:"linear-gradient(135deg,#0a183a,#182c6b)",ch:"Ch.9",tp:"Universal Law, g, Buoyancy, Archimedes",d:"1h 30m",dif:"Medium",desc:"Gravitation, weight, mass and Archimedes' principle.",p:0},
+        {t:"Work & Energy",i:"⚡",g:"linear-gradient(135deg,#1a1a00,#5c5c00)",ch:"Ch.10",tp:"Work, KE, PE, Power, Conservation",d:"1h 30m",dif:"Medium",desc:"Work, kinetic and potential energy, conservation.",p:0},
+        {t:"Sound",i:"🔊",g:"linear-gradient(135deg,#001a2d,#003d6b)",ch:"Ch.11",tp:"Wave, Reflection, Resonance, SONAR",d:"1h 30m",dif:"Medium",desc:"Sound waves, echo, resonance and SONAR.",p:0},
+        {t:"Natural Resources",i:"🌿",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.12",tp:"Air, Water, Soil, Biogeochemical Cycles",d:"1h 30m",dif:"Easy",desc:"Natural resources and biogeochemical cycles.",p:0},
+      ],
+      sst:[
+        {t:"India — Size & Location",i:"🗺️",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.1",tp:"Latitude, Longitude, Neighbours",d:"1h 00m",dif:"Easy",desc:"India's location, size and neighbours.",p:0},
+        {t:"Physical Features of India",i:"🏔️",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.2",tp:"Himalayas, Deccan, Coastal, Islands",d:"1h 00m",dif:"Easy",desc:"Major physical divisions of India.",p:0},
+        {t:"The French Revolution",i:"⚔️",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.3",tp:"Causes, Events, Napoleon, Impact",d:"1h 00m",dif:"Medium",desc:"The French Revolution and its impact.",p:0},
+        {t:"Socialism & Russian Revolution",i:"🔴",g:"linear-gradient(135deg,#1a0000,#500000)",ch:"Ch.4",tp:"Marx, Lenin, Soviet Union",d:"1h 00m",dif:"Medium",desc:"Socialism, Marxism and the Russian Revolution.",p:0},
+        {t:"Democracy",i:"🏛️",g:"linear-gradient(135deg,#0d001a,#280045)",ch:"Ch.5",tp:"What is Democracy? Why Democracy?",d:"1h 00m",dif:"Easy",desc:"Meaning and importance of democracy.",p:0},
+        {t:"Poverty as a Challenge",i:"💔",g:"linear-gradient(135deg,#330d00,#6b1a00)",ch:"Ch.6",tp:"Poverty Line, Causes, Government Policy",d:"1h 00m",dif:"Medium",desc:"Poverty in India and government measures.",p:0},
+      ],
+      english:[
+        {t:"The Fun They Had",i:"🤖",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Prose 1",tp:"Isaac Asimov, Future Schools",d:"0h 50m",dif:"Easy",desc:"A futuristic story about school and teaching.",p:0},
+        {t:"The Sound of Music",i:"🎵",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Prose 2",tp:"Evelyn Glennie, Bismillah Khan",d:"0h 50m",dif:"Easy",desc:"Stories of musicians who overcame challenges.",p:0},
+        {t:"The Little Girl",i:"👧",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Prose 3",tp:"Father-Child Relationship",d:"0h 45m",dif:"Easy",desc:"A girl's changing relationship with her father.",p:0},
+        {t:"Grammar",i:"📝",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Grammar",tp:"Tenses, Modals, Determiners, Clauses",d:"2h 00m",dif:"Medium",desc:"Comprehensive grammar for Class 9.",p:0},
+      ]
+    }
+  },
+  10:{
+    label:"Grade 10", emoji:"🎓",
+    subjects:{
+      maths:[
+        {t:"Real Numbers",i:"🔢",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.1",tp:"Euclid's Algorithm, Irrationals, Decimal Expansion",d:"2h 00m",dif:"Medium",desc:"Euclid's division lemma, fundamental theorem of arithmetic.",p:0},
+        {t:"Polynomials",i:"📈",g:"linear-gradient(135deg,#1a0033,#3d006b)",ch:"Ch.2",tp:"Zeroes, Relationship, Division Algorithm",d:"1h 30m",dif:"Medium",desc:"Zeroes of polynomials and division algorithm.",p:0},
+        {t:"Pair of Linear Equations",i:"⚖️",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.3",tp:"Graphical, Substitution, Elimination, Cross-Mult",d:"2h 00m",dif:"Medium",desc:"Methods of solving pair of linear equations.",p:0},
+        {t:"Quadratic Equations",i:"📊",g:"linear-gradient(135deg,#330000,#660000)",ch:"Ch.4",tp:"Factorisation, Formula, Nature of Roots",d:"2h 00m",dif:"Hard",desc:"Quadratic equations — methods and nature of roots.",p:0},
+        {t:"Arithmetic Progressions",i:"🔢",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.5",tp:"nth Term, Sum of n Terms",d:"2h 00m",dif:"Medium",desc:"AP — nth term and sum formula.",p:0},
+        {t:"Triangles",i:"🔺",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.6",tp:"Similarity, BPT, Pythagoras Theorem",d:"2h 00m",dif:"Hard",desc:"Similar triangles, BPT and Pythagoras theorem.",p:0},
+        {t:"Coordinate Geometry",i:"📊",g:"linear-gradient(135deg,#0d001a,#280045)",ch:"Ch.7",tp:"Distance, Section, Midpoint Formula",d:"1h 30m",dif:"Medium",desc:"Distance formula, section formula, area of triangle.",p:0},
+        {t:"Trigonometry",i:"📐",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.8",tp:"Ratios, Identities, Applications",d:"2h 30m",dif:"Hard",desc:"Trigonometric ratios, identities and applications.",p:0},
+        {t:"Circles",i:"⭕",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.9",tp:"Tangent, Secant, Theorems",d:"1h 30m",dif:"Medium",desc:"Tangent to a circle and related theorems.",p:0},
+        {t:"Areas Related to Circles",i:"🟡",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Ch.10",tp:"Sector, Segment, Combination",d:"1h 30m",dif:"Medium",desc:"Area of sector, segment and combinations of shapes.",p:0},
+        {t:"Surface Area & Volume",i:"📦",g:"linear-gradient(135deg,#001a33,#003d6b)",ch:"Ch.11",tp:"Combinations of Solids, Frustum",d:"2h 00m",dif:"Hard",desc:"Surface area and volume of combined solids and frustum.",p:0},
+        {t:"Statistics",i:"📊",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Ch.12",tp:"Mean, Median, Mode — Grouped Data",d:"2h 00m",dif:"Medium",desc:"Statistical measures for grouped data.",p:0},
+        {t:"Probability",i:"🎲",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.13",tp:"Classical Probability, Real-life",d:"1h 20m",dif:"Medium",desc:"Classical probability with real-life applications.",p:0},
+      ],
+      science:[
+        {t:"Chemical Reactions & Equations",i:"⚗️",g:"linear-gradient(135deg,#2d0d4e,#5c1a9e)",ch:"Ch.1",tp:"Types, Balancing, Oxidation-Reduction",d:"2h 00m",dif:"Medium",desc:"Types of chemical reactions and balancing equations.",p:0},
+        {t:"Acids, Bases & Salts",i:"🧪",g:"linear-gradient(135deg,#003d3d,#007070)",ch:"Ch.2",tp:"pH Scale, Indicators, Important Salts",d:"2h 00m",dif:"Medium",desc:"Properties and reactions of acids, bases and salts.",p:0},
+        {t:"Metals & Non-metals",i:"⚙️",g:"linear-gradient(135deg,#1a1a00,#454500)",ch:"Ch.3",tp:"Reactivity Series, Extraction, Corrosion",d:"2h 00m",dif:"Hard",desc:"Properties, reactivity series and extraction of metals.",p:0},
+        {t:"Carbon & Its Compounds",i:"💎",g:"linear-gradient(135deg,#0d0d3d,#1a1a6b)",ch:"Ch.4",tp:"Covalent Bonds, Functional Groups, Soaps",d:"2h 30m",dif:"Hard",desc:"Carbon compounds, functional groups and reactions.",p:0},
+        {t:"Life Processes",i:"💓",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.5",tp:"Nutrition, Respiration, Transport, Excretion",d:"2h 30m",dif:"Hard",desc:"Basic life processes in plants and animals.",p:0},
+        {t:"Control & Coordination",i:"🧠",g:"linear-gradient(135deg,#1a1a3d,#2d2d8c)",ch:"Ch.6",tp:"Nervous System, Hormones, Tropisms",d:"2h 00m",dif:"Hard",desc:"Nervous system, hormones and plant hormones.",p:0},
+        {t:"Reproduction",i:"🌱",g:"linear-gradient(135deg,#2d0d00,#6b1a00)",ch:"Ch.7",tp:"Asexual, Sexual, Human Reproductive System",d:"2h 00m",dif:"Hard",desc:"Modes of reproduction in plants and animals.",p:0},
+        {t:"Heredity & Evolution",i:"🧬",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.8",tp:"Mendel, DNA, Evolution, Classification",d:"2h 00m",dif:"Hard",desc:"Heredity, Mendel's laws and evolution.",p:0},
+        {t:"Light — Reflection & Refraction",i:"🔭",g:"linear-gradient(135deg,#00001a,#000066)",ch:"Ch.9",tp:"Mirrors, Lenses, Power, Human Eye",d:"2h 30m",dif:"Hard",desc:"Laws of reflection, refraction, mirrors and lenses.",p:0},
+        {t:"Electricity",i:"⚡",g:"linear-gradient(135deg,#080836,#0c0c66)",ch:"Ch.10",tp:"Ohm's Law, Resistance, Circuits, Power",d:"2h 30m",dif:"Hard",desc:"Electric current, circuits, power and energy.",p:0},
+        {t:"Magnetic Effects of Current",i:"🧲",g:"linear-gradient(135deg,#3d0000,#8b0000)",ch:"Ch.11",tp:"Oersted, Motor, Generator, Domestic Wiring",d:"2h 00m",dif:"Hard",desc:"Magnetic effects, motors, generators.",p:0},
+        {t:"Environment",i:"🌍",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.12",tp:"Ecosystem, Food Web, Ozone, Waste",d:"1h 30m",dif:"Medium",desc:"Ecosystem, environmental problems and management.",p:0},
+      ],
+      sst:[
+        {t:"Nationalism in Europe",i:"🗺️",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.1",tp:"French Revolution, Unification, Balkans",d:"1h 30m",dif:"Medium",desc:"Rise of nationalism in Europe in the 19th century.",p:0},
+        {t:"Nationalism in India",i:"🇮🇳",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.2",tp:"Non-cooperation, Civil Disobedience, Gandhi",d:"1h 30m",dif:"Medium",desc:"Indian freedom struggle and key movements.",p:0},
+        {t:"Resources & Development",i:"🌿",g:"linear-gradient(135deg,#1a1a00,#454500)",ch:"Ch.3",tp:"Resource Types, Soil Conservation",d:"1h 00m",dif:"Easy",desc:"Types of resources and land-soil resources.",p:0},
+        {t:"Democracy & Diversity",i:"🏛️",g:"linear-gradient(135deg,#0d001a,#280045)",ch:"Ch.4",tp:"Social Divisions, Political Parties",d:"1h 00m",dif:"Medium",desc:"How social divisions affect democracy.",p:0},
+        {t:"Development",i:"📈",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.5",tp:"GDP, HDI, Sustainability",d:"1h 00m",dif:"Medium",desc:"Development goals, HDI and sustainability.",p:0},
+        {t:"Money & Credit",i:"💰",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.6",tp:"Banking, Credit, Formal, Informal",d:"1h 00m",dif:"Medium",desc:"Money, banking and credit mechanisms.",p:0},
+      ],
+      english:[
+        {t:"A Letter to God",i:"🌧️",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Prose 1",tp:"Faith, Irony",d:"0h 50m",dif:"Easy",desc:"A farmer's unshakeable faith in God.",p:0},
+        {t:"Nelson Mandela",i:"✊",g:"linear-gradient(135deg,#1a0000,#500000)",ch:"Prose 2",tp:"Freedom, Courage, Leadership",d:"0h 50m",dif:"Easy",desc:"Nelson Mandela's journey to freedom.",p:0},
+        {t:"Two Stories about Flying",i:"✈️",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Prose 3",tp:"Courage, Independence",d:"0h 50m",dif:"Easy",desc:"Stories about overcoming fear and finding freedom.",p:0},
+        {t:"Grammar",i:"📝",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Grammar",tp:"Tenses, Voice, Conditionals, Letter Writing",d:"2h 00m",dif:"Medium",desc:"Complete grammar revision for Class 10.",p:0},
+      ]
+    }
+  },
+  11:{
+    label:"Grade 11", emoji:"🔥",
+    subjects:{
+      physics:[
+        {t:"Physical World & Measurement",i:"📏",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.1",tp:"SI Units, Dimensions, Errors",d:"2h 00m",dif:"Medium",desc:"Scope of physics, units and measurement.",p:0},
+        {t:"Kinematics",i:"🚗",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.2",tp:"Velocity, Acceleration, Projectile Motion",d:"3h 00m",dif:"Hard",desc:"Motion in a straight line and in a plane.",p:0},
+        {t:"Laws of Motion",i:"🍎",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Ch.3",tp:"Newton's Laws, Friction, Circular Motion",d:"3h 00m",dif:"Hard",desc:"Newton's laws, equilibrium and circular motion.",p:0},
+        {t:"Work, Energy & Power",i:"⚡",g:"linear-gradient(135deg,#1a1a00,#5c5c00)",ch:"Ch.4",tp:"KE, PE, Conservation, Collisions",d:"2h 30m",dif:"Hard",desc:"Work, energy, power and collisions.",p:0},
+        {t:"System of Particles",i:"🌀",g:"linear-gradient(135deg,#0a183a,#182c6b)",ch:"Ch.5",tp:"Centre of Mass, Torque, Angular Momentum",d:"3h 00m",dif:"Hard",desc:"Centre of mass, rotation and angular momentum.",p:0},
+        {t:"Gravitation",i:"🌍",g:"linear-gradient(135deg,#001a2d,#003d6b)",ch:"Ch.6",tp:"Universal Law, Orbital Velocity, Satellites",d:"2h 30m",dif:"Medium",desc:"Newton's gravitation, satellites and escape velocity.",p:0},
+        {t:"Properties of Matter",i:"💧",g:"linear-gradient(135deg,#001a1a,#005c5c)",ch:"Ch.7",tp:"Elasticity, Viscosity, Surface Tension",d:"2h 30m",dif:"Medium",desc:"Mechanical properties of solids and fluids.",p:0},
+        {t:"Thermodynamics",i:"🌡️",g:"linear-gradient(135deg,#3d1a00,#7a3300)",ch:"Ch.8",tp:"Laws of Thermodynamics, Carnot Engine",d:"2h 30m",dif:"Hard",desc:"Thermodynamic laws, heat engines and refrigerators.",p:0},
+        {t:"Oscillations & Waves",i:"〰️",g:"linear-gradient(135deg,#2e0c0c,#6b1a1a)",ch:"Ch.9",tp:"SHM, Damping, Wave Speed, Standing Waves",d:"3h 00m",dif:"Hard",desc:"Simple harmonic motion, waves and sound.",p:0},
+      ],
+      chemistry:[
+        {t:"Basic Concepts of Chemistry",i:"⚗️",g:"linear-gradient(135deg,#2d0d4e,#5c1a9e)",ch:"Ch.1",tp:"Mole Concept, Stoichiometry, Molarity",d:"2h 30m",dif:"Medium",desc:"Atoms, molecules, mole concept and stoichiometry.",p:0},
+        {t:"Structure of Atom",i:"⚛️",g:"linear-gradient(135deg,#001a0d,#004018)",ch:"Ch.2",tp:"Bohr, Quantum Model, Orbitals, Electronic Config",d:"3h 00m",dif:"Hard",desc:"Atomic models, quantum numbers and electronic configuration.",p:0},
+        {t:"Periodic Table",i:"🔬",g:"linear-gradient(135deg,#0d0d1a,#1a1a4d)",ch:"Ch.3",tp:"Trends, Ionisation Energy, Electronegativity",d:"2h 30m",dif:"Medium",desc:"Modern periodic table and periodic properties.",p:0},
+        {t:"Chemical Bonding",i:"🔗",g:"linear-gradient(135deg,#003d3d,#007070)",ch:"Ch.4",tp:"Ionic, Covalent, VSEPR, MOT, Hybridisation",d:"3h 30m",dif:"Hard",desc:"Types of chemical bonds and molecular geometry.",p:0},
+        {t:"States of Matter",i:"💨",g:"linear-gradient(135deg,#3d1a00,#7a3300)",ch:"Ch.5",tp:"Gas Laws, Kinetic Theory, Liquid Properties",d:"2h 30m",dif:"Medium",desc:"Gas laws, kinetic molecular theory.",p:0},
+        {t:"Thermodynamics",i:"🔥",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Ch.6",tp:"Enthalpy, Entropy, Gibbs Energy, Hess's Law",d:"3h 00m",dif:"Hard",desc:"Thermodynamic principles in chemistry.",p:0},
+        {t:"Chemical Equilibrium",i:"⚖️",g:"linear-gradient(135deg,#001a3d,#003470)",ch:"Ch.7",tp:"Le Chatelier, Kp, Kc, Ionic Equilibrium, pH",d:"3h 00m",dif:"Hard",desc:"Chemical and ionic equilibrium.",p:0},
+        {t:"Redox Reactions",i:"🔋",g:"linear-gradient(135deg,#160a4e,#2a1070)",ch:"Ch.8",tp:"Oxidation State, Balancing, Electrochemistry Intro",d:"2h 00m",dif:"Medium",desc:"Oxidation-reduction reactions and balancing.",p:0},
+        {t:"Hydrogen",i:"💧",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.9",tp:"Preparation, Properties, Water, H2O2",d:"1h 30m",dif:"Easy",desc:"Hydrogen, water and hydrogen peroxide.",p:0},
+        {t:"s-Block Elements",i:"🧂",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.10",tp:"Alkali & Alkaline Earth Metals",d:"2h 00m",dif:"Medium",desc:"Group 1 and 2 elements — properties and compounds.",p:0},
+        {t:"p-Block Elements (Part 1)",i:"🧬",g:"linear-gradient(135deg,#0d3d00,#1a6b00)",ch:"Ch.11",tp:"Group 13 & 14 — Boron, Carbon Family",d:"2h 30m",dif:"Hard",desc:"p-Block elements — groups 13 and 14.",p:0},
+        {t:"Organic Chemistry — Basics",i:"🔵",g:"linear-gradient(135deg,#001a3d,#003470)",ch:"Ch.12",tp:"Nomenclature, Isomerism, Reaction Mechanisms",d:"3h 00m",dif:"Hard",desc:"Basic organic chemistry and reaction mechanisms.",p:0},
+        {t:"Hydrocarbons",i:"⛽",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.13",tp:"Alkanes, Alkenes, Alkynes, Aromatic",d:"3h 00m",dif:"Hard",desc:"Alkanes, alkenes, alkynes and benzene.",p:0},
+      ],
+      maths:[
+        {t:"Sets",i:"🔵",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.1",tp:"Types, Venn Diagrams, Operations",d:"2h 00m",dif:"Easy",desc:"Sets, types, operations and Venn diagrams.",p:0},
+        {t:"Relations & Functions",i:"🔗",g:"linear-gradient(135deg,#1a0033,#3d006b)",ch:"Ch.2",tp:"Domain, Range, Types of Functions",d:"2h 00m",dif:"Medium",desc:"Relations, functions, domain and range.",p:0},
+        {t:"Trigonometric Functions",i:"📐",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.3",tp:"Radian, Graphs, Identities, Equations",d:"3h 00m",dif:"Hard",desc:"Trigonometric functions, identities and equations.",p:0},
+        {t:"Principle of Mathematical Induction",i:"🔢",g:"linear-gradient(135deg,#330000,#660000)",ch:"Ch.4",tp:"PMI, Problems",d:"1h 30m",dif:"Medium",desc:"Principle of mathematical induction with problems.",p:0},
+        {t:"Complex Numbers",i:"i",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.5",tp:"Argand Plane, Modulus, Conjugate, Roots",d:"2h 30m",dif:"Hard",desc:"Complex numbers, Argand plane and roots.",p:0},
+        {t:"Linear Inequalities",i:"⚖️",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.6",tp:"Graphical Method, Word Problems",d:"1h 30m",dif:"Medium",desc:"Linear inequalities in one and two variables.",p:0},
+        {t:"Permutations & Combinations",i:"🎲",g:"linear-gradient(135deg,#0d001a,#280045)",ch:"Ch.7",tp:"nPr, nCr, Counting Principles",d:"2h 30m",dif:"Hard",desc:"Fundamental counting principle, permutations, combinations.",p:0},
+        {t:"Binomial Theorem",i:"📈",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.8",tp:"Expansion, General Term, Middle Term",d:"2h 00m",dif:"Hard",desc:"Binomial theorem and its applications.",p:0},
+        {t:"Sequences & Series",i:"🔢",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.9",tp:"AP, GP, Special Series",d:"2h 30m",dif:"Medium",desc:"Arithmetic and geometric progressions and special series.",p:0},
+        {t:"Straight Lines",i:"📏",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Ch.10",tp:"Slope, Forms of Line, Distance Formula",d:"2h 30m",dif:"Hard",desc:"Various forms of straight lines and distance.",p:0},
+        {t:"Conic Sections",i:"⭕",g:"linear-gradient(135deg,#001a33,#003d6b)",ch:"Ch.11",tp:"Parabola, Ellipse, Hyperbola",d:"3h 00m",dif:"Hard",desc:"Conic sections — circle, parabola, ellipse, hyperbola.",p:0},
+        {t:"Introduction to 3D Geometry",i:"📦",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.12",tp:"Coordinate Axes, Distance, Section Formula",d:"1h 30m",dif:"Medium",desc:"3D coordinates, distance and section formula.",p:0},
+        {t:"Limits & Derivatives",i:"📉",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Ch.13",tp:"Limits, First Principle, Basic Derivatives",d:"3h 00m",dif:"Hard",desc:"Limits, continuity and differentiation.",p:0},
+        {t:"Statistics & Probability",i:"📊",g:"linear-gradient(135deg,#001a0d,#004018)",ch:"Ch.14",tp:"Variance, SD, Probability, Events",d:"2h 30m",dif:"Medium",desc:"Measures of dispersion and probability.",p:0},
+      ],
+      biology:[
+        {t:"The Living World",i:"🌿",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.1",tp:"Characteristics, Classification, Taxonomy",d:"1h 30m",dif:"Easy",desc:"Characteristics of living things and biological classification.",p:0},
+        {t:"Biological Classification",i:"🦠",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.2",tp:"5 Kingdoms, Monera, Protista, Fungi, Plants, Animals",d:"2h 00m",dif:"Medium",desc:"Five-kingdom system of classification.",p:0},
+        {t:"Plant Kingdom",i:"🌸",g:"linear-gradient(135deg,#003d00,#007a00)",ch:"Ch.3",tp:"Algae, Bryophytes, Pteridophytes, Gymnosperms, Angiosperms",d:"2h 30m",dif:"Medium",desc:"Classification and characteristics of plant kingdom.",p:0},
+        {t:"Animal Kingdom",i:"🦁",g:"linear-gradient(135deg,#330d00,#6b1a00)",ch:"Ch.4",tp:"Phyla, Characteristics, Examples",d:"2h 30m",dif:"Medium",desc:"Classification of animal kingdom into phyla.",p:0},
+        {t:"Morphology of Flowering Plants",i:"🌺",g:"linear-gradient(135deg,#1a3d00,#2d6600)",ch:"Ch.5",tp:"Root, Stem, Leaf, Flower, Fruit",d:"2h 00m",dif:"Medium",desc:"Morphology of flowering plant parts.",p:0},
+        {t:"Anatomy of Flowering Plants",i:"🔬",g:"linear-gradient(135deg,#001a0d,#004018)",ch:"Ch.6",tp:"Meristems, Tissues, Internal Structure",d:"2h 00m",dif:"Hard",desc:"Internal structure of roots, stems and leaves.",p:0},
+        {t:"Cell — The Unit of Life",i:"🦠",g:"linear-gradient(135deg,#1a1a3d,#2d2d8c)",ch:"Ch.7",tp:"Prokaryotic, Eukaryotic, Organelles",d:"2h 30m",dif:"Hard",desc:"Cell types, organelles and their functions.",p:0},
+        {t:"Biomolecules",i:"🧬",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.8",tp:"Carbohydrates, Proteins, Lipids, Nucleic Acids, Enzymes",d:"2h 30m",dif:"Hard",desc:"Structure and function of biomolecules.",p:0},
+        {t:"Cell Cycle & Division",i:"🔄",g:"linear-gradient(135deg,#0d001a,#280045)",ch:"Ch.9",tp:"Mitosis, Meiosis, Cell Cycle Phases",d:"2h 00m",dif:"Hard",desc:"Cell cycle, mitosis and meiosis.",p:0},
+        {t:"Photosynthesis",i:"☀️",g:"linear-gradient(135deg,#1a1a00,#454500)",ch:"Ch.10",tp:"Light Reaction, Calvin Cycle, C4, CAM",d:"2h 30m",dif:"Hard",desc:"Light and dark reactions, photorespiration.",p:0},
+        {t:"Respiration in Plants",i:"🌬️",g:"linear-gradient(135deg,#001a1a,#004545)",ch:"Ch.11",tp:"Glycolysis, Krebs Cycle, Oxidative Phosphorylation",d:"2h 00m",dif:"Hard",desc:"Cellular respiration pathways in plants.",p:0},
+        {t:"Plant Growth & Development",i:"🌱",g:"linear-gradient(135deg,#003300,#007000)",ch:"Ch.12",tp:"Growth Regulators, Auxins, Gibberellins, Dormancy",d:"2h 00m",dif:"Medium",desc:"Plant growth regulators and development.",p:0},
+      ]
+    }
+  },
+  12:{
+    label:"Grade 12", emoji:"🏆",
+    subjects:{
+      physics:[
+        {t:"Electric Charges & Fields",i:"⚡",g:"linear-gradient(135deg,#080836,#0c0c66)",ch:"Ch.1",tp:"Coulomb's Law, Gauss's Theorem",d:"4h 20m",dif:"Medium",desc:"Electric charge, Coulomb's law, electric field, Gauss's theorem.",p:65},
+        {t:"Electrostatic Potential & Capacitance",i:"🔋",g:"linear-gradient(135deg,#160a4e,#2a1070)",ch:"Ch.2",tp:"Potential, Capacitance, Dielectrics",d:"3h 45m",dif:"Medium",desc:"Electric potential, capacitors and dielectrics.",p:30},
+        {t:"Current Electricity",i:"💡",g:"linear-gradient(135deg,#0a280a,#1a5c1a)",ch:"Ch.3",tp:"Ohm's Law, Kirchhoff's Laws",d:"5h 10m",dif:"Hard",desc:"Drift velocity, Ohm's law, Kirchhoff's laws.",p:10},
+        {t:"Moving Charges & Magnetism",i:"🧲",g:"linear-gradient(135deg,#3d0000,#8b0000)",ch:"Ch.4",tp:"Biot-Savart, Ampere, Cyclotron",d:"4h 50m",dif:"Hard",desc:"Magnetic force, Biot-Savart and Ampere's law.",p:0},
+        {t:"Magnetism & Matter",i:"🌍",g:"linear-gradient(135deg,#0a183a,#182c6b)",ch:"Ch.5",tp:"Bar Magnet, Earth's Magnetism",d:"2h 40m",dif:"Easy",desc:"Magnetic dipole, earth's field and magnetic properties.",p:0},
+        {t:"Electromagnetic Induction",i:"🌀",g:"linear-gradient(135deg,#1a1a00,#5c5c00)",ch:"Ch.6",tp:"Faraday, Lenz, Inductance",d:"3h 30m",dif:"Medium",desc:"Faraday's laws, Lenz's law and inductance.",p:0},
+        {t:"Alternating Current",i:"〰️",g:"linear-gradient(135deg,#2e0c0c,#6b1a1a)",ch:"Ch.7",tp:"RLC, Resonance, Transformer",d:"4h 00m",dif:"Hard",desc:"RLC circuits, resonance and transformers.",p:0},
+        {t:"Electromagnetic Waves",i:"📡",g:"linear-gradient(135deg,#001a2d,#003d6b)",ch:"Ch.8",tp:"Maxwell's Equations, EM Spectrum",d:"2h 20m",dif:"Easy",desc:"EM waves, spectrum and Maxwell's equations.",p:0},
+        {t:"Ray Optics",i:"🔭",g:"linear-gradient(135deg,#00001a,#000066)",ch:"Ch.9",tp:"Lenses, Mirrors, Telescope",d:"5h 20m",dif:"Medium",desc:"Reflection, refraction, lenses and optical instruments.",p:85},
+        {t:"Wave Optics",i:"🌊",g:"linear-gradient(135deg,#001a1a,#005c5c)",ch:"Ch.10",tp:"Huygens, Interference, Diffraction",d:"3h 40m",dif:"Hard",desc:"Huygens principle, Young's experiment and diffraction.",p:0},
+        {t:"Dual Nature of Radiation",i:"☢️",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Ch.11",tp:"Photoelectric Effect, de Broglie",d:"2h 50m",dif:"Medium",desc:"Photoelectric effect and wave-particle duality.",p:0},
+        {t:"Atoms",i:"⚛️",g:"linear-gradient(135deg,#001a0d,#004018)",ch:"Ch.12",tp:"Bohr Model, Hydrogen Spectrum",d:"2h 30m",dif:"Easy",desc:"Rutherford and Bohr models, hydrogen spectrum.",p:0},
+        {t:"Nuclei",i:"💥",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.13",tp:"Binding Energy, Radioactivity, Fission",d:"3h 10m",dif:"Medium",desc:"Nuclear binding energy, radioactivity, fission and fusion.",p:0},
+        {t:"Semiconductor Electronics",i:"🖥️",g:"linear-gradient(135deg,#0d0d1a,#1a1a4d)",ch:"Ch.14",tp:"Diode, Transistor, Logic Gates",d:"4h 30m",dif:"Hard",desc:"p-n junction, transistor and logic gates.",p:40},
+      ],
+      chemistry:[
+        {t:"The Solid State",i:"💎",g:"linear-gradient(135deg,#0d0d3d,#1a1a6b)",ch:"Ch.1",tp:"Crystal Structure, Packing, Defects",d:"3h 20m",dif:"Medium",desc:"Crystal lattices, unit cells and crystal defects.",p:0},
+        {t:"Solutions",i:"🧪",g:"linear-gradient(135deg,#003d3d,#007070)",ch:"Ch.2",tp:"Raoult's Law, Colligative Properties",d:"3h 40m",dif:"Medium",desc:"Concentration, Raoult's law and colligative properties.",p:50},
+        {t:"Electrochemistry",i:"⚗️",g:"linear-gradient(135deg,#2d0d4e,#5c1a9e)",ch:"Ch.3",tp:"Galvanic Cell, Nernst, Electrolysis",d:"4h 20m",dif:"Hard",desc:"Galvanic cells, Nernst equation and electrolysis.",p:20},
+        {t:"Chemical Kinetics",i:"💨",g:"linear-gradient(135deg,#3d1a00,#7a3300)",ch:"Ch.4",tp:"Rate Laws, Activation Energy, Arrhenius",d:"3h 10m",dif:"Medium",desc:"Rate laws, activation energy and Arrhenius equation.",p:0},
+        {t:"Surface Chemistry",i:"🔵",g:"linear-gradient(135deg,#001a3d,#003470)",ch:"Ch.5",tp:"Adsorption, Colloids, Catalysis",d:"2h 30m",dif:"Easy",desc:"Adsorption, catalysis and colloids.",p:0},
+        {t:"Isolation of Elements",i:"⛏️",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.6",tp:"Metallurgy, Thermodynamics, Refining",d:"2h 10m",dif:"Easy",desc:"Extraction and refining of metals.",p:0},
+        {t:"The p-Block Elements",i:"🧬",g:"linear-gradient(135deg,#0d3d00,#1a6b00)",ch:"Ch.7",tp:"Group 15-18 Elements & Compounds",d:"4h 40m",dif:"Hard",desc:"p-Block elements groups 15-18.",p:0},
+        {t:"The d & f Block Elements",i:"🔩",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.8",tp:"Transition Metals, Lanthanoids",d:"3h 00m",dif:"Medium",desc:"Transition metals, lanthanoids and actinoids.",p:0},
+        {t:"Coordination Compounds",i:"🌐",g:"linear-gradient(135deg,#001a3d,#003470)",ch:"Ch.9",tp:"IUPAC, Werner, Isomerism, CFT",d:"4h 00m",dif:"Hard",desc:"Coordination compounds and crystal field theory.",p:0},
+        {t:"Haloalkanes & Haloarenes",i:"🌡️",g:"linear-gradient(135deg,#1a3d00,#2d6600)",ch:"Ch.10",tp:"SN1, SN2, Elimination Reactions",d:"3h 50m",dif:"Hard",desc:"Haloalkanes — nomenclature and reactions.",p:10},
+        {t:"Alcohols, Phenols & Ethers",i:"🍶",g:"linear-gradient(135deg,#3d0d00,#6b1a00)",ch:"Ch.11",tp:"Preparation, Reactions, Acidity",d:"3h 20m",dif:"Medium",desc:"Alcohols, phenols and ethers.",p:0},
+        {t:"Aldehydes, Ketones & Carboxylic Acids",i:"🧴",g:"linear-gradient(135deg,#0d1a3d,#1a2d6b)",ch:"Ch.12",tp:"Nucleophilic Addition, Reactions",d:"4h 10m",dif:"Hard",desc:"Carbonyl compounds and carboxylic acids.",p:0},
+        {t:"Amines",i:"🔬",g:"linear-gradient(135deg,#2d0d00,#5c1a00)",ch:"Ch.13",tp:"Classification, Basicity, Reactions",d:"2h 50m",dif:"Medium",desc:"Amines, basicity and reactions.",p:0},
+        {t:"Biomolecules",i:"🧫",g:"linear-gradient(135deg,#001a00,#003300)",ch:"Ch.14",tp:"Carbohydrates, Proteins, DNA, Vitamins",d:"3h 30m",dif:"Medium",desc:"Biomolecules — structure and function.",p:0},
+      ],
+      maths:[
+        {t:"Relations & Functions",i:"🔗",g:"linear-gradient(135deg,#0d001a,#280040)",ch:"Ch.1",tp:"Types, Composite, Inverse",d:"3h 20m",dif:"Easy",desc:"Types of relations and functions.",p:100},
+        {t:"Inverse Trigonometric Functions",i:"📐",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.2",tp:"Domain, Range, Graphs, Identities",d:"2h 40m",dif:"Medium",desc:"Inverse trig functions and properties.",p:75},
+        {t:"Matrices",i:"🔢",g:"linear-gradient(135deg,#1a1a00,#454500)",ch:"Ch.3",tp:"Operations, Transpose, Inverse",d:"3h 50m",dif:"Medium",desc:"Matrix operations and invertible matrices.",p:40},
+        {t:"Determinants",i:"📊",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.4",tp:"Properties, Cofactors, Cramer's Rule",d:"3h 30m",dif:"Medium",desc:"Determinants and their applications.",p:20},
+        {t:"Continuity & Differentiability",i:"📈",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Ch.5",tp:"Limits, Chain Rule, MVT",d:"5h 30m",dif:"Hard",desc:"Continuity, differentiability and MVT.",p:0},
+        {t:"Application of Derivatives",i:"📉",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Ch.6",tp:"Tangents, Maxima, Minima",d:"4h 20m",dif:"Hard",desc:"Tangents, normals, maxima and minima.",p:0},
+        {t:"Integrals",i:"∫",g:"linear-gradient(135deg,#001a1a,#005050)",ch:"Ch.7",tp:"Substitution, By Parts, Definite",d:"6h 20m",dif:"Hard",desc:"Methods of integration.",p:0},
+        {t:"Application of Integrals",i:"🏔️",g:"linear-gradient(135deg,#0d1a0d,#1a4d1a)",ch:"Ch.8",tp:"Area Under Curves",d:"2h 40m",dif:"Medium",desc:"Area using definite integrals.",p:0},
+        {t:"Differential Equations",i:"🌀",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Ch.9",tp:"Order, Variable Separable, Linear",d:"4h 00m",dif:"Hard",desc:"Differential equations — types and solutions.",p:0},
+        {t:"Vector Algebra",i:"➡️",g:"linear-gradient(135deg,#001a3d,#003d8c)",ch:"Ch.10",tp:"Dot Product, Cross Product",d:"3h 20m",dif:"Medium",desc:"Vectors, dot and cross products.",p:0},
+        {t:"Three Dimensional Geometry",i:"📦",g:"linear-gradient(135deg,#00001a,#000050)",ch:"Ch.11",tp:"Lines, Planes, Direction Cosines",d:"3h 45m",dif:"Medium",desc:"3D geometry — lines and planes.",p:0},
+        {t:"Linear Programming",i:"📋",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Ch.12",tp:"Feasible Region, Corner Points",d:"2h 20m",dif:"Medium",desc:"Linear programming problems.",p:0},
+        {t:"Probability",i:"🎲",g:"linear-gradient(135deg,#1a0010,#4d0030)",ch:"Ch.13",tp:"Bayes Theorem, Random Variable",d:"4h 10m",dif:"Hard",desc:"Conditional probability, Bayes' theorem.",p:0},
+      ],
+      biology:[
+        {t:"Reproduction in Organisms",i:"🌱",g:"linear-gradient(135deg,#003300,#006600)",ch:"Ch.1",tp:"Asexual, Sexual Reproduction",d:"2h 30m",dif:"Easy",desc:"Modes of reproduction in organisms.",p:0},
+        {t:"Sexual Reproduction in Flowering Plants",i:"🌸",g:"linear-gradient(135deg,#3d001a,#8c003d)",ch:"Ch.2",tp:"Pollination, Fertilisation, Embryo",d:"4h 00m",dif:"Medium",desc:"Flower structure, pollination and fertilisation.",p:0},
+        {t:"Human Reproduction",i:"👶",g:"linear-gradient(135deg,#1a0033,#3d0070)",ch:"Ch.3",tp:"Male & Female System, Gametogenesis",d:"3h 30m",dif:"Medium",desc:"Human reproductive systems and gametogenesis.",p:0},
+        {t:"Reproductive Health",i:"❤️",g:"linear-gradient(135deg,#330000,#700000)",ch:"Ch.4",tp:"Birth Control, STDs, MTP",d:"2h 00m",dif:"Easy",desc:"Reproductive health and birth control.",p:0},
+        {t:"Principles of Inheritance",i:"🧬",g:"linear-gradient(135deg,#001a33,#003d70)",ch:"Ch.5",tp:"Mendel's Laws, Dihybrid Cross",d:"4h 20m",dif:"Hard",desc:"Mendel's laws and chromosomal theory.",p:0},
+        {t:"Molecular Basis of Inheritance",i:"🔬",g:"linear-gradient(135deg,#1a1a3d,#2d2d8c)",ch:"Ch.6",tp:"DNA Structure, Replication, Transcription",d:"5h 00m",dif:"Hard",desc:"DNA structure, replication and gene expression.",p:20},
+        {t:"Evolution",i:"🦋",g:"linear-gradient(135deg,#2d0d00,#6b1a00)",ch:"Ch.7",tp:"Origin of Life, Natural Selection",d:"3h 10m",dif:"Medium",desc:"Origin of life, evolution and speciation.",p:0},
+        {t:"Human Health & Disease",i:"🏥",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.8",tp:"Immunity, Pathogens, Cancer",d:"3h 00m",dif:"Medium",desc:"Immunity, common diseases and cancer.",p:0},
+        {t:"Biotechnology: Principles",i:"🔭",g:"linear-gradient(135deg,#0d001a,#280045)",ch:"Ch.9",tp:"Recombinant DNA, PCR, Cloning",d:"3h 30m",dif:"Hard",desc:"Recombinant DNA technology.",p:0},
+        {t:"Biotechnology & Applications",i:"💉",g:"linear-gradient(135deg,#001a0d,#004525)",ch:"Ch.10",tp:"GM Crops, Gene Therapy, Insulin",d:"2h 30m",dif:"Medium",desc:"Applications of biotechnology.",p:0},
+        {t:"Organisms & Populations",i:"🐘",g:"linear-gradient(135deg,#1a1a00,#404000)",ch:"Ch.11",tp:"Ecology, Population Attributes",d:"3h 00m",dif:"Medium",desc:"Ecology and population dynamics.",p:0},
+        {t:"Ecosystem",i:"🌍",g:"linear-gradient(135deg,#001a00,#003800)",ch:"Ch.12",tp:"Food Chain, Energy Flow",d:"2h 40m",dif:"Medium",desc:"Ecosystem structure and energy flow.",p:0},
+        {t:"Biodiversity & Conservation",i:"🦁",g:"linear-gradient(135deg,#2d1a00,#6b3d00)",ch:"Ch.13",tp:"Hotspots, Extinction, Conservation",d:"2h 20m",dif:"Easy",desc:"Biodiversity and conservation strategies.",p:0},
+        {t:"Environmental Issues",i:"♻️",g:"linear-gradient(135deg,#001a00,#004000)",ch:"Ch.14",tp:"Pollution, Global Warming, Ozone",d:"2h 00m",dif:"Easy",desc:"Environmental pollution and solutions.",p:0},
+      ],
+      english:[
+        {t:"The Last Lesson",i:"📚",g:"linear-gradient(135deg,#0d1a2d,#1a3d6b)",ch:"Prose 1",tp:"Alphonse Daudet",d:"1h 20m",dif:"Easy",desc:"Last French lesson — patriotism and language.",p:100},
+        {t:"Lost Spring",i:"🌱",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Prose 2",tp:"Anees Jung",d:"1h 10m",dif:"Easy",desc:"Stories of poverty and child labour.",p:80},
+        {t:"Deep Water",i:"🌊",g:"linear-gradient(135deg,#001a3d,#00336b)",ch:"Prose 3",tp:"William O. Douglas",d:"1h 00m",dif:"Easy",desc:"Overcoming the fear of water.",p:50},
+        {t:"The Rattrap",i:"🪤",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Prose 4",tp:"Selma Lagerlöf",d:"1h 20m",dif:"Easy",desc:"A peddler's worldview and redemption.",p:20},
+        {t:"Indigo",i:"💙",g:"linear-gradient(135deg,#00001a,#000066)",ch:"Prose 5",tp:"Louis Fischer",d:"1h 00m",dif:"Easy",desc:"Gandhi's Champaran movement.",p:0},
+        {t:"Poets and Pancakes",i:"🎭",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Prose 6",tp:"Asokamitran",d:"1h 10m",dif:"Easy",desc:"Life inside Gemini Studios.",p:0},
+        {t:"The Interview",i:"🎤",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Prose 7",tp:"Umberto Eco",d:"1h 00m",dif:"Easy",desc:"Nature of interviews in journalism.",p:0},
+        {t:"Going Places",i:"✈️",g:"linear-gradient(135deg,#1a0d0d,#4d1a1a)",ch:"Prose 8",tp:"A.R. Barton",d:"1h 00m",dif:"Easy",desc:"Sophie's world of fantasy.",p:0},
+        {t:"My Mother at Sixty-Six",i:"👩",g:"linear-gradient(135deg,#0d1a0d,#204020)",ch:"Poem 1",tp:"Kamala Das",d:"0h 45m",dif:"Easy",desc:"Fear of losing ageing mother.",p:0},
+        {t:"Keeping Quiet",i:"🤫",g:"linear-gradient(135deg,#001a2d,#004d8c)",ch:"Poem 2",tp:"Pablo Neruda",d:"0h 40m",dif:"Easy",desc:"Call for peace and introspection.",p:0},
+        {t:"A Thing of Beauty",i:"🌅",g:"linear-gradient(135deg,#1a0000,#4d0000)",ch:"Poem 3",tp:"John Keats",d:"0h 35m",dif:"Easy",desc:"Beauty as a source of eternal joy.",p:0},
+        {t:"A Roadside Stand",i:"🏪",g:"linear-gradient(135deg,#001a00,#003d00)",ch:"Poem 4",tp:"Robert Frost",d:"0h 35m",dif:"Easy",desc:"Rural poor and urban indifference.",p:0},
+        {t:"Aunt Jennifer's Tigers",i:"🐯",g:"linear-gradient(135deg,#1a001a,#4d004d)",ch:"Poem 5",tp:"Adrienne Rich",d:"0h 35m",dif:"Easy",desc:"Patriarchal oppression and freedom through art.",p:0},
+      ],
+      cs:[
+        {t:"Python Revision Tour",i:"🐍",g:"linear-gradient(135deg,#001a00,#004500)",ch:"Ch.1",tp:"Data Types, Functions, Recursion",d:"3h 00m",dif:"Easy",desc:"Revision of Python fundamentals.",p:90},
+        {t:"Data Handling using NumPy",i:"🔢",g:"linear-gradient(135deg,#001a3d,#004d8c)",ch:"Ch.2",tp:"Arrays, Indexing",d:"2h 30m",dif:"Medium",desc:"NumPy arrays and operations.",p:50},
+        {t:"Data Handling using Pandas",i:"🐼",g:"linear-gradient(135deg,#1a1a00,#4d4d00)",ch:"Ch.3",tp:"Series, DataFrame, Groupby",d:"3h 20m",dif:"Medium",desc:"Pandas for data analysis.",p:30},
+        {t:"Plotting with Matplotlib",i:"📊",g:"linear-gradient(135deg,#1a0d00,#4d2600)",ch:"Ch.4",tp:"Line, Bar, Histogram, Pie",d:"2h 00m",dif:"Easy",desc:"Data visualisation with Matplotlib.",p:10},
+        {t:"Computer Networks",i:"🌐",g:"linear-gradient(135deg,#001a1a,#004d4d)",ch:"Ch.5",tp:"Topologies, OSI, TCP/IP",d:"3h 40m",dif:"Medium",desc:"Network models and protocols.",p:0},
+        {t:"Database Concepts",i:"🗃️",g:"linear-gradient(135deg,#0d001a,#280060)",ch:"Ch.6",tp:"DBMS, Relational Model, Keys",d:"2h 50m",dif:"Medium",desc:"Database fundamentals.",p:0},
+        {t:"SQL Queries",i:"💾",g:"linear-gradient(135deg,#00001a,#000060)",ch:"Ch.7",tp:"DDL, DML, Joins, Aggregates",d:"4h 00m",dif:"Hard",desc:"SQL queries and joins.",p:0},
+        {t:"Cybersecurity & Ethics",i:"🔐",g:"linear-gradient(135deg,#1a0000,#500000)",ch:"Ch.8",tp:"Threats, Encryption, Cyber Laws",d:"2h 20m",dif:"Medium",desc:"Cyber threats and IT Act 2000.",p:0},
+      ]
+    }
+  }
 };
 
-// Subject colors for badge
-const SC={physics:"#0a3d8f",chemistry:"#1a6b3a",maths:"#4a0080",biology:"#8c2d00",english:"#006b6b",cs:"#003d6b"};
+// Current active grade
+let currentGrade = 12;
+let D = GRADES[12].subjects;
+
+// Subject colors
+const SC={physics:"#0a3d8f",chemistry:"#1a6b3a",maths:"#4a0080",biology:"#8c2d00",english:"#006b6b",cs:"#003d6b",science:"#006060",sst:"#7a4500",evs:"#2d6600"};
+
+// Subject display names & icons
+const SUBJ_META={
+  physics:{name:"Physics",icon:"⚛️"},chemistry:{name:"Chemistry",icon:"🧪"},
+  maths:{name:"Mathematics",icon:"📐"},biology:{name:"Biology",icon:"🧬"},
+  english:{name:"English",icon:"📖"},cs:{name:"Comp. Sci",icon:"💻"},
+  science:{name:"Science",icon:"🔬"},sst:{name:"Social Studies",icon:"🗺️"},
+  evs:{name:"EVS",icon:"🌿"}
+};
+
+// ═══════════ GRADE SWITCHING ═══════════
+function buildGradeGrid(){
+  const grid = document.getElementById('gradeGrid');
+  if(!grid) return;
+  grid.innerHTML = '';
+  for(let g=1; g<=12; g++){
+    const info = GRADES[g];
+    const div = document.createElement('div');
+    div.className = 'grade-item' + (g===currentGrade?' active':'');
+    div.innerHTML = `<span class="gnum">${info.emoji}</span><span class="glbl">Grade ${g}</span>`;
+    div.onclick = () => switchGrade(g);
+    grid.appendChild(div);
+  }
+}
+
+function switchGrade(g){
+  currentGrade = g;
+  D = GRADES[g].subjects;
+  document.getElementById('gradeLabel').textContent = g;
+  document.getElementById('gradeMenu').classList.remove('open');
+  // update grid active state
+  document.querySelectorAll('.grade-item').forEach((el,i)=>{
+    el.classList.toggle('active', i+1===g);
+  });
+  // rebuild subject tabs & rows
+  buildSubjectTabs();
+  buildAllRows();
+}
+
+function toggleGradeMenu(){
+  document.getElementById('gradeMenu').classList.toggle('open');
+}
+
+// close grade menu on outside click
+document.addEventListener('click', e=>{
+  const wrap = document.querySelector('.grade-wrap');
+  if(wrap && !wrap.contains(e.target)){
+    document.getElementById('gradeMenu').classList.remove('open');
+  }
+});
+
+function buildSubjectTabs(){
+  const tabs = document.getElementById('stabs');
+  if(!tabs) return;
+  const subjects = Object.keys(D);
+  tabs.innerHTML = `<div class="stab on" onclick="setTab(this,'all')">All</div>`;
+  subjects.forEach(s=>{
+    const meta = SUBJ_META[s] || {name:s, icon:'📚'};
+    tabs.innerHTML += `<div class="stab" onclick="setTab(this,'${s}')">${meta.icon} ${meta.name}</div>`;
+  });
+}
+
+function buildAllRows(){
+  const rwrap = document.querySelector('.rwrap');
+  if(!rwrap) return;
+
+  // Remove old subject rows (keep continue-watching row)
+  rwrap.querySelectorAll('.row:not(#row-continue)').forEach(r=>r.remove());
+
+  // rebuild continue watching
+  const subjects = Object.keys(D);
+  const cwRow = document.getElementById('row-continue');
+  const cwEl = document.getElementById('rc');
+  if(cwEl) cwEl.innerHTML='';
+
+  let hasProgress = false;
+  subjects.forEach(s=>{
+    (D[s]||[]).filter(c=>c.p>0).forEach(c=>{
+      c.subj=s;
+      if(cwEl) cwEl.appendChild(mkCard(c));
+      hasProgress = true;
+    });
+  });
+  if(cwRow) cwRow.style.display = hasProgress ? '' : 'none';
+
+  // build subject rows
+  subjects.forEach(s=>{
+    const meta = SUBJ_META[s] || {name:s,icon:'📚'};
+    const rowId = 'row-'+s;
+    const crowId = 'crow-'+s;
+    const row = document.createElement('div');
+    row.className='row'; row.id=rowId; row.dataset.subj=s;
+    row.innerHTML=`<div class="rtitle">${meta.icon} ${meta.name} <span class="rmore">See all ›</span></div>
+      <div class="slwrap">
+        <button class="slbtn l" onclick="sr('${crowId}',-1)">‹</button>
+        <div class="crow" id="${crowId}"></div>
+        <button class="slbtn r" onclick="sr('${crowId}',1)">›</button>
+      </div>`;
+    rwrap.appendChild(row);
+    const crowEl = document.getElementById(crowId);
+    (D[s]||[]).forEach(c=>{ c.subj=s; crowEl.appendChild(mkCard(c)); });
+  });
+}
 
 // ═══════════ INTRO → AUTH ═══════════
 window.addEventListener('load',()=>{
@@ -761,7 +1298,9 @@ function enterApp(name,email){
   document.getElementById('uinit').childNodes[0].textContent=name.charAt(0).toUpperCase();
   if(document.getElementById('umName')) document.getElementById('umName').textContent=name;
   if(document.getElementById('umEmail')) document.getElementById('umEmail').textContent=email||'';
-  renderAll();
+  buildGradeGrid();
+  buildSubjectTabs();
+  buildAllRows();
 }
 
 // ── AUTO LOGIN CHECK ──
@@ -822,21 +1361,7 @@ document.addEventListener('click',e=>{
 });
 
 // ═══════════ RENDER ═══════════
-const ROWMAP={physics:'rp',chemistry:'rch',maths:'rm',biology:'rb',english:'re',cs:'rcs'};
-
-function renderAll(){
-  const cont=[];
-  for(const[s,arr] of Object.entries(D))
-    arr.filter(c=>c.p>0&&c.p<100).forEach(c=>cont.push({...c,subj:s}));
-  if(cont.length){
-    document.getElementById('row-continue').style.display='block';
-    renderRow('rc',cont,true);
-  }
-  for(const[s,arr] of Object.entries(D))
-    renderRow(ROWMAP[s],arr.map(c=>({...c,subj:s})));
-}
-
-function renderRow(id,items,sp=false){
+function renderRow(id,items){
   const el=document.getElementById(id);
   if(!el)return;
   el.innerHTML='';
@@ -1008,10 +1533,12 @@ function closeOv(e){if(e.target===document.getElementById('ov'))closeMdl()}
 // ═══════════ HELPERS ═══════════
 function sr(id,dir){const el=document.getElementById(id);if(el)el.scrollBy({left:dir*720,behavior:'smooth'})}
 function setTab(el,s){
-  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on'));el.classList.add('on');
-  ['physics','chemistry','maths','biology','english','cs'].forEach(k=>{
-    const r=document.getElementById('row-'+k);
-    if(r)r.style.display=(s==='all'||s===k)?'block':'none';
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('.rwrap .row').forEach(r=>{
+    if(r.id==='row-continue') return;
+    const subj = r.dataset.subj;
+    r.style.display=(s==='all'||s===subj)?'block':'none';
   });
 }
 let tt;
