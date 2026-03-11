@@ -148,18 +148,14 @@ html,body{background:#000;color:#fff;font-family:'Inter',sans-serif;overflow-x:h
 .crow{display:flex;gap:10px;overflow-x:auto;padding:14px 4px 20px;scroll-behavior:smooth;scrollbar-width:none}
 .crow::-webkit-scrollbar{display:none}
 
-/* ══ CARD — always visible, no hover expand ══ */
+/* ══ CARD ══ */
 .card{
-  flex:0 0 200px;border-radius:8px;cursor:pointer;
-  position:relative;z-index:1;
+  flex:0 0 180px;border-radius:8px;cursor:pointer;
   background:var(--card);
   transition:transform .2s ease, box-shadow .2s ease;
   overflow:hidden;
 }
-.card:hover{
-  transform:translateY(-4px);
-  box-shadow:0 12px 40px rgba(0,0,0,.8);
-}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,.7)}
 
 /* The visible part (thumb) */
 .cin{border-radius:8px 8px 0 0;overflow:hidden;background:var(--card);position:relative}
@@ -173,21 +169,8 @@ html,body{background:#000;color:#fff;font-family:'Inter',sans-serif;overflow-x:h
 .cpbar{height:3px;background:#555}
 .cpfill{height:100%;background:var(--red)}
 
-/* Play button overlay on thumb */
-.cplay-ov{
-  position:absolute;inset:0;z-index:5;
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;transition:opacity .2s;background:rgba(0,0,0,.3);
-}
-.card:hover .cplay-ov{opacity:1}
-.cplay-btn{
-  width:44px;height:44px;border-radius:50%;
-  background:rgba(255,255,255,.95);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 20px rgba(0,0,0,.5);
-  transition:transform .15s;
-}
-.cplay-btn:hover{transform:scale(1.1)}
+/* Play button overlay - hidden always */
+.cplay-ov{display:none}
 
 /* Always visible bottom info panel */
 .cexp{
