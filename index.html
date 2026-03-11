@@ -1295,13 +1295,20 @@ async function doLogout(){
 function enterApp(name,email){
   document.getElementById('auth').style.display='none';
   document.getElementById('app').classList.add('show');
-  document.getElementById('uinit').childNodes[0].textContent=name.charAt(0).toUpperCase();
-  if(document.getElementById('umName')) document.getElementById('umName').textContent=name;
+  document.getElementById('uinit').childNodes[0].textContent=(name||'S').charAt(0).toUpperCase();
+  if(document.getElementById('umName')) document.getElementById('umName').textContent=name||'Student';
   if(document.getElementById('umEmail')) document.getElementById('umEmail').textContent=email||'';
   buildGradeGrid();
   buildSubjectTabs();
   buildAllRows();
 }
+
+// Force show app immediately — build content right away
+window.addEventListener('DOMContentLoaded', ()=>{
+  buildGradeGrid();
+  buildSubjectTabs();
+  buildAllRows();
+});
 
 // ── AUTO LOGIN CHECK ──
 (async function checkAutoLogin(){
